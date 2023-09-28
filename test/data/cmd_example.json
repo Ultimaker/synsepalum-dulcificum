@@ -1,0 +1,83 @@
+[
+  {
+    "command": {
+      "function": "set_toolhead_temperature",
+      "metadata": {},
+      "parameters": {
+        "index": 1,
+        "temperature": 180
+      },
+      "tags": []
+    }
+  },
+  {
+    "command": {
+      "function": "move",
+      "metadata": {
+        "relative": {
+          "a": true,
+          "b": true,
+          "x": false,
+          "y": false,
+          "z": false
+        }
+      },
+      "parameters": {
+        "a": 0.041868,
+        "b": 0.0,
+        "feedrate": 15.0,
+        "x": -35.166229,
+        "y": -61.460419,
+        "z": 0.40
+      },
+      "tags": [
+        "Inset",
+        "Purge"
+      ]
+    }
+  },
+  {
+    "command": {
+      "function": "toggle_fan",
+      "metadata": {},
+      "parameters": {
+        "index": 0,
+        "value": true
+      },
+      "tags": []
+    }
+  },
+  {
+    "command": {
+      "function": "fan_duty",
+      "metadata": {},
+      "parameters": {
+        "index": 0,
+        "value": 1.0
+      },
+      "tags": []
+    }
+  },
+  {
+    "command": {
+      "function": "change_toolhead",
+      "metadata": {},
+      "parameters": {
+        "index": 1,
+        "x": -33.0,
+        "y": -50.0
+      },
+      "tags": []
+    }
+  },
+  {
+    "command": {
+      "function": "comment",
+      "metadata": {},
+      "parameters": {
+        "comment": "Layer Section 25 (4320)"
+      },
+      "tags": []
+    }
+  }
+]
