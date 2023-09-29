@@ -29,18 +29,6 @@ namespace dulcificum {
 
     namespace miracle_jtp {
 
-        template<typename KeyType, typename ValType>
-        KeyType inverseLookup(const std::unordered_map<KeyType, ValType> &map,
-                              const ValType &val) {
-            for (const auto &pair: map) {
-                if (val == pair.second) {
-                    return pair.first;
-                }
-            }
-            throw std::invalid_argument("Key not in map");
-        }
-
-
         template<typename KeyListType, typename ValListType>
         nlohmann::json
         zipListsToJson(const KeyListType &keys, const ValListType &vals) {
@@ -50,29 +38,6 @@ namespace dulcificum {
             }
             return jout;
         }
-
-
-        //    const static std::unordered_map<std::string, CommandType> kNameToCommandMap = {
-        //            {"move", CommandType::kMove},
-        //            {"fan_toggle", CommandType::kActiveFanEnable,},
-        //            {"fan_duty", CommandType::kActiveFanDuty},
-        //            {"temperature", CommandType::kSetTemperature},
-        //            {"tool_change", CommandType::kChangeTool},
-        //            {"comment", CommandType::kComment},
-        //            {"delay", CommandType::kDelay},
-        //            {"wait_for_temperature", CommandType::kWaitForTemperature},
-        //            {"pause", CommandType::kPause}
-        //    };
-
-        //    const static std::unordered_map<std::string, Tag> kNameToTagMap = {
-        //            {"Support", Tag::Support},
-        //            {"Roof", Tag::Roof},
-        //            {"Raft", Tag::Raft},
-        //            {"Infill", Tag::Infill},
-        //            {"Sparse", Tag::Sparse},
-        //            {"Restart", Tag::Restart}
-        //    };
-
 
         const static std::array<std::string, 5> kParamPointPrintName = {
                 "x", "y", "z", "a", "b"
@@ -113,20 +78,6 @@ namespace dulcificum {
             }
         }
 
-        //    std::vector<std::string> nameTagList(const std::vector<Tag>& tags) {
-        //        std::vector<std::string> names;
-        //        std::transform(
-        //                std::begin(tags),
-        //                std::end(tags),
-        //                std::back_inserter(names),
-        //                [](const Tag& tag) -> std::string {
-        //                    std::string name_of_tag = inverseLookup(kNameToTagMap, tag);
-        //                    return name_of_tag;
-        //                }
-        //        );
-        //        return names;
-        //    }
-
         nlohmann::json toJson(const Command &cmd) {
             nlohmann::json jcmd;
             jcmd["function"] = to_string(cmd.type);
@@ -147,31 +98,28 @@ namespace dulcificum {
 
         std::shared_ptr<Move> toMove(const nlohmann::json &jmove) {
             auto move = std::make_shared<Move>();
-            const auto &jparams = jmove["parameters"];
-            const auto &jmetadata = jmove["metadata"];
+            const auto &jparams = jmove.at("parameters");
+            const auto &jrelative = jmove.at("metadata").at("relative");
             for (size_t param_ii = 0;
                  param_ii < kParamPointPrintName.size(); param_ii++) {
                 const auto &key = kParamPointPrintName[param_ii];
-
-                move->point[param_ii] = jparams[key];
-                move->is_point_relative[param_ii] = jmetadata[key];
+                double pval = jparams.at(key);
+                move->point[param_ii] = pval;
+                bool is_rel = jrelative.at(key);
+                move->is_point_relative[param_ii] = is_rel;
             }
-            move->tags = jmove["tags"].template get<std::vector<Tag>>();
-            //        std::transform(
-            //                std::begin(jmove["tags"]),
-            //                std::end(jmove["tags"]),
-            //                std::back_inserter(move->tags),
-            //                [](const std::string& name) -> Tag {
-            //                    return kNameToTagMap.find(name)->second;
-            //                }
-            //        );
+            std::vector<Tag> tags = jmove.at("tags");
+            move->tags = std::move(tags);
+            return move;
         }
 
 
         CommandPtr toCommand(const nlohmann::json &jin) {
             auto jcmd = jin["command"];
             CommandType type = jcmd["function"];
-            if (type == CommandType::kMove) return toMove(jcmd);
+            if (type == CommandType::kMove) {
+                return toMove(jcmd);
+            }
             auto cmd = spawnCommandPtr(type);
             return cmd;
         }

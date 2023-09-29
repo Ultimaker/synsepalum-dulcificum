@@ -25,6 +25,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
 #------------------------------#
 #    SUBDIRECTORIES
 #------------------------------#
-#add_subdirectory(apps)
+add_subdirectory(apps)
 add_subdirectory(src)
 add_subdirectory(test)

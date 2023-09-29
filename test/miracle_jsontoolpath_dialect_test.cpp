@@ -10,5 +10,5 @@ TEST(miracgle_jtp, move) {
     move.tags = {botcmd::Tag::Roof};
     auto jmove = miracle_jtp::toJson(move);
     std::cout << jmove << std::endl;
-//    auto cmove = miracle_jtp::toCommand(jmove);
+    auto cmove = miracle_jtp::toCommand(jmove);
 }

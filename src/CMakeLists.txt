@@ -5,4 +5,4 @@ add_library(dulcificum
 
 target_include_directories(dulcificum INTERFACE ${PROJECT_BINARY_DIR}/include)
 
-target_link_libraries(dulcificum ${CONAN_LIBS})
+target_link_libraries(dulcificum PUBLIC ${CONAN_LIBS})
