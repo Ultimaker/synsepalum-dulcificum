@@ -68,18 +68,10 @@ namespace dulcificum {
             return jparams;
         }
 
-        std::string to_string(const CommandType &type) {
-            switch (type) {
-                case CommandType::kMove:
-                    return "move";
-                default:
-                    return "";
-            }
-        }
 
         nlohmann::json toJson(const Command &cmd) {
             nlohmann::json jcmd;
-            jcmd["function"] = to_string(cmd.type);
+            jcmd["function"] = cmd.type;
             jcmd["metadata"] = getCommandMetadata(cmd);
             jcmd["parameters"] = getCommandParameters(cmd);
             if (cmd.type == CommandType::kMove) {
@@ -90,6 +82,10 @@ namespace dulcificum {
             jout["command"] = jcmd;
             return jout;
         }
+
+        // ################################ //
+        // From Json to Command             //
+        // ################################ //
 
         std::shared_ptr<Move> toMove(const nlohmann::json &jmove) {
             auto move = std::make_shared<Move>();
