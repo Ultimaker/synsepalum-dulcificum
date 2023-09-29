@@ -3,13 +3,19 @@
 
 #include "nlohmann/json.hpp"
 
-#include "command_types.h"
+#include "../include/command_types.h"
 
 namespace dulcificum {
+
+    using namespace botcmd;
+
     namespace miraclegrue {
         class CommandParser {
             // Converts miraclgrue commands with limited history
-            nlohmann::json toJson() const;
+
+//            static nlohmann::json toJson(const CommandPtr& cmd);
+
+//            CommandPtr toCommand(const nlohmann::json& jin);
         };
     }
 }
