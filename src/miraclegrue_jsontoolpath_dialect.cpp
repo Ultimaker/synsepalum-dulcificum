@@ -1,7 +1,5 @@
 #include "miraclegrue_jsontoolpath_dialect.h"
 
-#include <iostream>
-
 namespace dulcificum {
 
     namespace botcmd {
@@ -65,6 +63,7 @@ namespace dulcificum {
                         kParamPointPrintName,
                         move.point
                 );
+                jparams["feedrate"] = move.feedrate;
             }
             return jparams;
         }
@@ -85,11 +84,7 @@ namespace dulcificum {
             jcmd["parameters"] = getCommandParameters(cmd);
             if (cmd.type == CommandType::kMove) {
                 const auto move = static_cast<const Move &>(cmd);
-                for (const auto &tag: move.tags) {
-                    nlohmann::json jtag(tag);
-                    std::cout << jtag << std::endl;
-                    jcmd["tags"].push_back(jtag);
-                }
+                jcmd["tags"] = nlohmann::json (move.tags);
             }
             nlohmann::json jout;
             jout["command"] = jcmd;
@@ -99,6 +94,7 @@ namespace dulcificum {
         std::shared_ptr<Move> toMove(const nlohmann::json &jmove) {
             auto move = std::make_shared<Move>();
             const auto &jparams = jmove.at("parameters");
+            move->feedrate = jparams.at("feedrate");
             const auto &jrelative = jmove.at("metadata").at("relative");
             for (size_t param_ii = 0;
                  param_ii < kParamPointPrintName.size(); param_ii++) {
