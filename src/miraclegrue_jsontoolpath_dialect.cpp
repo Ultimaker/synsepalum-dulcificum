@@ -21,7 +21,9 @@ namespace dulcificum {
             { Tag::Raft, "Raft" },
             { Tag::Infill, "Infill" },
             { Tag::Sparse, "Sparse" },
-            { Tag::Restart, "Restart" }
+            { Tag::Restart, "Restart" },
+            { Tag::QuickToggle, "Quick Toggle" },
+            { Tag::TravelMove, "Travel Move" }
         })
     }
 
@@ -64,6 +66,44 @@ namespace dulcificum {
                         move.point
                 );
                 jparams["feedrate"] = move.feedrate;
+                return jparams;
+            }
+            if (cmd.type == CommandType::kComment) {
+                const auto com = static_cast<const Comment &>(cmd);
+                jparams["comment"] = com.comment;
+                return jparams;
+            }
+            if (cmd.type == CommandType::kActiveFanDuty) {
+                const auto dut = static_cast<const FanDuty &>(cmd);
+                jparams["index"] = dut.index;
+                jparams["value"] = dut.duty;
+                return jparams;
+            }
+            if (cmd.type == CommandType::kActiveFanEnable) {
+                const auto fan = static_cast<const FanToggle &>(cmd);
+                jparams["index"] = fan.index;
+                jparams["value"] = fan.is_on;
+                return jparams;
+            }
+            if (cmd.type == CommandType::kSetTemperature) {
+                const auto dcmd = static_cast<const SetTemperature &>(cmd);
+                jparams["index"] = dcmd.index;
+                jparams["temperature"] = dcmd.temperature;
+                return jparams;
+            }
+            if (cmd.type == CommandType::kWaitForTemperature) {
+                const auto dcmd = static_cast<const WaitForTemperature &>(cmd);
+                jparams["index"] = dcmd.index;
+                return jparams;
+            }
+            if (cmd.type == CommandType::kChangeTool) {
+                const auto dcmd = static_cast<const ToolChange &>(cmd);
+                jparams = zipListsToJson(
+                        kParamPointPrintName,
+                        dcmd.position
+                );
+                jparams["index"] = dcmd.index;
+                return jparams;
             }
             return jparams;
         }
@@ -76,7 +116,7 @@ namespace dulcificum {
             jcmd["parameters"] = getCommandParameters(cmd);
             if (cmd.type == CommandType::kMove) {
                 const auto move = static_cast<const Move &>(cmd);
-                jcmd["tags"] = nlohmann::json (move.tags);
+                jcmd["tags"] = nlohmann::json(move.tags);
             }
             nlohmann::json jout;
             jout["command"] = jcmd;

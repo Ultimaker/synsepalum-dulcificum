@@ -30,7 +30,9 @@ namespace dulcificum {
             Raft,
             Infill,
             Sparse,
-            Restart
+            Restart,
+            QuickToggle,
+            TravelMove
         };
 
         typedef size_t ExtruderIndex;
@@ -60,7 +62,6 @@ namespace dulcificum {
             std::vector<Tag> tags;
         };
 
-
         struct FanDuty : public Command {
             FanDuty() : Command(CommandType::kActiveFanDuty) {}
             ExtruderIndex index = 0;
@@ -87,6 +88,7 @@ namespace dulcificum {
 
         struct ToolChange : public Command {
             ToolChange() : Command(CommandType::kChangeTool) {}
+            ExtruderIndex index = 0;
             ParamPoint position = {NAN, NAN, NAN, NAN, NAN};
         };
 
