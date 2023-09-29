@@ -1,9 +1,6 @@
 add_library(dulcificum
-    ${PROJECT_SOURCE_DIR}/include/command_types.h
-    blank.cpp
-    blank.h
-    makerbot_dialect.cpp
-    makerbot_dialect.h
+    miraclegrue_jsontoolpath_dialect.cpp
+    ../include/command_types.cpp
 )
 
 target_include_directories(dulcificum INTERFACE ${PROJECT_BINARY_DIR}/include)

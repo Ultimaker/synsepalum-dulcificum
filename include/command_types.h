@@ -13,7 +13,7 @@ namespace dulcificum {
     namespace botcmd {
 
         enum class CommandType {
-            kMove = 0,            // most commands are move commands
+            kMove,            // most commands are move commands
             kActiveFanEnable,          // look at m_fan_state
             kActiveFanDuty,           // look at m_fan_speed
             kSetTemperature,         // change temperature for active tool
@@ -95,26 +95,8 @@ namespace dulcificum {
             double seconds = 0.0;
         };
 
-        CommandPtr spawnCommandPtr(CommandType type) {
-            switch(type) {
-                case CommandType::kMove:
-                    return std::make_shared<Move>();
-                case CommandType::kActiveFanEnable:
-                    return std::make_shared<FanToggle>();
-                case CommandType::kActiveFanDuty:
-                    return std::make_shared<FanDuty>();
-                case CommandType::kDelay:
-                    return std::make_shared<Delay>();
-                case CommandType::kChangeTool:
-                    return std::make_shared<ToolChange>();
-                case CommandType::kSetTemperature:
-                    return std::make_shared<SetTemperature>();
-                case CommandType::kWaitForTemperature:
-                    return std::make_shared<WaitForTemperature>();
-                default:
-                    return std::make_shared<Command>(type);
-            }
-        }
+        CommandPtr spawnCommandPtr(CommandType type);
+
     }
 }
 
