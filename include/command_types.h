@@ -86,10 +86,11 @@ namespace dulcificum {
             ExtruderIndex index = 0;
         };
 
-        struct ToolChange : public Command {
-            ToolChange() : Command(CommandType::kChangeTool) {}
+        struct ChangeTool : public Command {
+            ChangeTool() : Command(CommandType::kChangeTool) {}
             ExtruderIndex index = 0;
             ParamPoint position = {NAN, NAN, NAN, NAN, NAN};
+            std::vector<Tag> tags;
         };
 
         struct Delay : public Command {

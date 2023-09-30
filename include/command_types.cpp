@@ -12,7 +12,7 @@ namespace dulcificum::botcmd {
             case CommandType::kDelay:
                 return std::make_shared<Delay>();
             case CommandType::kChangeTool:
-                return std::make_shared<ToolChange>();
+                return std::make_shared<ChangeTool>();
             case CommandType::kSetTemperature:
                 return std::make_shared<SetTemperature>();
             case CommandType::kWaitForTemperature:
