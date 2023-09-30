@@ -1,4 +1,4 @@
-#include "command_types.h"
+#include "../include/command_types.h"
 
 namespace dulcificum::botcmd {
     CommandPtr spawnCommandPtr(CommandType type) {

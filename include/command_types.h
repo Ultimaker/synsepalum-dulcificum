@@ -13,6 +13,7 @@ namespace dulcificum {
     namespace botcmd {
 
         enum class CommandType {
+            kInvalid,
             kMove,            // most commands are move commands
             kActiveFanEnable,          // look at m_fan_state
             kActiveFanDuty,           // look at m_fan_speed
@@ -25,13 +26,16 @@ namespace dulcificum {
         };
 
         enum class Tag {
-            Support,
-            Roof,
-            Raft,
+            Invalid,
             Infill,
-            Sparse,
-            Restart,
+            Inset,
+            Purge,
             QuickToggle,
+            Raft,
+            Restart,
+            Roof,
+            Support,
+            Sparse,
             TravelMove
         };
 

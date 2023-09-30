@@ -79,5 +79,8 @@
       },
       "tags": []
     }
+  },
+  {
+    "command" : {"function":"delay","metadata":{},"parameters":{"seconds":5},"tags":[]}
   }
 ]
