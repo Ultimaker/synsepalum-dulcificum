@@ -6,7 +6,9 @@
 #include "../../include/command_types.h"
 
 namespace dulcificum::miracle_jtp {
-        nlohmann::json toJson(const botcmd::Command& cmd);
+
+nlohmann::json toJson(const botcmd::Command &cmd);
+
 }
 
 #endif //DULCIFICUM_MIRACLEGRUE_JSONTOOLPATH_H_

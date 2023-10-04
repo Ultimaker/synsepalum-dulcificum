@@ -1,0 +1,10 @@
+#ifndef DULCIFICUM_TEST_DATA_DIR_H
+#define DULCIFICUM_TEST_DATA_DIR_H
+
+#include <filesystem>
+
+namespace dulcificum {
+    static const std::filesystem::path kTestDataDir = "${DULCIFICUM_TEST_DATA_DIR}";
+}
+
+#endif //DULCIFICUM_TEST_DATA_DIR_H

@@ -32,6 +32,7 @@ TEST(miracle_jtp_tests, change_toolhead) {
 
 TEST(miracle_jtp_tests, rwrw) {
     std::filesystem::path example_path = kTestDataDir / "cmd_example.json";
+    std::cout << "_debug test data dir: " << example_path << std::endl;
     ASSERT_TRUE(std::filesystem::exists(example_path));
     std::ifstream fin(example_path);
     nlohmann::json jin = nlohmann::json::parse(fin);

@@ -1,7 +1,5 @@
 set(
     MIRACLEGRUE_TOOLPATH_DIALECT_SRC
-    mgjtp_io.cpp
-    mgjtp_io.h
     mgjtp_command_to_json.cpp
     mgjtp_command_to_json.h
     mgjtp_json_to_command.cpp
