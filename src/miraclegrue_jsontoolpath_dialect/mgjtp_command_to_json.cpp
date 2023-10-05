@@ -97,25 +97,12 @@ nlohmann::json getCommandParameters(const Command &cmd) {
     return jparams;
 }
 
-nlohmann::json getCommandTags(const Command &cmd) {
-    if (cmd.type == CommandType::kMove) {
-        const auto &move = static_cast<const Move &>(cmd);
-        return nlohmann::json(move.tags);
-    }
-    if (cmd.type == CommandType::kChangeTool) {
-        const auto &changetool = static_cast<const ChangeTool &>(cmd);
-        return nlohmann::json(changetool.tags);
-    }
-    nlohmann::json jtags = std::vector<Tag>();
-    return jtags;
-}
-
 nlohmann::json toJson(const Command &cmd) {
     nlohmann::json jcmd;
     jcmd[kKeyStr::function] = cmd.type;
     jcmd[kKeyStr::metadata] = getCommandMetadata(cmd);
     jcmd[kKeyStr::parameters] = getCommandParameters(cmd);
-    jcmd[kKeyStr::tags] = getCommandTags(cmd);
+    jcmd[kKeyStr::tags] = cmd.tags;
     nlohmann::json jout;
     jout[kKeyStr::command] = jcmd;
     return jout;

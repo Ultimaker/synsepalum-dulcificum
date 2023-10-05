@@ -93,7 +93,10 @@ CommandPtr toCommand(const nlohmann::json &jin) {
     }
     if (jcmd.contains(kKeyStr::parameters)) {
         auto jparam = jcmd[kKeyStr::parameters];
-        return toParamOnlyCommand(type, jparam);
+        auto cmd = toParamOnlyCommand(type, jparam);
+        std::vector<Tag> tags = jcmd.at(kKeyStr::tags);
+        cmd->tags = std::move(tags);
+        return cmd;
     }
     auto cmd = spawnCommandPtr(type);
     return cmd;
