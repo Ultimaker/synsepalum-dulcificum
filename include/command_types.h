@@ -7,104 +7,113 @@
 
 namespace dulcificum {
 
-    // x, y, z, a, b
-    typedef std::array<double, 5> ParamPoint;
+// x, y, z, a, b
+typedef std::array<double, 5> ParamPoint;
 
-    namespace botcmd {
+namespace botcmd {
 
-        enum class CommandType {
-            kInvalid,
-            kMove,            // most commands are move commands
-            kActiveFanEnable,          // look at m_fan_state
-            kActiveFanDuty,           // look at m_fan_speed
-            kSetTemperature,         // change temperature for active tool
-            kChangeTool,         // change active tool
-            kComment,        // do nothing, only emit comments
-            kDelay,               // delay - command to wait for event
-            kWaitForTemperature,       // firmware delays until temp reached
-            kPause,               // Command to allow for user defined pause.
-        };
+enum class CommandType {
+    kInvalid,
+    kMove,            // most commands are move commands
+    kActiveFanEnable,          // look at m_fan_state
+    kActiveFanDuty,           // look at m_fan_speed
+    kSetTemperature,         // change temperature for active tool
+    kChangeTool,         // change active tool
+    kComment,        // do nothing, only emit comments
+    kDelay,               // delay - command to wait for event
+    kWaitForTemperature,       // firmware delays until temp reached
+    kPause,               // Command to allow for user defined pause.
+};
 
-        enum class Tag {
-            Invalid,
-            Infill,
-            Inset,
-            Purge,
-            QuickToggle,
-            Raft,
-            Restart,
-            Roof,
-            Support,
-            Sparse,
-            TravelMove
-        };
+enum class Tag {
+    Invalid,
+    Infill,
+    Inset,
+    Purge,
+    QuickToggle,
+    Raft,
+    Restart,
+    Roof,
+    Support,
+    Sparse,
+    TravelMove
+};
 
-        typedef size_t ExtruderIndex;
+typedef size_t ExtruderIndex;
 
-        struct Command {
-            Command() = delete;
-            Command(CommandType type) : type(type) {}
-            const CommandType type;
-        };
+struct Command {
+    Command() = delete;
 
-        typedef std::shared_ptr<Command> CommandPtr;
-        typedef std::vector<CommandPtr> CommandList;
+    Command(CommandType type) : type(type) {}
 
-        struct Comment : public Command {
-            Comment()
-                    : Command(CommandType::kComment) {}
-            std::string comment;
-        };
+    const CommandType type;
+    std::vector<Tag> tags;
+};
 
-        struct Move : public Command {
-            Move()
-              : Command(CommandType::kMove) {}
-            ParamPoint point = {NAN, NAN, NAN, NAN, NAN};
-            double feedrate = NAN;
-            std::array<bool, 5> is_point_relative = {false, false, false, true,
-                                                     true};
-            std::vector<Tag> tags;
-        };
+typedef std::shared_ptr<Command> CommandPtr;
+typedef std::vector<CommandPtr> CommandList;
 
-        struct FanDuty : public Command {
-            FanDuty() : Command(CommandType::kActiveFanDuty) {}
-            ExtruderIndex index = 0;
-            float duty = 0.0;
-        };
+struct Comment : public Command {
+    Comment()
+            : Command(CommandType::kComment) {}
 
-        struct FanToggle : public Command {
-            FanToggle() : Command(CommandType::kActiveFanEnable) {}
-            ExtruderIndex index = 0;
-            bool is_on = false;
-        };
+    std::string comment;
+};
+
+struct Move : public Command {
+    Move()
+            : Command(CommandType::kMove) {}
+
+    ParamPoint point = {NAN, NAN, NAN, NAN, NAN};
+    double feedrate = NAN;
+    std::array<bool, 5> is_point_relative = {false, false, false, true,
+                                             true};
+};
+
+struct FanDuty : public Command {
+    FanDuty() : Command(CommandType::kActiveFanDuty) {}
+
+    ExtruderIndex index = 0;
+    float duty = 0.0;
+};
+
+struct FanToggle : public Command {
+    FanToggle() : Command(CommandType::kActiveFanEnable) {}
+
+    ExtruderIndex index = 0;
+    bool is_on = false;
+};
 
 
-        struct SetTemperature : public Command {
-            SetTemperature() : Command(CommandType::kSetTemperature) {}
-            ExtruderIndex index = 0;
-            double temperature = 0.0;
-        };
+struct SetTemperature : public Command {
+    SetTemperature() : Command(CommandType::kSetTemperature) {}
 
-        struct WaitForTemperature : public Command {
-            WaitForTemperature() : Command(CommandType::kWaitForTemperature) {}
-            ExtruderIndex index = 0;
-        };
+    ExtruderIndex index = 0;
+    double temperature = 0.0;
+};
 
-        struct ChangeTool : public Command {
-            ChangeTool() : Command(CommandType::kChangeTool) {}
-            ExtruderIndex index = 0;
-            ParamPoint position = {NAN, NAN, NAN, NAN, NAN};
-            std::vector<Tag> tags;
-        };
+struct WaitForTemperature : public Command {
+    WaitForTemperature() : Command(CommandType::kWaitForTemperature) {}
 
-        struct Delay : public Command {
-            Delay() : Command(CommandType::kDelay) {}
-            double seconds = 0.0;
-        };
+    ExtruderIndex index = 0;
+};
 
-        CommandPtr spawnCommandPtr(CommandType type);
+struct ChangeTool : public Command {
+    ChangeTool() : Command(CommandType::kChangeTool) {}
 
-    }
+    ExtruderIndex index = 0;
+    ParamPoint position = {NAN, NAN, NAN, NAN, NAN};
+};
+
+struct Delay : public Command {
+    Delay() : Command(CommandType::kDelay) {}
+
+    double seconds = 0.0;
+};
+
+CommandPtr spawnCommandPtr(CommandType type);
+
+}
 }
 
 #endif //DULCIFICUM_COMMAND_TYPES_H_
