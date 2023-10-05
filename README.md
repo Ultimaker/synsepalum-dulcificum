@@ -1,5 +1,12 @@
 # Synsepalum Dulcificum
-Changes the dialect or *flavor* of 3d printer commmands.
+
+## Taste ye the Miracle Fruit!
+
+Dulcificum changes the ~flavor~, or dialect, of 3d printer commmands.
+
+Supported dialects include:
++ MiracleGrue jsontoolpath dialect
++ UltiMaker GCode dialect
 
 ## build
 
