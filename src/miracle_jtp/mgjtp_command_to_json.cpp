@@ -1,4 +1,5 @@
 #include "dulcificum/miracle_jtp/mgjtp_command_to_json.h"
+
 #include "dulcificum/miracle_jtp/mgjtp_mappings_json_key_to_str.h"
 
 namespace dulcificum::miracle_jtp
