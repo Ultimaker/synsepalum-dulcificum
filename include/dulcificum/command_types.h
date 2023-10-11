@@ -16,7 +16,7 @@ using ParamPoint = std::array<double, 5>;
 namespace botcmd
 {
 
-enum CommandType : std::uint8_t
+enum class CommandType
 {
     kInvalid,
     kMove, // most commands are move commands
@@ -30,7 +30,7 @@ enum CommandType : std::uint8_t
     kPause, // Command to allow for user defined pause.
 };
 
-enum Tag : std::uint8_t
+enum class Tag
 {
     Invalid,
     Infill,
