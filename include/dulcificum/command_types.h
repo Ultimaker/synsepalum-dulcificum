@@ -51,7 +51,7 @@ struct Command
 {
     Command() = delete;
 
-    explicit Command(CommandType type) noexcept
+    constexpr explicit Command(CommandType type) noexcept
         : type{ type }
     {
     }
@@ -75,7 +75,7 @@ struct Comment : public Command
 
 struct Move : public Command
 {
-    Move() noexcept
+    constexpr Move() noexcept
         : Command(CommandType::kMove)
     {
     }
@@ -87,7 +87,7 @@ struct Move : public Command
 
 struct FanDuty : public Command
 {
-    FanDuty() noexcept
+    constexpr FanDuty() noexcept
         : Command(CommandType::kActiveFanDuty)
     {
     }
@@ -98,7 +98,7 @@ struct FanDuty : public Command
 
 struct FanToggle : public Command
 {
-    FanToggle() noexcept
+    constexpr FanToggle() noexcept
         : Command(CommandType::kActiveFanEnable)
     {
     }
@@ -109,7 +109,7 @@ struct FanToggle : public Command
 
 struct SetTemperature : public Command
 {
-    SetTemperature() noexcept
+    constexpr SetTemperature() noexcept
         : Command(CommandType::kSetTemperature)
     {
     }
@@ -120,7 +120,7 @@ struct SetTemperature : public Command
 
 struct WaitForTemperature : public Command
 {
-    WaitForTemperature() noexcept
+    constexpr WaitForTemperature() noexcept
         : Command(CommandType::kWaitForTemperature)
     {
     }
@@ -130,7 +130,7 @@ struct WaitForTemperature : public Command
 
 struct ChangeTool : public Command
 {
-    ChangeTool() noexcept
+    constexpr ChangeTool() noexcept
         : Command(CommandType::kChangeTool)
     {
     }
@@ -141,7 +141,7 @@ struct ChangeTool : public Command
 
 struct Delay : public Command
 {
-    Delay() noexcept
+    constexpr Delay() noexcept
         : Command(CommandType::kDelay)
     {
     }
