@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <memory>
+#include <array>
 
 namespace dulcificum {
 

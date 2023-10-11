@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "mgjtp_json_to_command.h"
-#include "mgjtp_command_to_json.h"
+#include "dulcificum/miracle_jtp/mgjtp_json_to_command.h"
+#include "dulcificum/miracle_jtp/mgjtp_command_to_json.h"
 
 #include <fstream>
 #include "test_data_dir.h"

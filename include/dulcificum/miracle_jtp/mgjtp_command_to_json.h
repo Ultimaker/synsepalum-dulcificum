@@ -1,9 +1,9 @@
 #ifndef DULCIFICUM_MIRACLEGRUE_JSONTOOLPATH_H_
 #define DULCIFICUM_MIRACLEGRUE_JSONTOOLPATH_H_
 
-#include "nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 
-#include "../../include/command_types.h"
+#include "dulcificum/command_types.h"
 
 namespace dulcificum::miracle_jtp {
 

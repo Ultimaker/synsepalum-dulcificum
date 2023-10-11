@@ -1,7 +1,7 @@
 #ifndef DULCIFICUM_MIRACLE_GRUE_JSONTOOLPATH_JSON_KEYS_H
 #define DULCIFICUM_MIRACLE_GRUE_JSONTOOLPATH_JSON_KEYS_H
 
-#include "mgjtp_command_to_json.h"
+#include "dulcificum/miracle_jtp/mgjtp_command_to_json.h"
 
 namespace dulcificum {
 
