@@ -1,14 +1,15 @@
-#ifndef DULCIFICUM_MIRACLEGRUE_JSONTOOLPATH_H_
-#define DULCIFICUM_MIRACLEGRUE_JSONTOOLPATH_H_
-
-#include <nlohmann/json.hpp>
+#ifndef DULCIFICUM_MIRACLEGRUE_JSONTOOLPATH_H
+#define DULCIFICUM_MIRACLEGRUE_JSONTOOLPATH_H
 
 #include "dulcificum/command_types.h"
 
-namespace dulcificum::miracle_jtp {
+#include <nlohmann/json.hpp>
 
-nlohmann::json toJson(const botcmd::Command &cmd);
+namespace dulcificum::miracle_jtp
+{
 
-}
+nlohmann::json toJson(const botcmd::Command& cmd);
 
-#endif //DULCIFICUM_MIRACLEGRUE_JSONTOOLPATH_H_
+} // namespace dulcificum::miracle_jtp
+
+#endif // DULCIFICUM_MIRACLEGRUE_JSONTOOLPATH_H

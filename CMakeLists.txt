@@ -29,9 +29,6 @@ if (${EXTENSIVE_WARNINGS})
 endif ()
 
 
-# --- Setup command-line utility --- is this still needed
-
-
 # --- Setup Python bindings ---
 
 
