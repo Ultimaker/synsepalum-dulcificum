@@ -43,7 +43,7 @@ if (WITH_PYTHON_BINDINGS)
     pybind11_add_module(pyDulcificum pyDulcificum/pyDulcificum.cpp)
     target_link_libraries(pyDulcificum PUBLIC dulcificum pybind11::pybind11 cpython::cpython)
     if(NOT MSVC AND NOT ${CMAKE_BUILD_TYPE} MATCHES Debug|RelWithDebInfo)
-        pybind11_strip(pyArcus)
+        pybind11_strip(pyDulcificum)
     endif()
 endif ()
 
