@@ -1,7 +1,6 @@
 #ifndef DULCIFICUM_COMMAND_TYPES_H
 #define DULCIFICUM_COMMAND_TYPES_H
 
-#include <array>
 #include <cmath>
 #include <memory>
 #include <string>
@@ -11,7 +10,7 @@ namespace dulcificum
 {
 
 // x, y, z, a, b
-using ParamPoint = std::array<double, 5>;
+using ParamPoint = std::vector<double>;
 
 namespace botcmd
 {
@@ -82,7 +81,7 @@ struct Move : public Command
 
     ParamPoint point{ NAN, NAN, NAN, NAN, NAN };
     double feedrate{ NAN };
-    std::array<bool, 5> is_point_relative{ false, false, false, true, true };
+    std::vector<bool> is_point_relative{ false, false, false, true, true };
 };
 
 struct FanDuty : public Command

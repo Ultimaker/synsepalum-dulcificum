@@ -1,6 +1,7 @@
 #include <dulcificum/miracle_jtp/mgjtp_command_to_json.h>
 #include <dulcificum/miracle_jtp/mgjtp_json_to_command.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 
