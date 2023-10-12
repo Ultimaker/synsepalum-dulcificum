@@ -29,12 +29,14 @@ class DulcificumConan(ConanFile):
         "fPIC": [True, False],
         "enable_extensive_warnings": [True, False],
         "with_apps": [True, False],
+        "with_python_bindings": [True, False],
     }
     default_options = {
         "shared": False,
         "fPIC": True,
         "enable_extensive_warnings": False,
         "with_apps": True,
+        "with_python_bindings": True,
     }
 
     def set_version(self):
@@ -71,6 +73,7 @@ class DulcificumConan(ConanFile):
         copy(self, "*", os.path.join(self.recipe_folder, "include"), os.path.join(self.export_sources_folder, "include"))
         copy(self, "*", os.path.join(self.recipe_folder, "test"), os.path.join(self.export_sources_folder, "test"))
         copy(self, "*", os.path.join(self.recipe_folder, "apps"), os.path.join(self.export_sources_folder, "apps"))
+        copy(self, "*", os.path.join(self.recipe_folder, "pyDulcificum"), os.path.join(self.export_sources_folder, "pyDulcificum"))
         copy(self, "*", os.path.join(self.recipe_folder, "templates"), os.path.join(self.export_sources_folder, "templates"))
 
     def config_options(self):
@@ -90,6 +93,9 @@ class DulcificumConan(ConanFile):
         self.requires("spdlog/1.10.0")
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
+        if self.options.with_python_bindings:
+            self.requires("cpython/3.10.4")
+            self.requires("pybind11/2.10.4")
 
     def build_requirements(self):
         self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
@@ -115,7 +121,19 @@ class DulcificumConan(ConanFile):
         tc = CMakeToolchain(self)
         tc.variables["ENABLE_TESTS"] = not self.conf.get("tools.build:skip_test", False, check_type = bool)
         tc.variables["EXTENSIVE_WARNINGS"] = self.options.enable_extensive_warnings
+
         tc.variables["WITH_APPS"] = self.options.with_apps
+
+        tc.variables["WITH_PYTHON_BINDINGS"] = self.options.with_python_bindings
+        if self.options.with_python_bindings:
+            tc.variables["Python_EXECUTABLE"] = self.deps_user_info["cpython"].python.replace("\\", "/")
+            tc.variables["Python_USE_STATIC_LIBS"] = not self.options["cpython"].shared
+            tc.variables["Python_ROOT_DIR"] = self.deps_cpp_info["cpython"].rootpath.replace("\\", "/")
+            tc.variables["Python_FIND_FRAMEWORK"] = "NEVER"
+            tc.variables["Python_FIND_REGISTRY"] = "NEVER"
+            tc.variables["Python_FIND_IMPLEMENTATIONS"] = "CPython"
+            tc.variables["Python_FIND_STRATEGY"] = "LOCATION"
+
         if is_msvc(self):
             tc.variables["USE_MSVC_RUNTIME_LIBRARY_DLL"] = not is_msvc_static_runtime(self)
         tc.cache_variables["CMAKE_POLICY_DEFAULT_CMP0077"] = "NEW"

@@ -5,6 +5,7 @@ find_package(standardprojectsettings REQUIRED)
 option(EXTENSIVE_WARNINGS "Build with all warnings" ON)
 option(ENABLE_TESTS "Build with unit test" ON)
 option(WITH_APPS "Build with apps" ON)
+option(WITH_PYTHON_BINDINGS "Build with Python bindings: `pyDulcificum`" ON)
 
 find_package(nlohmann_json REQUIRED)
 find_package(spdlog REQUIRED)
@@ -35,7 +36,16 @@ if (${EXTENSIVE_WARNINGS})
 endif ()
 
 # --- Setup Python bindings ---
+if (WITH_PYTHON_BINDINGS)
+    find_package(pybind11 REQUIRED)
+    find_package(cpython REQUIRED)
 
+    pybind11_add_module(pyDulcificum pyDulcificum/pyDulcificum.cpp)
+    target_link_libraries(pyDulcificum PUBLIC dulcificum pybind11::pybind11 cpython::cpython)
+    if(NOT MSVC AND NOT ${CMAKE_BUILD_TYPE} MATCHES Debug|RelWithDebInfo)
+        pybind11_strip(pyArcus)
+    endif()
+endif ()
 
 # --- Setup tests ---
 if (ENABLE_TESTS)
