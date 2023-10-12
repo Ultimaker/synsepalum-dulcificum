@@ -1,0 +1,34 @@
+#ifndef APPS_CMDLINE_H
+#define APPS_CMDLINE_H
+
+#include <fmt/compile.h>
+
+#include <string_view>
+
+namespace apps::cmdline
+{
+
+constexpr std::string_view NAME = "{{ app_name }}";
+constexpr std::string_view VERSION = "{{ version }}";
+static const auto VERSION_ID = fmt::format(FMT_COMPILE("{} {}"), NAME, VERSION);
+
+constexpr std::string_view USAGE = R"({0}.
+{{ description }}
+
+Usage:
+  {{ app_name }} [--quiet | --verbose] --input=FLAVOR INPUT --output=FLAVOR OUPUT
+  {{ app_name }} (-h | --help)
+  {{ app_name }} --version
+
+Options:
+  -h --help                      Show this screen.
+  --version                      Show version.
+  --quiet                        Output no text to stdout (except errors)
+  --verbose                      Output more log statements
+  --input=TYPE                   'miracle_jtp' | 'griffin'
+  --output=FLAVOR                'miracle_jtp' | 'griffin'
+)";
+
+} // namespace apps::cmdline
+
+#endif // APPS_CMDLINE_H

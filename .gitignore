@@ -40,3 +40,5 @@ conanbuildinfo.txt
 conaninfo.txt
 graph_info.json
 
+apps/cmdline.h
+

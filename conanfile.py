@@ -8,6 +8,7 @@ from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy, mkdir, AutoPackager
 from conan.tools.microsoft import check_min_vs, is_msvc_static_runtime, is_msvc
 from conan.tools.scm import Version
+from jinja2 import Template
 
 
 required_conan_version = ">=1.58.0 <2.0.0"
@@ -27,11 +28,13 @@ class DulcificumConan(ConanFile):
         "shared": [True, False],
         "fPIC": [True, False],
         "enable_extensive_warnings": [True, False],
+        "with_apps": [True, False],
     }
     default_options = {
         "shared": False,
         "fPIC": True,
         "enable_extensive_warnings": False,
+        "with_apps": True,
     }
 
     def set_version(self):
@@ -52,11 +55,23 @@ class DulcificumConan(ConanFile):
             "visual_studio": "17",
         }
 
+    def _generate_cmdline(self):
+        with open(os.path.join(self.source_folder, "templates", "cmdline.h.jinja"), "r") as f:
+            template = Template(f.read())
+
+        version = Version(self.version)
+        with open(os.path.join(self.source_folder, "apps", "cmdline.h"), "w") as f:
+            f.write(template.render(app_name = "translator",
+                                    description = self.description,
+                                    version = f"{version.major}.{version.minor}.{version.patch}"))
+
     def export_sources(self):
         copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
         copy(self, "*", os.path.join(self.recipe_folder, "src"), os.path.join(self.export_sources_folder, "src"))
         copy(self, "*", os.path.join(self.recipe_folder, "include"), os.path.join(self.export_sources_folder, "include"))
         copy(self, "*", os.path.join(self.recipe_folder, "test"), os.path.join(self.export_sources_folder, "test"))
+        copy(self, "*", os.path.join(self.recipe_folder, "apps"), os.path.join(self.export_sources_folder, "apps"))
+        copy(self, "*", os.path.join(self.recipe_folder, "templates"), os.path.join(self.export_sources_folder, "templates"))
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -72,6 +87,9 @@ class DulcificumConan(ConanFile):
 
     def requirements(self):
         self.requires("nlohmann_json/3.11.2", transitive_headers = True)
+        self.requires("spdlog/1.10.0")
+        if self.options.with_apps:
+            self.requires("docopt.cpp/0.6.3")
 
     def build_requirements(self):
         self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
@@ -92,9 +110,12 @@ class DulcificumConan(ConanFile):
             raise ConanInvalidConfiguration(f"{self.ref} can not be built as shared on Visual Studio and msvc.")
 
     def generate(self):
+        self._generate_cmdline()
+
         tc = CMakeToolchain(self)
         tc.variables["ENABLE_TESTS"] = not self.conf.get("tools.build:skip_test", False, check_type = bool)
         tc.variables["EXTENSIVE_WARNINGS"] = self.options.enable_extensive_warnings
+        tc.variables["WITH_APPS"] = self.options.with_apps
         if is_msvc(self):
             tc.variables["USE_MSVC_RUNTIME_LIBRARY_DLL"] = not is_msvc_static_runtime(self)
         tc.cache_variables["CMAKE_POLICY_DEFAULT_CMP0077"] = "NEW"
