@@ -90,6 +90,7 @@ class DulcificumConan(ConanFile):
 
     def requirements(self):
         self.requires("nlohmann_json/3.11.2", transitive_headers = True)
+        self.requires("range-v3/0.12.0")
         self.requires("spdlog/1.10.0")
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")

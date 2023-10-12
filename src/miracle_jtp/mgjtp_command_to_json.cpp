@@ -2,6 +2,9 @@
 
 #include "dulcificum/miracle_jtp/mgjtp_mappings_json_key_to_str.h"
 
+#include <range/v3/view/remove_if.hpp>
+#include <range/v3/view/zip.hpp>
+
 namespace dulcificum::miracle_jtp
 {
 
@@ -9,9 +12,9 @@ template<typename KeyListType, typename ValListType>
 nlohmann::json zipListsToJson(const KeyListType& keys, const ValListType& vals)
 {
     nlohmann::json jout;
-    for (size_t key_ii = 0; key_ii < keys.size(); key_ii++)
+    for (auto const& item : ranges::views::zip(keys, vals))
     {
-        jout[keys[key_ii]] = vals[key_ii];
+        jout[std::get<0>(item)] = std::get<1>(item);
     }
     return jout;
 }
@@ -20,17 +23,18 @@ template<typename KeyListType, typename ValListType>
 nlohmann::json zipListsIgnoreNan(const KeyListType& keys, const ValListType& vals)
 {
     nlohmann::json jout;
-    for (size_t key_ii = 0; key_ii < keys.size(); key_ii++)
+    auto filter_key_value_view = ranges::views::zip(keys, vals)
+                               | ranges::views::remove_if(
+                                     [](const auto& key_value)
+                                     {
+                                         return std::isnan(std::get<1>(key_value));
+                                     });
+    for (auto const& item : filter_key_value_view)
     {
-        const auto& val = vals[key_ii];
-        if (! std::isnan(val))
-        {
-            jout[keys[key_ii]] = vals[key_ii];
-        }
+        jout[std::get<0>(item)] = std::get<1>(item);
     }
     return jout;
 }
-
 
 nlohmann::json getCommandMetadata(const botcmd::Command& cmd)
 {
