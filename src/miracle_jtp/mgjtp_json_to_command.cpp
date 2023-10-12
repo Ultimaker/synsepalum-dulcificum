@@ -3,11 +3,10 @@
 
 namespace dulcificum::miracle_jtp
 {
-using namespace botcmd;
 
-std::shared_ptr<Move> toMove(const nlohmann::json& jmove)
+std::shared_ptr<botcmd::Move> toMove(const nlohmann::json& jmove)
 {
-    auto move = std::make_shared<Move>();
+    auto move = std::make_shared<botcmd::Move>();
     const auto& jparams = jmove.at(k_key_str::parameters);
     move->feedrate = jparams.at(k_key_str::feedrate);
     const auto& jrelative = jmove.at(k_key_str::metadata).at("relative");
@@ -19,65 +18,65 @@ std::shared_ptr<Move> toMove(const nlohmann::json& jmove)
         bool is_rel = jrelative.at(key);
         move->is_point_relative[param_ii] = is_rel;
     }
-    std::vector<Tag> tags = jmove.at(k_key_str::tags);
+    std::vector<botcmd::Tag> tags = jmove.at(k_key_str::tags);
     move->tags = std::move(tags);
     return move;
 }
 
-CommandPtr toParamOnlyCommand(const CommandType type, const nlohmann::json& jparam)
+botcmd::CommandPtr toParamOnlyCommand(const botcmd::CommandType type, const nlohmann::json& jparam)
 {
-    if (type == CommandType::kComment)
+    if (type == botcmd::CommandType::kComment)
     {
-        auto com = std::make_shared<Comment>();
+        auto com = std::make_shared<botcmd::Comment>();
         com->comment = jparam.at(k_key_str::comment);
         return com;
     }
-    if (type == CommandType::kActiveFanDuty)
+    if (type == botcmd::CommandType::kActiveFanDuty)
     {
-        auto cmd = std::make_shared<FanDuty>();
+        auto cmd = std::make_shared<botcmd::FanDuty>();
         cmd->index = jparam[k_key_str::index];
         cmd->duty = jparam[k_key_str::value];
         return cmd;
     }
-    if (type == CommandType::kActiveFanEnable)
+    if (type == botcmd::CommandType::kActiveFanEnable)
     {
-        auto cmd = std::make_shared<FanToggle>();
+        auto cmd = std::make_shared<botcmd::FanToggle>();
         cmd->index = jparam[k_key_str::index];
         cmd->is_on = jparam[k_key_str::value];
         return cmd;
     }
-    if (type == CommandType::kSetTemperature)
+    if (type == botcmd::CommandType::kSetTemperature)
     {
-        auto cmd = std::make_shared<SetTemperature>();
+        auto cmd = std::make_shared<botcmd::SetTemperature>();
         cmd->index = jparam[k_key_str::index];
         cmd->temperature = jparam[k_key_str::temperature];
         return cmd;
     }
-    if (type == CommandType::kWaitForTemperature)
+    if (type == botcmd::CommandType::kWaitForTemperature)
     {
-        auto cmd = std::make_shared<WaitForTemperature>();
+        auto cmd = std::make_shared<botcmd::WaitForTemperature>();
         cmd->index = jparam[k_key_str::index];
         return cmd;
     }
-    if (type == CommandType::kChangeTool)
+    if (type == botcmd::CommandType::kChangeTool)
     {
-        auto cmd = std::make_shared<SetTemperature>();
+        auto cmd = std::make_shared<botcmd::SetTemperature>();
         cmd->index = jparam[k_key_str::index];
         cmd->temperature = jparam[k_key_str::temperature];
         return cmd;
     }
-    if (type == CommandType::kDelay)
+    if (type == botcmd::CommandType::kDelay)
     {
-        auto cmd = std::make_shared<Delay>();
+        auto cmd = std::make_shared<botcmd::Delay>();
         cmd->seconds = jparam[k_key_str::seconds];
         return cmd;
     }
     return spawnCommandPtr(type);
 }
 
-CommandPtr toChangeTool(const nlohmann::json& jcmd)
+botcmd::CommandPtr toChangeTool(const nlohmann::json& jcmd)
 {
-    auto cmd = std::make_shared<ChangeTool>();
+    auto cmd = std::make_shared<botcmd::ChangeTool>();
     auto jparam = jcmd.at(k_key_str::parameters);
     cmd->index = jparam.at(k_key_str::index);
     for (size_t param_ii = 0; param_ii < k_key_str::k_param_point_names.size(); param_ii++)
@@ -88,20 +87,20 @@ CommandPtr toChangeTool(const nlohmann::json& jcmd)
             cmd->position[param_ii] = jparam.at(key);
         }
     }
-    std::vector<Tag> tags = jcmd.at(k_key_str::tags);
+    std::vector<botcmd::Tag> tags = jcmd.at(k_key_str::tags);
     cmd->tags = std::move(tags);
     return cmd;
 }
 
-CommandPtr toCommand(const nlohmann::json& jin)
+botcmd::CommandPtr toCommand(const nlohmann::json& jin)
 {
     auto jcmd = jin[k_key_str::command];
-    CommandType type = jcmd[k_key_str::function];
-    if (type == CommandType::kMove)
+    botcmd::CommandType type = jcmd[k_key_str::function];
+    if (type == botcmd::CommandType::kMove)
     {
         return toMove(jcmd);
     }
-    if (type == CommandType::kChangeTool)
+    if (type == botcmd::CommandType::kChangeTool)
     {
         return toChangeTool(jcmd);
     }
@@ -109,7 +108,7 @@ CommandPtr toCommand(const nlohmann::json& jin)
     {
         auto jparam = jcmd[k_key_str::parameters];
         auto cmd = toParamOnlyCommand(type, jparam);
-        std::vector<Tag> tags = jcmd.at(k_key_str::tags);
+        std::vector<botcmd::Tag> tags = jcmd.at(k_key_str::tags);
         cmd->tags = std::move(tags);
         return cmd;
     }

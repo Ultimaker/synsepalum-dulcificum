@@ -4,7 +4,6 @@
 
 namespace dulcificum::miracle_jtp
 {
-using namespace botcmd;
 
 template<typename KeyListType, typename ValListType>
 nlohmann::json zipListsToJson(const KeyListType& keys, const ValListType& vals)
@@ -33,78 +32,78 @@ nlohmann::json zipListsIgnoreNan(const KeyListType& keys, const ValListType& val
 }
 
 
-nlohmann::json getCommandMetadata(const Command& cmd)
+nlohmann::json getCommandMetadata(const botcmd::Command& cmd)
 {
     nlohmann::json jmetadata({});
-    if (cmd.type == CommandType::kMove)
+    if (cmd.type == botcmd::CommandType::kMove)
     {
-        auto move = static_cast<const Move&>(cmd);
+        auto move = static_cast<const botcmd::Move&>(cmd);
         jmetadata["relative"] = zipListsToJson(k_key_str::k_param_point_names, move.is_point_relative);
         return jmetadata;
     }
     return jmetadata;
 }
 
-nlohmann::json getCommandParameters(const Command& cmd)
+nlohmann::json getCommandParameters(const botcmd::Command& cmd)
 {
     nlohmann::json jparams({});
-    if (cmd.type == CommandType::kMove)
+    if (cmd.type == botcmd::CommandType::kMove)
     {
-        const auto move = static_cast<const Move&>(cmd);
+        const auto move = static_cast<const botcmd::Move&>(cmd);
         jparams = zipListsToJson(k_key_str::k_param_point_names, move.point);
         jparams[k_key_str::feedrate] = move.feedrate;
         return jparams;
     }
-    if (cmd.type == CommandType::kComment)
+    if (cmd.type == botcmd::CommandType::kComment)
     {
-        const auto com = static_cast<const Comment&>(cmd);
+        const auto com = static_cast<const botcmd::Comment&>(cmd);
         jparams[k_key_str::comment] = com.comment;
         return jparams;
     }
-    if (cmd.type == CommandType::kActiveFanDuty)
+    if (cmd.type == botcmd::CommandType::kActiveFanDuty)
     {
-        const auto dut = static_cast<const FanDuty&>(cmd);
+        const auto dut = static_cast<const botcmd::FanDuty&>(cmd);
         jparams[k_key_str::index] = dut.index;
         jparams[k_key_str::value] = dut.duty;
         return jparams;
     }
-    if (cmd.type == CommandType::kActiveFanEnable)
+    if (cmd.type == botcmd::CommandType::kActiveFanEnable)
     {
-        const auto fan = static_cast<const FanToggle&>(cmd);
+        const auto fan = static_cast<const botcmd::FanToggle&>(cmd);
         jparams[k_key_str::index] = fan.index;
         jparams[k_key_str::value] = fan.is_on;
         return jparams;
     }
-    if (cmd.type == CommandType::kSetTemperature)
+    if (cmd.type == botcmd::CommandType::kSetTemperature)
     {
-        const auto dcmd = static_cast<const SetTemperature&>(cmd);
+        const auto dcmd = static_cast<const botcmd::SetTemperature&>(cmd);
         jparams[k_key_str::index] = dcmd.index;
         jparams[k_key_str::temperature] = dcmd.temperature;
         return jparams;
     }
-    if (cmd.type == CommandType::kWaitForTemperature)
+    if (cmd.type == botcmd::CommandType::kWaitForTemperature)
     {
-        const auto dcmd = static_cast<const WaitForTemperature&>(cmd);
+        const auto dcmd = static_cast<const botcmd::WaitForTemperature&>(cmd);
         jparams[k_key_str::index] = dcmd.index;
         return jparams;
     }
-    if (cmd.type == CommandType::kChangeTool)
+    if (cmd.type == botcmd::CommandType::kChangeTool)
     {
-        const auto dcmd = static_cast<const ChangeTool&>(cmd);
+        const auto dcmd = static_cast<const botcmd::ChangeTool&>(cmd);
         jparams = zipListsIgnoreNan(k_key_str::k_param_point_names, dcmd.position);
         jparams[k_key_str::index] = dcmd.index;
         return jparams;
     }
-    if (cmd.type == CommandType::kDelay)
+    if (cmd.type == botcmd::CommandType::kDelay)
     {
-        const auto dcmd = static_cast<const Delay&>(cmd);
+        const auto dcmd = static_cast<const botcmd::Delay&>(cmd);
         jparams[k_key_str::seconds] = dcmd.seconds;
         return jparams;
     }
     return jparams;
 }
 
-nlohmann::json toJson(const Command& cmd)
+nlohmann::json toJson(const botcmd::Command& cmd)
 {
     nlohmann::json jcmd;
     jcmd[k_key_str::function] = cmd.type;
