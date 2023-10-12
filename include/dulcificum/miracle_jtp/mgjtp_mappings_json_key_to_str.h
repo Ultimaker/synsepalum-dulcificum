@@ -41,7 +41,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
 
 } // namespace botcmd
 
-namespace miracle_jtp::kKeyStr
+namespace miracle_jtp::k_key_str
 {
 
 constexpr static std::string_view a{ "a" };
@@ -60,9 +60,9 @@ constexpr static std::string_view value{ "value" };
 constexpr static std::string_view x{ "x" };
 constexpr static std::string_view y{ "y" };
 constexpr static std::string_view z{ "z" };
-constexpr static std::array<const std::string_view, 5> kParamPointNames{ x, y, z, a, b };
+constexpr static std::array<const std::string_view, 5> k_param_point_names{ x, y, z, a, b };
 
-} // namespace miracle_jtp::kKeyStr
+} // namespace miracle_jtp::k_key_str
 
 
 } // namespace dulcificum
