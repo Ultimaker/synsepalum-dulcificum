@@ -1,0 +1,261 @@
+PlantUML example:
+
+@startuml
+
+package "gcode"
+{
+
+together {
+class "Griffin gcode" as Griffin << (D, yellow) >> {
+    +Header : Header
+    +Body : Body
+    +Footer : Footer
+}
+
+class "Header" as Header << (B, yellow) >> {
+    ;START_OF_HEADER
+    ;END_OF_HEADER
+    ..
+    +Comments : List<Comment>
+    +CommentCommands : List<CommentCommand>
+}
+
+class "Footer" as Footer << (B, yellow) >> {
+    +Comments : List<Comment>
+}
+
+class "Body" as Body << (B, yellow) >> {
+    +Commands : List<Commands>
+    +Comments : List<Comment>
+    +Layers : List<Layer>
+}
+
+class "Layer" as Layer << (C, grey) >> {
+    ;LAYER;<index>
+    ..
+    +Comment : optional<Comment>
+    +index : size_t
+    +Commands : List<Commands>
+    +Comments : List<Comment>
+    +Meshes : List<Mesh>
+}
+
+class "Mesh" as Mesh << (C, grey) >> {
+    ;MESH:NONMESH
+    ;MESH:<name>
+    ..
+    +index : size_t
+    +Features : List<Feature>
+}
+
+class "Feature" as Feature << (C, grey) >> {
+    Undefined
+    ;TYPE:WALL-OUTER
+    ;TYPE:WALL-INNER
+    ;TYPE:SKIN
+    ;TYPE:SUPPORT
+    ;TYPE:SKIRT
+    ;TYPE:FILL
+    ;TYPE:SUPPORT-INTERFACE
+    ;TYPE:PRIME-TOWER
+    ..
+    +Comment : optional<Comment>
+    +index : size_t
+    +Commands : List<Commands>
+    +Comments : List<Comment>
+}
+
+}
+
+Griffin -[bold]-> Header : contains
+Griffin -[bold]-> Footer : contains
+Griffin -[bold]-> Body : contains
+Body -[bold]-> Layer : contains
+Layer -[bold]-> Mesh : contains
+Mesh -[bold]-> Feature : contains
+
+Header --> Comment : has
+Header --> CommentCommand : has
+
+Footer --> Comment : has
+
+Body --> Comment : has
+Body --> ToolChangeCommand : has
+Body --> CommentCommand : has
+Body --> MachineCommand : has
+Body --> GCommand : has
+
+Layer --> Comment : has
+Layer --> Comment : has
+Layer --> ToolChangeCommand : has
+Layer --> CommentCommand : has
+Layer --> MachineCommand : has
+Layer --> GCommand : has
+
+Feature --> Comment : has
+Feature --> Comment : has
+Feature --> ToolChangeCommand : has
+Feature --> CommentCommand : has
+Feature --> MachineCommand : has
+Feature --> GCommand : has
+
+class "Comment" as Comment {
+    +Text : string
+    +index : size_t
+}
+
+class "ToolChangeCommand" as ToolChangeCommand << (T, orchid) >>  {
+    T<n...>
+    ..
+    +Comment : optional<Comment>
+    +index : size_t
+}
+ToolChangeCommand --> Comment : has
+
+package "CommentCommand" as CommentCommand {
+class "CommentCommandBedTemperature" as CommentCommandBedTemperature << (C, grey) >>  {
+    ;BUILD_PLATE.INITIAL_TEMPERATURE
+    ..
+    +Comment : Comment
+    +index : size_t
+}
+CommentCommandBedTemperature --> Comment : has
+
+class "CommentCommandExtruderTemperature" as CommentCommandExtruderTemperature << (C, grey) >> {
+    ;EXTRUDER_TRAIN.<n...>.INITIAL_TEMPERATURE
+    ..
+    +Comment : Comment
+    +index : size_t
+}
+CommentCommandExtruderTemperature --> Comment : has
+
+class "CommentCommandBuildVolumeTemperature" as CommentCommandBuildVolumeTemperature << (C, grey) >> {
+    ;BUILD_VOLUME.TEMPERATURE
+    ..
+    +Comment : Comment
+    +index : size_t
+}
+CommentCommandBuildVolumeTemperature --> Comment : has
+}
+
+package "MachineCommand" as MachineCommand {
+class "AccelerationCommand" as AccelerationCommand << (M, green) >> {
+    M204
+    ..
+    +P : optional<double>
+    +T : optional<double>
+    +Comment : optional<Comment>
+    +index : size_t
+}
+AccelerationCommand --> Comment : has
+
+class "AdvancedCommand" as AdvancedCommand << (M, green) >> {
+    M205
+    ..
+    +X : optional<double>
+    +Y : optional<double>
+    +Z : optional<double>
+    +E : optional<double>
+    +Comment : optional<Comment>
+    +index : size_t
+}
+AdvancedCommand --> Comment : has
+
+class "FanCommand" as FanCommand << (M, green) >> {
+    M106
+    M107
+    ..
+    +S : optional<int>
+    +Comment : optional<Comment>
+    +index : size_t
+}
+FanCommand --> Comment : has
+
+class "ExtruderPositioningModeCommand" as ExtruderPositioningModeCommand << (M, green) >> {
+    M82
+    M83
+    ..
+    +E : optional<double>
+    +Comment : optional<Comment>
+    +index : size_t
+}
+ExtruderPositioningModeCommand --> Comment : has
+
+class "ExtruderTemperatureCommand" as ExtruderTemperatureCommand << (M, green) >> {
+    M104
+    M109
+    ..
+    +S : optional<double>
+    +R : optional<double>
+    +is_blocking : bool
+    +Comment : optional<Comment>
+    +index : size_t
+}
+ExtruderTemperatureCommand --> Comment : has
+
+class "BedTemperatureCommand" as BedTemperatureCommand << (M, green) >> {
+    M140
+    M190
+    ..
+    +S : optional<double>
+    +R : optional<double>
+    +is_blocking : bool
+    +Comment : optional<Comment>
+    +index : size_t
+}
+BedTemperatureCommand --> Comment : has
+}
+
+package "GCommand" as GCommand {
+class "TranslateCommand" as TranslateCommand << (G, orange) >> {
+    G0
+    G1
+    ..
+    +X : optional<double>
+    +Y : optional<double>
+    +Z : optional<double>
+    +E : optional<double>
+    +F : optional<double>
+    +Comment : optional<Comment>
+    +index : size_t
+}
+TranslateCommand --> Comment : has
+
+class "PositioningModeCommand" as PositioningModeCommand << (G, orange) >> {
+    G90
+    G91
+    ..
+    +X : optional<double>
+    +Y : optional<double>
+    +Z : optional<double>
+    +E : optional<double>
+    +Comment : optional<Comment>
+    +index : size_t
+}
+PositioningModeCommand --> Comment : has
+
+class "PositionCommand" as PositionCommand << (G, orange) >> {
+    G92
+
+    +X : optional<double>
+    +Y : optional<double>
+    +Z : optional<double>
+    +E : optional<double>
+    +Comment : optional<Comment>
+    +index : size_t
+}
+PositionCommand --> Comment : has
+
+class "PurgeCommand" as PurgeCommand << (G, orange) >> {
+    G280
+    ..
+    +S : optional<int>
+    +Comment : optional<Comment>
+    +index : size_t
+}
+PurgeCommand --> Comment : has
+
+}
+
+}
+@enduml
