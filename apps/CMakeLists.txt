@@ -1,6 +1,14 @@
+find_package(docopt REQUIRED)
+
+
 add_executable(translator
-    translator_main.cpp
+        translator_main.cpp
 )
-target_link_libraries(translator dulcificum)
-target_include_directories(translator PUBLIC "${PROJECT_SOURCE_DIR}/include")
-target_include_directories(translator PUBLIC "${PROJECT_SOURCE_DIR}/src")
+
+enable_sanitizers(translator)
+if (${EXTENSIVE_WARNINGS})
+    set_project_warnings(translator)
+endif ()
+
+target_link_libraries(translator PUBLIC dulcificum docopt_s spdlog::spdlog)
+target_compile_definitions(translator PRIVATE APP_VERSION="${APP_VERSION}")

@@ -1,30 +1,67 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.23)
 project(dulcificum)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-#------------------------------#
-#    SETUP CONAN
-#------------------------------#
-if (NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
-        "${CMAKE_BINARY_DIR}/conan.cmake")
+find_package(standardprojectsettings REQUIRED)
+option(EXTENSIVE_WARNINGS "Build with all warnings" ON)
+option(ENABLE_TESTS "Build with unit test" ON)
+option(WITH_APPS "Build with apps" ON)
+if(WITH_APPS)
+    set(APP_VERSION "0.1.0" CACHE STRING "Version of the translator app" )
+    message(STATUS "Configuring translator app version: ${APP_VERSION}")
 endif ()
 
-include(${CMAKE_BINARY_DIR}/conan.cmake)
+option(WITH_PYTHON_BINDINGS "Build with Python bindings: `pyDulcificum`" ON)
+if(WITH_PYTHON_BINDINGS)
+    set(PYDULCIFICUM_VERSION "0.1.0" CACHE STRING "Version of the pyDulcificum python bindings" )
+    message(STATUS "Configuring pyDulcificum version: ${PYDULCIFICUM_VERSION}")
+endif ()
 
-conan_cmake_run(CONANFILE conanfile.py
-    BASIC_SETUP TARGETS
-    BUILD missing
-    #        KEEP_RPATHS
+set(DULCIFICUM_VERSION "0.1.0" CACHE STRING "Version of the dulcificum library" )
+message(STATUS "Configuring Dulcificum version: ${DULCIFICUM_VERSION}")
+
+find_package(nlohmann_json REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(range-v3 REQUIRED)
+
+# --- Setup the shared C++ mgjtp library ---
+set(DULCIFICUM_SRC
+        src/command_types.cpp
+        src/miracle_jtp/mgjtp_command_to_json.cpp
+        src/miracle_jtp/mgjtp_json_to_command.cpp
 )
-set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
+add_library(dulcificum ${DULCIFICUM_SRC})
+target_link_libraries(dulcificum
+        PUBLIC
+        nlohmann_json::nlohmann_json
+        PRIVATE
+        range-v3::range-v3
+        spdlog::spdlog)
 
-#------------------------------#
-#    SUBDIRECTORIES
-#------------------------------#
-add_subdirectory(apps)
-add_subdirectory(src)
-add_subdirectory(test)
+target_include_directories(dulcificum
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+target_compile_definitions(dulcificum PRIVATE DULCIFICUM_VERSION="${DULCIFICUM_VERSION}")
+
+use_threads(dulcificum)
+enable_sanitizers(dulcificum)
+if (${EXTENSIVE_WARNINGS})
+    set_project_warnings(dulcificum)
+endif ()
+
+# --- Setup Python bindings ---
+if (WITH_PYTHON_BINDINGS)
+    add_subdirectory(pyDulcificum)
+endif ()
+
+# --- Setup tests ---
+if (ENABLE_TESTS)
+    add_subdirectory(test)
+endif ()
+
+# --- Setup Apps ---
+if (WITH_APPS)
+    add_subdirectory(apps)
+endif ()

@@ -30,4 +30,13 @@
 *.exe
 *.out
 *.app
-/test/test_data_dir.h
+
+build
+.idea
+
+CMakeUserPresets.json
+conan.lock
+conanbuildinfo.txt
+conaninfo.txt
+graph_info.json
+
