@@ -5,6 +5,7 @@ Checks: >
   -altera-unroll-loops*,
   -readability-avoid-const-params-in-decls,
   -fuchsia-default-arguments-calls,
+  -fuchsia-multiple-inheritance,
   -google-readability-todo,
   -altera-struct-pack-align,
   -android-*,
