@@ -1,6 +1,10 @@
 #ifndef APPS_CMDLINE_H
 #define APPS_CMDLINE_H
 
+#ifndef APP_VERSION
+#define APP_VERSION "0.1.0"
+#endif
+
 #include <fmt/compile.h>
 
 #include <string_view>
@@ -8,17 +12,17 @@
 namespace apps::cmdline
 {
 
-constexpr std::string_view NAME = "{{ app_name }}";
-constexpr std::string_view VERSION = "{{ version }}";
+constexpr std::string_view NAME = "translator";
+constexpr std::string_view VERSION = APP_VERSION;
 static const auto VERSION_ID = fmt::format(FMT_COMPILE("{} {}"), NAME, VERSION);
 
 constexpr std::string_view USAGE = R"({0}.
-{{ description }}
+Dulcificum changes the flavor, or dialect, of 3d printer commands
 
 Usage:
-  {{ app_name }} [--quiet | --verbose] --input=FLAVOR INPUT --output=FLAVOR OUPUT
-  {{ app_name }} (-h | --help)
-  {{ app_name }} --version
+  translator [--quiet | --verbose] --input=FLAVOR INPUT --output=FLAVOR OUPUT
+  translator (-h | --help)
+  translator --version
 
 Options:
   -h --help                      Show this screen.

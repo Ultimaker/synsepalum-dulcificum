@@ -5,7 +5,19 @@ find_package(standardprojectsettings REQUIRED)
 option(EXTENSIVE_WARNINGS "Build with all warnings" ON)
 option(ENABLE_TESTS "Build with unit test" ON)
 option(WITH_APPS "Build with apps" ON)
+if(WITH_APPS)
+    set(APP_VERSION "0.1.0" CACHE STRING "Version of the translator app" )
+    message(STATUS "Configuring translator app version: ${APP_VERSION}")
+endif ()
+
 option(WITH_PYTHON_BINDINGS "Build with Python bindings: `pyDulcificum`" ON)
+if(WITH_PYTHON_BINDINGS)
+    set(PYDULCIFICUM_VERSION "0.1.0" CACHE STRING "Version of the pyDulcificum python bindings" )
+    message(STATUS "Configuring pyDulcificum version: ${PYDULCIFICUM_VERSION}")
+endif ()
+
+set(DULCIFICUM_VERSION "0.1.0" CACHE STRING "Version of the dulcificum library" )
+message(STATUS "Configuring Dulcificum version: ${DULCIFICUM_VERSION}")
 
 find_package(nlohmann_json REQUIRED)
 find_package(spdlog REQUIRED)
@@ -31,6 +43,8 @@ target_include_directories(dulcificum
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+target_compile_definitions(dulcificum PRIVATE DULCIFICUM_VERSION="${DULCIFICUM_VERSION}")
+
 use_threads(dulcificum)
 enable_sanitizers(dulcificum)
 if (${EXTENSIVE_WARNINGS})
@@ -44,6 +58,7 @@ if (WITH_PYTHON_BINDINGS)
 
     pybind11_add_module(pyDulcificum pyDulcificum/pyDulcificum.cpp)
     target_link_libraries(pyDulcificum PUBLIC dulcificum pybind11::pybind11 cpython::cpython)
+    target_compile_definitions(pyDulcificum PRIVATE PYDULCIFICUM_VERSION="${PYDULCIFICUM_VERSION}")
     if(NOT MSVC AND NOT ${CMAKE_BUILD_TYPE} MATCHES Debug|RelWithDebInfo)
         pybind11_strip(pyDulcificum)
     endif()

@@ -3,6 +3,10 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
+#ifndef PYDULCIFICUM_VERSION
+#define PYDULCIFICUM_VERSION "0.1.0"
+#endif
+
 namespace py = pybind11;
 
 PYBIND11_MODULE(pyDulcificum, module)
@@ -16,6 +20,7 @@ PYBIND11_MODULE(pyDulcificum, module)
            add
            subtract
     )pbdoc";
+    module.attr("__version__") = PYDULCIFICUM_VERSION;
 
     py::class_<dulcificum::botcmd::Move>(module, "Move")
         .def(py::init<>())

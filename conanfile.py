@@ -57,16 +57,6 @@ class DulcificumConan(ConanFile):
             "visual_studio": "17",
         }
 
-    def _generate_cmdline(self):
-        with open(os.path.join(self.source_folder, "templates", "cmdline.h.jinja"), "r") as f:
-            template = Template(f.read())
-
-        version = Version(self.version)
-        with open(os.path.join(self.source_folder, "apps", "cmdline.h"), "w") as f:
-            f.write(template.render(app_name = "translator",
-                                    description = self.description,
-                                    version = f"{version.major}.{version.minor}.{version.patch}"))
-
     def export_sources(self):
         copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
         copy(self, "*", os.path.join(self.recipe_folder, "src"), os.path.join(self.export_sources_folder, "src"))
@@ -74,7 +64,6 @@ class DulcificumConan(ConanFile):
         copy(self, "*", os.path.join(self.recipe_folder, "test"), os.path.join(self.export_sources_folder, "test"))
         copy(self, "*", os.path.join(self.recipe_folder, "apps"), os.path.join(self.export_sources_folder, "apps"))
         copy(self, "*", os.path.join(self.recipe_folder, "pyDulcificum"), os.path.join(self.export_sources_folder, "pyDulcificum"))
-        copy(self, "*", os.path.join(self.recipe_folder, "templates"), os.path.join(self.export_sources_folder, "templates"))
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -117,13 +106,14 @@ class DulcificumConan(ConanFile):
             raise ConanInvalidConfiguration(f"{self.ref} can not be built as shared on Visual Studio and msvc.")
 
     def generate(self):
-        self._generate_cmdline()
-
         tc = CMakeToolchain(self)
         tc.variables["ENABLE_TESTS"] = not self.conf.get("tools.build:skip_test", False, check_type = bool)
         tc.variables["EXTENSIVE_WARNINGS"] = self.options.enable_extensive_warnings
+        tc.variables["DULCIFICUM_VERSION"] = self.version
 
         tc.variables["WITH_APPS"] = self.options.with_apps
+        if self.options.with_apps:
+            tc.variables["APP_VERSION"] = self.version
 
         tc.variables["WITH_PYTHON_BINDINGS"] = self.options.with_python_bindings
         if self.options.with_python_bindings:
@@ -134,6 +124,7 @@ class DulcificumConan(ConanFile):
             tc.variables["Python_FIND_REGISTRY"] = "NEVER"
             tc.variables["Python_FIND_IMPLEMENTATIONS"] = "CPython"
             tc.variables["Python_FIND_STRATEGY"] = "LOCATION"
+            tc.variables["PYDULCIFICUM_VERSION"] = self.version
 
         if is_msvc(self):
             tc.variables["USE_MSVC_RUNTIME_LIBRARY_DLL"] = not is_msvc_static_runtime(self)
