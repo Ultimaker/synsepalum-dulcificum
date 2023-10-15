@@ -26,6 +26,7 @@ find_package(range-v3 REQUIRED)
 # --- Setup the shared C++ mgjtp library ---
 set(DULCIFICUM_SRC
         src/command_types.cpp
+        src/io.cpp
         src/miracle_jtp/mgjtp_command_to_json.cpp
         src/miracle_jtp/mgjtp_json_to_command.cpp
 )
