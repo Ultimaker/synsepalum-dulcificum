@@ -70,6 +70,7 @@ class DulcificumConan(ConanFile):
             del self.options.fPIC
 
     def configure(self):
+        self.options["boost"].header_only = True
         if self.options.shared:
             self.options.rm_safe("fPIC")
 
@@ -81,6 +82,8 @@ class DulcificumConan(ConanFile):
         self.requires("nlohmann_json/3.11.2", transitive_headers = True)
         self.requires("range-v3/0.12.0")
         self.requires("spdlog/1.10.0")
+        self.requires("boost/1.82.0")
+        self.requires("zlib/1.2.13")
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
         if self.options.with_python_bindings:

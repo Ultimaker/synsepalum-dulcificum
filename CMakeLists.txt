@@ -22,6 +22,7 @@ message(STATUS "Configuring Dulcificum version: ${DULCIFICUM_VERSION}")
 find_package(nlohmann_json REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(range-v3 REQUIRED)
+find_package(Boost REQUIRED)
 
 # --- Setup the shared C++ mgjtp library ---
 set(DULCIFICUM_SRC
@@ -35,6 +36,7 @@ target_link_libraries(dulcificum
         PUBLIC
         nlohmann_json::nlohmann_json
         PRIVATE
+        boost::boost
         range-v3::range-v3
         spdlog::spdlog)
 
