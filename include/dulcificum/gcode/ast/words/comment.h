@@ -10,6 +10,6 @@ struct Comment : public Entry
     static constexpr std::string_view word{ ";" };
     std::string msg; ///< Message contained in the comment
 };
-} // namespace dulcificum::gcode::details
+} // namespace dulcificum::gcode::ast
 
 #endif // DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_WORDS_COMMENT_H

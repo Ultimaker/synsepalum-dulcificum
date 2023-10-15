@@ -16,6 +16,6 @@ struct Command : public Entry
     std::optional<Comment> comment; ///< Optional comment related to the command
 };
 
-} // namespace dulcificum::gcode::details
+} // namespace dulcificum::gcode::ast
 
 #endif // DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_WORDS_COMMAND_H

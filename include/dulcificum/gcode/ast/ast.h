@@ -5,7 +5,7 @@
 
 namespace dulcificum::gcode::ast
 {
-auto const all_rule = boost::spirit::x3::rule<struct class_all, command_t>{} = g0_rule | g1_rule;  // NOLINT
+auto const all_rule = boost::spirit::x3::rule<struct class_all, command_t>{} = g0_rule | g1_rule; // NOLINT
 
 }
 

@@ -11,7 +11,7 @@ struct Entry : public boost::spirit::x3::position_tagged
     std::string raw_value; ///< Raw value as represented in the source
 };
 
-} // namespace dulcificum::gcode::details
+} // namespace dulcificum::gcode::ast
 
 
 #endif // DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_WORDS_ENTRY_H

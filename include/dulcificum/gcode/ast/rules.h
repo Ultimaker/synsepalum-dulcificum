@@ -7,7 +7,7 @@ namespace dulcificum::gcode::ast
 {
 
 // TODO: Figure out if the I should maybe use this pattern
-//struct rules {
+// struct rules {
 //    const boost::spirit::x3::rule<struct x, double> x_rule;
 //
 //    rules() : x_rule{ "x" }
