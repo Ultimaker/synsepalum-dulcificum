@@ -38,14 +38,11 @@ int main(int argc, const char** argv)
     auto input{ dulcificum::utils::readFile(args.at("INPUT").asString()).value() };
     auto ast = dulcificum::gcode::parse(input);
 
-    auto TypeOfNode = Overload{ [](dulcificum::gcode::ast::G1)
+    auto TypeOfNode = Overload{ [](auto& node)
                                 {
-                                    spdlog::info("G1");
-                                },
-                                [](auto)
-                                {
-                                    spdlog::info("Not yet implemented");
-                                } };
+                                    node();
+                                }
+    };
 
     for (auto& node : ast)
     {

@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <ctre.hpp>
 #include <string>
+#include <spdlog/spdlog.h>
 
 namespace dulcificum::gcode::ast
 {
@@ -25,6 +26,11 @@ public:
     constexpr auto get()
     {
         return ctre::match<Pattern.value>(line);
+    }
+
+    virtual constexpr void operator()()
+    {
+        spdlog::info("lino: {} -> {}", index, line);
     }
 };
 
