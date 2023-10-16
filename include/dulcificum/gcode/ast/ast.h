@@ -4,9 +4,9 @@
 #include "dulcificum/gcode/ast/g0.h"
 #include "dulcificum/gcode/ast/g1.h"
 
+#include <string_view>
 #include <variant>
 #include <vector>
-#include <string_view>
 
 namespace dulcificum::gcode::ast
 {
@@ -20,17 +20,17 @@ node_t factory(size_t index, std::string line)
 {
     if (line.starts_with(';'))
     {
-        return Comment { index, line };
+        return Comment{ index, line };
     }
     if (line.starts_with("G0"))
     {
-        return G0 { index, line };
+        return G0{ index, line };
     }
     if (line.starts_with("G1"))
     {
-        return G1 { index, line };
+        return G1{ index, line };
     }
-    return Unknown { index, line };
+    return Unknown{ index, line };
 }
 
 } // namespace dulcificum::gcode::ast
