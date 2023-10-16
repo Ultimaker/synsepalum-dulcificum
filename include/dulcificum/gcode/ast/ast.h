@@ -14,9 +14,9 @@
 #include "dulcificum/gcode/ast/translate.h"
 
 #include <cstddef>
+#include <map>
 #include <memory>
 #include <string>
-#include <map>
 #include <vector>
 
 namespace dulcificum::gcode::ast

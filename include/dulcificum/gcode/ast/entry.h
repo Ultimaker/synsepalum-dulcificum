@@ -15,7 +15,7 @@ namespace dulcificum::gcode::ast
 class BaseEntry
 {
 public:
-//    BaseEntry() = delete;
+    //    BaseEntry() = delete;
     BaseEntry(size_t index, std::string line)
         : index{ index }
         , line{ std::move(line) } {};
