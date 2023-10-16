@@ -23,7 +23,10 @@ public:
 
     void operator()() override
     {
-        if (auto x = get().get<"X">()) { spdlog::debug("x: {}", x); }
+        if (auto x = get().get<"X">())
+        {
+            spdlog::debug("x: {}", x);
+        }
         spdlog::info("lino: {} -> {}", index, line);
     }
 };

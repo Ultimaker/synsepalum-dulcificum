@@ -3,10 +3,11 @@
 
 #include "dulcificum/utils/char_range_literal.h"
 
+#include <spdlog/spdlog.h>
+
 #include <cstddef>
 #include <ctre.hpp>
 #include <string>
-#include <spdlog/spdlog.h>
 
 namespace dulcificum::gcode::ast
 {
