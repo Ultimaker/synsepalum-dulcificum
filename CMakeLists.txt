@@ -35,9 +35,9 @@ add_library(dulcificum ${DULCIFICUM_SRC})
 target_link_libraries(dulcificum
         PUBLIC
         nlohmann_json::nlohmann_json
+        ctre::ctre
         PRIVATE
         range-v3::range-v3
-        ctre::ctre
         spdlog::spdlog)
 
 target_include_directories(dulcificum

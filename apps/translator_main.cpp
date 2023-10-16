@@ -3,7 +3,17 @@
 #include <spdlog/spdlog.h>
 
 #include <docopt/docopt.h>
+#include <dulcificum/gcode/parse.h>
+#include <dulcificum/utils/io.h>
 #include <map>
+
+template<typename... Ts>
+struct Overload : Ts...
+{
+    using Ts::operator()...;
+};
+template<class... Ts>
+Overload(Ts...) -> Overload<Ts...>;
 
 int main(int argc, const char** argv)
 {
@@ -11,11 +21,11 @@ int main(int argc, const char** argv)
     const std::map<std::string, docopt::value> args
         = docopt::docopt(fmt::format(apps::cmdline::USAGE, apps::cmdline::NAME), { argv + 1, argv + argc }, show_help, apps::cmdline::VERSION_ID);
 
-    if (args.contains("--quiet"))
+    if (args.at("--quiet").asBool())
     {
         spdlog::set_level(spdlog::level::err);
     }
-    else if (args.contains("--verbose"))
+    else if (args.at("--verbose").asBool())
     {
         spdlog::set_level(spdlog::level::debug);
     }
@@ -24,4 +34,23 @@ int main(int argc, const char** argv)
         spdlog::set_level(spdlog::level::info);
     }
     spdlog::info("Tasting the menu");
+
+    auto input{ dulcificum::utils::readFile(args.at("INPUT").asString()).value() };
+    auto ast = dulcificum::gcode::parse(input);
+
+    auto TypeOfNode = Overload{ [](dulcificum::gcode::ast::G1)
+                                {
+                                    spdlog::info("G1");
+                                },
+                                [](auto)
+                                {
+                                    spdlog::info("Not yet implemented");
+                                } };
+
+    for (auto& node : ast)
+    {
+        std::visit(TypeOfNode, node);
+    }
+
+    auto x = 1;
 }
