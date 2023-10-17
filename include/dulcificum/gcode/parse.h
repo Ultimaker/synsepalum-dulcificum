@@ -27,7 +27,7 @@ auto parse(std::string_view content)
         ast.emplace(root, ast::factory(index++, line));
     }
 
-    return std::make_tuple(root, ast);
+    return std::make_tuple( root, ast );
 }
 
 
