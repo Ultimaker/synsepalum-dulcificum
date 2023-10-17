@@ -21,7 +21,7 @@ public:
     G0(size_t index, std::string line)
         : Entry{ index, std::move(line) } {};
 
-    void operator()() override final
+    void operator()() override
     {
         if (auto x = get().get<"X">())
         {

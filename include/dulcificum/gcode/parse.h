@@ -9,25 +9,23 @@
 #include <sstream>
 #include <string>
 #include <string_view>
-#include <tuple>
 
 namespace dulcificum::gcode
 {
 
-auto parse(std::string_view content)
+ast::ast_t parse(std::string_view content)
 {
     std::istringstream stream(content.data());
     std::string line;
     ast::ast_t ast;
 
     size_t index{ 0 };
-    auto root = std::make_shared<ast::Entry<"">>(0, "griffin");
     while (std::getline(stream, line))
     {
-        ast.emplace(root, ast::factory(index++, line));
+        ast.emplace_back(ast::factory(index++, line));
     }
 
-    return std::make_tuple( root, ast );
+    return ast;
 }
 
 

@@ -12,34 +12,24 @@
 namespace dulcificum::gcode::ast
 {
 
-class BaseEntry
-{
-public:
-//    BaseEntry() = delete;
-    BaseEntry(size_t index, std::string line)
-        : index{ index }
-        , line{ std::move(line) } {};
-
-    size_t index{};
-    std::string line{};
-
-    virtual constexpr void operator()() = 0;
-};
-
 template<dulcificum::utils::CharRangeLiteral Pattern>
-class Entry : public BaseEntry
+class Entry
 {
 public:
     Entry() = delete;
     Entry(size_t index, std::string line)
-        : BaseEntry{ index, std::move(line) } {};
+        : index{ index }
+        , line{ std::move(line) } {};
+
+    size_t index;
+    std::string line;
 
     constexpr auto get()
     {
         return ctre::match<Pattern.value>(line);
     }
 
-    virtual constexpr void operator()() override
+    virtual constexpr void operator()()
     {
         spdlog::info("lino: {} -> {}", index, line);
     }

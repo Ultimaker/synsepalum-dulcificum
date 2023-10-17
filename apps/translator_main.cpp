@@ -6,7 +6,6 @@
 #include <dulcificum/gcode/parse.h>
 #include <dulcificum/utils/io.h>
 #include <map>
-#include <unordered_set>
 
 template<typename... Ts>
 struct Overload : Ts...
@@ -15,20 +14,6 @@ struct Overload : Ts...
 };
 template<class... Ts>
 Overload(Ts...) -> Overload<Ts...>;
-
-void DFS(dulcificum::gcode::ast::ast_t& m, std::shared_ptr<dulcificum::gcode::ast::BaseEntry> root, std::unordered_set<std::shared_ptr<dulcificum::gcode::ast::BaseEntry>>& visited)
-{
-    auto range = m.equal_range(root);
-    for(auto i = range.first; i != range.second; ++i)
-    {
-        if(visited.find(i->second) == visited.end())
-        {
-            i->second->operator()();
-            visited.insert(i->second);
-            DFS(m, i->second, visited);
-        }
-    }
-}
 
 int main(int argc, const char** argv)
 {
@@ -51,7 +36,7 @@ int main(int argc, const char** argv)
     spdlog::info("Tasting the menu");
 
     auto input{ dulcificum::utils::readFile(args.at("INPUT").asString()).value() };
-    auto [root, ast] = dulcificum::gcode::parse(input);
+    auto ast = dulcificum::gcode::parse(input);
 
     auto TypeOfNode = Overload{ [](auto& node)
                                 {
@@ -59,7 +44,10 @@ int main(int argc, const char** argv)
                                 }
     };
 
-    std::unordered_set<std::shared_ptr<dulcificum::gcode::ast::BaseEntry>> visited;
-    DFS(ast, root, visited);
+    for (auto& node : ast)
+    {
+        std::visit(TypeOfNode, node);
+    }
+
     auto x = 1;
 }
