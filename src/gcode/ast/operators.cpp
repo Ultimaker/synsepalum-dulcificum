@@ -1,6 +1,5 @@
 #include "dulcificum/gcode/ast/translate.h"
 
-
 #include <spdlog/spdlog.h>
 
 
