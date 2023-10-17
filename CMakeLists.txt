@@ -36,6 +36,7 @@ set(DULCIFICUM_SRC
         src/proto_path/translate.cpp
 
         src/utils/io.cpp
+        src/utils/svtod.cpp
         src/command_types.cpp
 )
 add_library(dulcificum ${DULCIFICUM_SRC})

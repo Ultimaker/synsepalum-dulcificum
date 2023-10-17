@@ -3,6 +3,8 @@
 
 #include "dulcificum/gcode/ast/entry.h"
 
+#include <optional>
+
 namespace dulcificum::gcode::ast
 {
 /*!
@@ -13,8 +15,8 @@ class M106 : public Entry<R"(M106((?:\sS(?<S>\d+(?:\.\d+)?)))*$)">
 {
 public:
     M106() = delete;
-    M106(size_t index, std::string line)
-        : Entry{ index, std::move(line) } {};
+    M106(size_t index, std::string line);
+    std::optional<double> S;
 };
 
 /*!

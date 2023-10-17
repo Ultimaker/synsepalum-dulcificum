@@ -3,6 +3,8 @@
 
 #include "dulcificum/gcode/ast/entry.h"
 
+#include <optional>
+
 namespace dulcificum::gcode::ast
 {
 /*!
@@ -12,8 +14,8 @@ class G280 : public Entry<R"(G280((?:\sS(?<S>\d+(?:\.\d+)?)))*$)">
 {
 public:
     G280() = delete;
-    G280(size_t index, std::string line)
-        : Entry{ index, std::move(line) } {};
+    G280(size_t index, std::string line);
+    std::optional<size_t> S;
 };
 } // namespace dulcificum::gcode::ast
 

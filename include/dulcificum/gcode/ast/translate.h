@@ -3,6 +3,10 @@
 
 #include "dulcificum/gcode/ast/entry.h"
 
+#include <cstddef>
+#include <optional>
+#include <string>
+
 
 namespace dulcificum::gcode::ast
 {
@@ -14,14 +18,16 @@ namespace dulcificum::gcode::ast
  * E = An absolute or relative coordinate on the E axis (in current units).
  * F = The maximum movement rate of the move between the start and end point.
  */
-class G0 : public Entry<R"(G0((?:\sX(?<X>\d+(?:\.\d+)?))|(?:\sY(?<Y>\d+(?:\.\d+)?))|(?:\sZ(?<Z>\d+(?:\.\d+)?))|(?:\sE(?<E>\d+(?:\.\d+)?))|(?:\sF(?<F>\d+(?:\.\d+)?)))*$)">
+class G0 : public Entry<R"(G0((?:\sX(?<X>-?\d+(?:\.\d+)?))|(?:\sY(?<Y>-?\d+(?:\.\d+)?))|(?:\sZ(?<Z>-?\d+(?:\.\d+)?))|(?:\sE(?<E>-?\d+(?:\.\d+)?))|(?:\sF(?<F>-?\d+(?:\.\d+)?)))*$)">
 {
 public:
     G0() = delete;
-    G0(size_t index, std::string line)
-        : Entry{ index, std::move(line) } {};
-
-    void operator()() override final;
+    G0(size_t index, std::string line);
+    std::optional<double> X;
+    std::optional<double> Y;
+    std::optional<double> Z;
+    std::optional<double> E;
+    std::optional<double> F;
 };
 
 /*!
@@ -32,14 +38,16 @@ public:
  * E = An absolute or relative coordinate on the E axis (in current units).
  * F = The maximum movement rate of the move between the start and end point.
  */
-class G1 : public Entry<R"(G1((?:\sX(?<X>\d+(?:\.\d+)?))|(?:\sY(?<Y>\d+(?:\.\d+)?))|(?:\sZ(?<Z>\d+(?:\.\d+)?))|(?:\sE(?<E>\d+(?:\.\d+)?))|(?:\sF(?<F>\d+(?:\.\d+)?)))*$)">
+class G1 : public Entry<R"(G1((?:\sX(?<X>-?\d+(?:\.\d+)?))|(?:\sY(?<Y>-?\d+(?:\.\d+)?))|(?:\sZ(?<Z>-?\d+(?:\.\d+)?))|(?:\sE(?<E>-?\d+(?:\.\d+)?))|(?:\sF(?<F>-?\d+(?:\.\d+)?)))*$)">
 {
 public:
     G1() = delete;
-    G1(size_t index, std::string line)
-        : Entry{ index, std::move(line) } {};
-
-    void operator()() override final;
+    G1(size_t index, std::string line);
+    std::optional<double> X;
+    std::optional<double> Y;
+    std::optional<double> Z;
+    std::optional<double> E;
+    std::optional<double> F;
 };
 
 } // namespace dulcificum::gcode::ast

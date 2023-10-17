@@ -8,12 +8,12 @@ namespace dulcificum::gcode::ast
 /*!
  * /brief Switch to the specified tool
  */
-class T : public Entry<R"(T(?<T>\d))">
+class T : public Entry<R"(T(?<S>\d))">
 {
 public:
     T() = delete;
-    T(size_t index, std::string line)
-        : Entry{ index, std::move(line) } {};
+    T(size_t index, std::string line);
+    std::optional<size_t> S;
 };
 } // namespace dulcificum::gcode::ast
 

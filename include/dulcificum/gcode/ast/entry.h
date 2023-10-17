@@ -3,19 +3,27 @@
 
 #include "dulcificum/utils/char_range_literal.h"
 
-#include <spdlog/spdlog.h>
-
+#include <array>
 #include <cstddef>
+#include <ctll/fixed_string.hpp>
 #include <ctre.hpp>
+#include <map>
 #include <string>
+#include <string_view>
+#include <tuple>
+#include <unordered_map>
+#include <utility>
+#include <variant>
 
 namespace dulcificum::gcode::ast
 {
 
-template<dulcificum::utils::CharRangeLiteral Pattern>
+template<utils::CharRangeLiteral Pattern>
 class Entry
 {
 public:
+    using value_type = std::map<std::string_view, std::variant<double, int, std::string_view>>;
+
     Entry() = delete;
     Entry(size_t index, std::string line)
         : index{ index }
@@ -23,15 +31,16 @@ public:
 
     size_t index;
     std::string line;
+    static inline constexpr ctll::fixed_string pattern{ Pattern.value };
 
     constexpr auto get()
     {
-        return ctre::match<Pattern.value>(line);
+        return ctre::match<pattern>(line);
     };
 
-    virtual constexpr void operator()()
+    virtual value_type operator()()
     {
-        spdlog::info("lino: {} -> {}", index, line);
+        return {};
     };
 };
 
