@@ -26,10 +26,17 @@ find_package(ctre REQUIRED)
 
 # --- Setup the shared C++ mgjtp library ---
 set(DULCIFICUM_SRC
-        src/command_types.cpp
-        src/utils/io.cpp
+        src/gcode/ast/ast.cpp
+        src/gcode/ast/operators.cpp
+        src/gcode/parse.cpp
+
         src/miracle_jtp/mgjtp_command_to_json.cpp
         src/miracle_jtp/mgjtp_json_to_command.cpp
+
+        src/proto_path/translate.cpp
+
+        src/utils/io.cpp
+        src/command_types.cpp
 )
 add_library(dulcificum ${DULCIFICUM_SRC})
 target_link_libraries(dulcificum

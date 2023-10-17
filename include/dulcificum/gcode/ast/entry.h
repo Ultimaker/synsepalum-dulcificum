@@ -1,5 +1,5 @@
-#ifndef DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_AST_ENTRY_H
-#define DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_AST_ENTRY_H
+#ifndef INCLUDE_DULCIFICUM_GCODE_AST_ENTRY_H
+#define INCLUDE_DULCIFICUM_GCODE_AST_ENTRY_H
 
 #include "dulcificum/utils/char_range_literal.h"
 
@@ -27,14 +27,14 @@ public:
     constexpr auto get()
     {
         return ctre::match<Pattern.value>(line);
-    }
+    };
 
     virtual constexpr void operator()()
     {
         spdlog::info("lino: {} -> {}", index, line);
-    }
+    };
 };
 
 } // namespace dulcificum::gcode::ast
 
-#endif // DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_AST_ENTRY_H
+#endif // INCLUDE_DULCIFICUM_GCODE_AST_ENTRY_H

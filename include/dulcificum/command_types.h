@@ -1,5 +1,5 @@
-#ifndef DULCIFICUM_COMMAND_TYPES_H
-#define DULCIFICUM_COMMAND_TYPES_H
+#ifndef INCLUDE_DULCIFICUM_COMMAND_TYPES_H
+#define INCLUDE_DULCIFICUM_COMMAND_TYPES_H
 
 #include <cmath>
 #include <memory>
@@ -153,4 +153,4 @@ CommandPtr spawnCommandPtr(const CommandType& type) noexcept;
 } // namespace botcmd
 } // namespace dulcificum
 
-#endif // DULCIFICUM_COMMAND_TYPES_H
+#endif // INCLUDE_DULCIFICUM_COMMAND_TYPES_H

@@ -4,6 +4,7 @@
 
 #include <docopt/docopt.h>
 #include <dulcificum/gcode/parse.h>
+#include <dulcificum/proto_path/translate.h>
 #include <dulcificum/utils/io.h>
 #include <map>
 
@@ -36,18 +37,8 @@ int main(int argc, const char** argv)
     spdlog::info("Tasting the menu");
 
     auto input{ dulcificum::utils::readFile(args.at("INPUT").asString()).value() };
-    auto ast = dulcificum::gcode::parse(input);
-
-    auto TypeOfNode = Overload{ [](auto& node)
-                                {
-                                    node();
-                                }
-    };
-
-    for (auto& node : ast)
-    {
-        std::visit(TypeOfNode, node);
-    }
+    auto gcode_ast = dulcificum::gcode::parse(input);
+    auto proto_path_ast = dulcificum::proto_path::translate(gcode_ast);
 
     auto x = 1;
 }

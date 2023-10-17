@@ -1,5 +1,5 @@
-#ifndef DULCIFICUM_INCLUDE_DULCIFICUM_IO_H
-#define DULCIFICUM_INCLUDE_DULCIFICUM_IO_H
+#ifndef INCLUDE_DULCIFICUM_UTILS_IO_H
+#define INCLUDE_DULCIFICUM_UTILS_IO_H
 
 #include <filesystem>
 #include <optional>
@@ -17,4 +17,4 @@ namespace details
 
 } // namespace dulcificum::utils
 
-#endif // DULCIFICUM_INCLUDE_DULCIFICUM_IO_H
+#endif // INCLUDE_DULCIFICUM_UTILS_IO_H

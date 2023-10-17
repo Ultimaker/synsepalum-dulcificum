@@ -1,5 +1,5 @@
-#ifndef DULCIFICUM_MIRACLE_GRUE_JSONTOOLPATH_JSON_KEYS_H
-#define DULCIFICUM_MIRACLE_GRUE_JSONTOOLPATH_JSON_KEYS_H
+#ifndef INCLUDE_DULCIFICUM_MIRACLE_JTP_MGJTP_MAPPINGS_JSON_KEY_TO_STR_H
+#define INCLUDE_DULCIFICUM_MIRACLE_JTP_MGJTP_MAPPINGS_JSON_KEY_TO_STR_H
 
 #include "dulcificum/miracle_jtp/mgjtp_command_to_json.h"
 
@@ -67,4 +67,4 @@ constexpr static std::array<const std::string_view, 5> k_param_point_names{ x, y
 
 } // namespace dulcificum
 
-#endif // DULCIFICUM_MIRACLE_GRUE_JSONTOOLPATH_JSON_KEYS_H
+#endif // INCLUDE_DULCIFICUM_MIRACLE_JTP_MGJTP_MAPPINGS_JSON_KEY_TO_STR_H

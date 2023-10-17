@@ -1,5 +1,5 @@
-#ifndef DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_AST_TRANSLATE_H
-#define DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_AST_TRANSLATE_H
+#ifndef INCLUDE_DULCIFICUM_GCODE_AST_TRANSLATE_H
+#define INCLUDE_DULCIFICUM_GCODE_AST_TRANSLATE_H
 
 #include "dulcificum/gcode/ast/entry.h"
 
@@ -21,14 +21,7 @@ public:
     G0(size_t index, std::string line)
         : Entry{ index, std::move(line) } {};
 
-    void operator()() override
-    {
-        if (auto x = get().get<"X">())
-        {
-            spdlog::debug("x: {}", x);
-        }
-        spdlog::info("lino: {} -> {}", index, line);
-    }
+    void operator()() override final;
 };
 
 /*!
@@ -45,8 +38,10 @@ public:
     G1() = delete;
     G1(size_t index, std::string line)
         : Entry{ index, std::move(line) } {};
+
+    void operator()() override final;
 };
 
 } // namespace dulcificum::gcode::ast
 
-#endif // DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_AST_TRANSLATE_H
+#endif // INCLUDE_DULCIFICUM_GCODE_AST_TRANSLATE_H

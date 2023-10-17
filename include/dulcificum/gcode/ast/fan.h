@@ -1,5 +1,5 @@
-#ifndef DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_AST_FAN_H
-#define DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_AST_FAN_H
+#ifndef INCLUDE_DULCIFICUM_GCODE_AST_FAN_H
+#define INCLUDE_DULCIFICUM_GCODE_AST_FAN_H
 
 #include "dulcificum/gcode/ast/entry.h"
 
@@ -29,4 +29,4 @@ public:
 };
 } // namespace dulcificum::gcode::ast
 
-#endif // DULCIFICUM_INCLUDE_DULCIFICUM_GCODE_AST_FAN_H
+#endif // INCLUDE_DULCIFICUM_GCODE_AST_FAN_H
