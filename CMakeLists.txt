@@ -27,7 +27,7 @@ find_package(ctre REQUIRED)
 # --- Setup the shared C++ mgjtp library ---
 set(DULCIFICUM_SRC
         src/gcode/ast/ast.cpp
-        src/gcode/ast/operators.cpp
+        src/gcode/ast/entries.cpp
         src/gcode/parse.cpp
 
         src/miracle_jtp/mgjtp_command_to_json.cpp

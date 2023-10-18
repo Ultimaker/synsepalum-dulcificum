@@ -23,7 +23,7 @@ BuildVolumeTemperature::BuildVolumeTemperature(size_t index, std::string line)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -37,7 +37,7 @@ FeatureType::FeatureType(size_t index, std::string line)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -54,7 +54,7 @@ G0::G0(size_t index, std::string line)
     // clang-format on
     if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt && F == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -71,7 +71,7 @@ G1::G1(size_t index, std::string line)
     // clang-format on
     if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt && F == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -85,7 +85,7 @@ G280::G280(size_t index, std::string line)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -101,7 +101,7 @@ G92::G92(size_t index, std::string line)
     // clang-format on
     if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -115,7 +115,7 @@ InitialTemperatureBuildPlate::InitialTemperatureBuildPlate(size_t index, std::st
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -129,7 +129,7 @@ InitialTemperatureExtruder::InitialTemperatureExtruder(size_t index, std::string
     // clang-format on
     if (T == std::nullopt && S == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -143,7 +143,7 @@ Layer::Layer(size_t index, std::string line)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -157,7 +157,7 @@ M104::M104(size_t index, std::string line)
     // clang-format on
     if (S == std::nullopt && T == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -171,7 +171,7 @@ M106::M106(size_t index, std::string line)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -186,7 +186,7 @@ M109::M109(size_t index, std::string line)
     // clang-format on
     if (S == std::nullopt && R == std::nullopt && T == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -200,7 +200,7 @@ M140::M140(size_t index, std::string line)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -214,7 +214,7 @@ M190::M190(size_t index, std::string line)
     // clang-format on
     if (S == std::nullopt && R == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -229,7 +229,7 @@ M204::M204(size_t index, std::string line)
     // clang-format on
     if (P == std::nullopt && T == std::nullopt && S == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -245,7 +245,7 @@ M205::M205(size_t index, std::string line)
     // clang-format on
     if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -259,7 +259,7 @@ Mesh::Mesh(size_t index, std::string line)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
@@ -273,7 +273,7 @@ T::T(size_t index, std::string line)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse lino: {}", index));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
 }
 
