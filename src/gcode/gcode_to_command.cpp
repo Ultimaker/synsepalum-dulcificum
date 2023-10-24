@@ -2,16 +2,16 @@
 #include "dulcificum/gcode/ast/ast.h"
 #include "dulcificum/state.h"
 
-#include <spdlog/spdlog.h>
 #include <range/v3/view/zip.hpp>
+#include <spdlog/spdlog.h>
 
 namespace dulcificum::gcode
 {
 
 struct VisitCommand
 {
-    state_t state {};
-    std::vector<state_t> previous_states { state_t{} };
+    state_t state{};
+    std::vector<state_t> previous_states{ state_t{} };
     dulcificum::botcmd::CommandList proto_path = {};
 
     void operator()(const auto& command)
@@ -37,9 +37,7 @@ struct VisitCommand
         }
         if (command.E)
         {
-            state.E[state.active_tool] = state.E_positioning == Positioning::Absolute
-                                           ? *command.E
-                                           : *command.E + state.E[state.active_tool];
+            state.E[state.active_tool] = state.E_positioning == Positioning::Absolute ? *command.E : *command.E + state.E[state.active_tool];
         }
 
         if (command.F)
@@ -48,7 +46,8 @@ struct VisitCommand
         }
     }
     void update_state(const gcode::ast::G4& command)
-    {}
+    {
+    }
     void update_state(const gcode::ast::G90& command)
     {
         state.X_positioning = Positioning::Absolute;
@@ -83,7 +82,8 @@ struct VisitCommand
         }
     }
     void update_state(const gcode::ast::G280& command)
-    {}
+    {
+    }
     void update_state(const gcode::ast::M82& command)
     {
         state.E_positioning = Positioning::Absolute;
@@ -124,9 +124,11 @@ struct VisitCommand
         state.build_plate_temperature = *command.S;
     }
     void update_state(const gcode::ast::M204& command)
-    {}
+    {
+    }
     void update_state(const gcode::ast::M205& command)
-    {}
+    {
+    }
     void update_state(const gcode::ast::Layer& command)
     {
         if (command.L)
@@ -194,7 +196,8 @@ struct VisitCommand
         }
     }
     void update_state(const gcode::ast::Comment& command)
-    {}
+    {
+    }
     void update_state(const gcode::ast::T& command)
     {
         if (command.S)
@@ -207,16 +210,13 @@ struct VisitCommand
         }
     }
     void update_state(const gcode::ast::Unknown& command)
-    {}
+    {
+    }
     void to_proto_path(const gcode::ast::G0_G1& command)
     {
         const auto move = std::make_shared<botcmd::Move>();
         move->point = {
-            state.X + state.origin_x,
-            state.Y + state.origin_y,
-            state.Z + state.origin_z,
-            state.E[0],
-            state.E[1],
+            state.X + state.origin_x, state.Y + state.origin_y, state.Z + state.origin_z, state.E[0], state.E[1],
         };
         move->feedrate = state.F[state.active_tool];
         move->is_point_relative = { false, false, false, false, false };
@@ -323,19 +323,26 @@ struct VisitCommand
         // TODO set acceleration
     }
     void to_proto_path(const gcode::ast::M205& command)
-    {}
+    {
+    }
     void to_proto_path(const gcode::ast::Layer& command)
-    {}
+    {
+    }
     void to_proto_path(const gcode::ast::Mesh& command)
-    {}
+    {
+    }
     void to_proto_path(const gcode::ast::FeatureType& command)
-    {}
+    {
+    }
     void to_proto_path(const gcode::ast::InitialTemperatureExtruder& command)
-    {}
+    {
+    }
     void to_proto_path(const gcode::ast::InitialTemperatureBuildPlate& command)
-    {}
+    {
+    }
     void to_proto_path(const gcode::ast::BuildVolumeTemperature& command)
-    {}
+    {
+    }
     void to_proto_path(const gcode::ast::Comment& command)
     {
         const auto comment = std::make_shared<botcmd::Comment>();
@@ -349,14 +356,15 @@ struct VisitCommand
         proto_path.emplace_back(tool_change);
     }
     void to_proto_path(const gcode::ast::Unknown& command)
-    {}
+    {
+    }
 };
 
 botcmd::CommandList toCommand(gcode::ast::ast_t& gcode)
 {
     spdlog::info("Translating the GCode AST to CommandList");
 
-    VisitCommand visit_command {};
+    VisitCommand visit_command{};
 
     for (const auto& instruction : gcode)
     {

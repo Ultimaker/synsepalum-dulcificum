@@ -63,8 +63,10 @@ G4::G4(size_t index, std::string line)
     : Entry{ index, std::move(line) }
 {
     const auto& matches = get();
-    if (const auto& value = matches.get<"P">()) P = utils::StringViewToDouble(value.to_view());
-    if (const auto& value = matches.get<"S">()) S = utils::StringViewToDouble(value.to_view());
+    if (const auto& value = matches.get<"P">())
+        P = utils::StringViewToDouble(value.to_view());
+    if (const auto& value = matches.get<"S">())
+        S = utils::StringViewToDouble(value.to_view());
 
     if (P == std::nullopt && S == std::nullopt)
     {

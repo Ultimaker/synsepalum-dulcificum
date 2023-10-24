@@ -4,10 +4,10 @@
 #include <cstddef>
 #include <map>
 #include <memory>
+#include <set>
 #include <string_view>
 #include <variant>
 #include <vector>
-#include <set>
 
 namespace dulcificum
 {
@@ -49,7 +49,7 @@ struct State
 
     std::vector<double> extruder_temperatures = std::vector<double>(num_extruders, 0.0);
 
-    double fan_speed { 0.0 };
+    double fan_speed{ 0.0 };
 
     double build_plate_temperature{ 0.0 };
 
