@@ -33,7 +33,7 @@ set(DULCIFICUM_SRC
         src/miracle_jtp/mgjtp_command_to_json.cpp
         src/miracle_jtp/mgjtp_json_to_command.cpp
 
-        src/proto_path/translate.cpp
+        src/gcode/gcode_to_command.cpp
 
         src/utils/io.cpp
         src/utils/svtod.cpp

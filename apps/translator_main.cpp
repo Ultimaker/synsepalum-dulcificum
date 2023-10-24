@@ -4,9 +4,12 @@
 
 #include <docopt/docopt.h>
 #include <dulcificum/gcode/parse.h>
-#include <dulcificum/proto_path/translate.h>
+#include <dulcificum/miracle_jtp/mgjtp_command_to_json.h>
+#include <dulcificum/gcode/gcode_to_command.h>
 #include <dulcificum/utils/io.h>
 #include <map>
+
+#include <nlohmann/json.hpp>
 
 template<typename... Ts>
 struct Overload : Ts...
@@ -38,7 +41,13 @@ int main(int argc, const char** argv)
 
     auto input{ dulcificum::utils::readFile(args.at("INPUT").asString()).value() };
     auto gcode_ast = dulcificum::gcode::parse(input);
-    auto proto_path_ast = dulcificum::proto_path::translate(gcode_ast);
+    auto command_list = dulcificum::gcode::toCommand(gcode_ast);
+
+    auto json_commands = nlohmann::json::array();
+    for (const auto& command: command_list)
+    {
+        json_commands.emplace_back(dulcificum::miracle_jtp::toJson(*command));
+    }
 
     auto x = 1;
 }
