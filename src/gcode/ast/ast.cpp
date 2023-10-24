@@ -16,6 +16,7 @@ node_t factory(size_t index, const std::string& line)
     {
         { "G1", [](size_t index, const std::string& line) { return G0_G1{ index, line }; } },
         { "G0", [](size_t index, const std::string& line) { return G0_G1{ index, line }; } },
+        { "G4", [](size_t index, const std::string& line) { return G4{ index, line }; } },
         { "T", [](size_t index, const std::string& line) { return T{ index, line }; } },
         { "G90", [](size_t index, const std::string& line) { return G90{ index, line }; } },
         { "G91", [](size_t index, const std::string& line) { return G91{ index, line }; } },
@@ -38,6 +39,7 @@ node_t factory(size_t index, const std::string& line)
         { ";BUILD_VOLUME.TEMPERATURE:", [](size_t index, const std::string& line) { return BuildVolumeTemperature{ index, line }; } },
         { ";EXTRUDER_TRAIN.0.INITIAL_TEMPERATURE:", [](size_t index, const std::string& line) { return InitialTemperatureExtruder{ index, line }; } },
         { ";EXTRUDER_TRAIN.1.INITIAL_TEMPERATURE:", [](size_t index, const std::string& line) { return InitialTemperatureExtruder{ index, line }; } },
+        { ";", [](size_t index, const std::string& line) { return Comment{ index, line }; } },
     };
     // clang-format on
     for (const auto& [id, creator] : creators)

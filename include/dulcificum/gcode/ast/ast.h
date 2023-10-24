@@ -4,6 +4,7 @@
 #include "dulcificum/gcode/ast/acceleration.h"
 #include "dulcificum/gcode/ast/bed_temperature.h"
 #include "dulcificum/gcode/ast/comment_commands.h"
+#include "dulcificum/gcode/ast/delay.h"
 #include "dulcificum/gcode/ast/entry.h"
 #include "dulcificum/gcode/ast/extruder_temperature.h"
 #include "dulcificum/gcode/ast/fan.h"
@@ -25,6 +26,7 @@ using Unknown = Entry<R"((.*))">;
 
 using node_t = std::variant<
     G0_G1,
+    G4,
     G90,
     G91,
     G92,
@@ -45,6 +47,7 @@ using node_t = std::variant<
     InitialTemperatureExtruder,
     InitialTemperatureBuildPlate,
     BuildVolumeTemperature,
+    Comment,
     T,
     Unknown>;
 using ast_t = std::vector<node_t>;

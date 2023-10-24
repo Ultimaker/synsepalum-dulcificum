@@ -81,6 +81,19 @@ public:
     std::optional<double> S;
 };
 
+/*!
+ * /brief A generic comment
+ * comment = The text of the comment
+ */
+class Comment : public Entry<R"(;(?<C>\.*))">
+{
+public:
+    Comment() = delete;
+    Comment(size_t index, std::string line);
+    std::string C;
+};
+
+
 } // namespace dulcificum::gcode::ast
 
 #endif // INCLUDE_DULCIFICUM_GCODE_AST_COMMENT_COMMANDS_H

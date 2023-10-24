@@ -1,6 +1,7 @@
 #include "dulcificum/gcode/ast/acceleration.h"
 #include "dulcificum/gcode/ast/bed_temperature.h"
 #include "dulcificum/gcode/ast/comment_commands.h"
+#include "dulcificum/gcode/ast/delay.h"
 #include "dulcificum/gcode/ast/extruder_temperature.h"
 #include "dulcificum/gcode/ast/fan.h"
 #include "dulcificum/gcode/ast/position.h"
@@ -53,6 +54,19 @@ G0_G1::G0_G1(size_t index, std::string line)
     if (const auto& value = matches.get<"F">()) { F = utils::StringViewToDouble(value.to_view()); }
     // clang-format on
     if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt && F == std::nullopt)
+    {
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+    }
+}
+
+G4::G4(size_t index, std::string line)
+    : Entry{ index, std::move(line) }
+{
+    const auto& matches = get();
+    if (const auto& value = matches.get<"P">()) P = utils::StringViewToDouble(value.to_view());
+    if (const auto& value = matches.get<"S">()) S = utils::StringViewToDouble(value.to_view());
+
+    if (P == std::nullopt && S == std::nullopt)
     {
         throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
@@ -239,6 +253,20 @@ Mesh::Mesh(size_t index, std::string line)
     if (const auto& value = matches.get<"M">())
     {
         M = value.to_view();
+    }
+    else
+    {
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+    }
+}
+
+Comment::Comment(size_t index, std::string line)
+    : Entry{ index, std::move(line) }
+{
+    const auto& matches = get();
+    if (const auto& value = matches.get<"C">())
+    {
+        C = value.to_view();
     }
     else
     {
