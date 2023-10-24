@@ -14,8 +14,8 @@ node_t factory(size_t index, const std::string& line)
     // clang-format off
     std::map<std::string, Creator> const creators
     {
-        { "G1", [](size_t index, const std::string& line) { return G1{ index, line }; } },
-        { "G0", [](size_t index, const std::string& line) { return G0{ index, line }; } },
+        { "G1", [](size_t index, const std::string& line) { return G0_G1{ index, line }; } },
+        { "G0", [](size_t index, const std::string& line) { return G0_G1{ index, line }; } },
         { "T", [](size_t index, const std::string& line) { return T{ index, line }; } },
         { "G90", [](size_t index, const std::string& line) { return G90{ index, line }; } },
         { "G91", [](size_t index, const std::string& line) { return G91{ index, line }; } },

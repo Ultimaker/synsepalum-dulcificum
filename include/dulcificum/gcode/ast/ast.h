@@ -24,8 +24,7 @@ namespace dulcificum::gcode::ast
 using Unknown = Entry<R"((.*))">;
 
 using node_t = std::variant<
-    G0,
-    G1,
+    G0_G1,
     G90,
     G91,
     G92,

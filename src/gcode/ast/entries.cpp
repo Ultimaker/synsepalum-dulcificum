@@ -41,24 +41,7 @@ FeatureType::FeatureType(size_t index, std::string line)
     }
 }
 
-G0::G0(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
-{
-    const auto& matches = get();
-    // clang-format off
-    if (const auto& value = matches.get<"X">()) { X = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = matches.get<"Y">()) { Y = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = matches.get<"Z">()) { Z = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = matches.get<"E">()) { E = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = matches.get<"F">()) { F = utils::StringViewToDouble(value.to_view()); }
-    // clang-format on
-    if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt && F == std::nullopt)
-    {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
-    }
-}
-
-G1::G1(size_t index, std::string line)
+G0_G1::G0_G1(size_t index, std::string line)
     : Entry{ index, std::move(line) }
 {
     const auto& matches = get();
