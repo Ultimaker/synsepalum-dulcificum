@@ -49,5 +49,9 @@ int main(int argc, const char** argv)
         json_commands.emplace_back(dulcificum::miracle_jtp::toJson(*command));
     }
 
+    spdlog::info("Writing JSON to file");
+    auto output = json_commands.dump();
+    dulcificum::utils::writeFile(args.at("OUTPUT").asString(), output);
+
     auto x = 1;
 }

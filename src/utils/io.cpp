@@ -31,5 +31,13 @@ namespace details
     return details::readGcodeFile(filename);
 }
 
+[[nodiscard]] bool writeFile(const std::filesystem::path& filename, std::string& content) noexcept
+{
+    std::ofstream outfile { filename };
+    outfile << "test";
+    outfile.close();
+    return true;
+}
+
 
 } // namespace dulcificum::utils
