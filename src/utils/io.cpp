@@ -34,7 +34,7 @@ namespace details
 [[nodiscard]] bool writeFile(const std::filesystem::path& filename, std::string& content) noexcept
 {
     std::ofstream outfile { filename };
-    outfile << "test";
+    outfile << content;
     outfile.close();
     return true;
 }
