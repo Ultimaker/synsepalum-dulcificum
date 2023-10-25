@@ -23,6 +23,8 @@ struct State
     unsigned int num_extruders{ 2 };
     unsigned int active_tool{ 0 };
 
+    bool is_retracted{ false };
+
     unsigned int layer{ 0 };
     std::string mesh{ "" };
     std::string feature_type{ "" };

@@ -34,6 +34,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
       { Tag::QuickToggle, "Quick Toggle" },
       { Tag::Raft, "Raft" },
       { Tag::Restart, "Restart" },
+      { Tag::Retract, "Retract" },
       { Tag::Roof, "Roof" },
       { Tag::Sparse, "Sparse" },
       { Tag::Support, "Support" },

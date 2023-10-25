@@ -222,6 +222,77 @@ struct VisitCommand
             state.active_tool == 0 && command.E ? state.E_positioning == Positioning::Relative : true,
             state.active_tool == 1 && command.E ? state.E_positioning == Positioning::Relative : true,
         };
+
+        double delta_e;
+        if (!command.E)
+        {
+            delta_e = 0.0;
+        }
+        else if (state.E_positioning == Positioning::Relative)
+        {
+            delta_e = *command.E;
+        }
+        else
+        {
+            const auto last_e = previous_states[previous_states.size() - 1].E[state.active_tool];
+            delta_e = *command.E - last_e;
+        }
+
+        if (state.is_retracted)
+        {
+            if (delta_e > 0)
+            {
+                move->tags.emplace_back(botcmd::Tag::Restart);
+                state.is_retracted = false;
+            }
+            else
+            {
+                move->tags.emplace_back(botcmd::Tag::TravelMove);
+            }
+        }
+        else if (delta_e < 0)
+        {
+            move->tags.emplace_back(botcmd::Tag::Retract);
+            state.is_retracted = true;
+        }
+        else if (delta_e == 0)
+        {
+            move->tags.emplace_back(botcmd::Tag::TravelMove);
+        }
+        if (state.feature_type == "WALL-OUTER" || state.feature_type == "INNER-OUTER")
+        {
+            move->tags.emplace_back(botcmd::Tag::Inset);
+        }
+        else if (state.feature_type == "SKIN")
+        {
+            move->tags.emplace_back(botcmd::Tag::Roof);
+        }
+        else if (state.feature_type == "TOP-SURFACE")
+        {
+            move->tags.emplace_back(botcmd::Tag::Roof);
+        }
+        else if (state.feature_type == "PRIME-TOWER")
+        {
+            move->tags.emplace_back(botcmd::Tag::Purge);
+        }
+        else if (state.feature_type == "FILL")
+        {
+            move->tags.emplace_back(botcmd::Tag::Infill);
+            move->tags.emplace_back(botcmd::Tag::Sparse);
+        }
+        else if (state.feature_type == "Purge")
+        {
+            move->tags.emplace_back(botcmd::Tag::Raft);
+        }
+        else if (state.feature_type == "SUPPORT")
+        {
+            move->tags.emplace_back(botcmd::Tag::Sparse);
+            move->tags.emplace_back(botcmd::Tag::Support);
+        }
+        else if (state.feature_type == "SUPPORT-INTERFACE")
+        {
+            move->tags.emplace_back(botcmd::Tag::Support);
+        }
         proto_path.emplace_back(move);
     }
     void to_proto_path(const gcode::ast::G4& command)

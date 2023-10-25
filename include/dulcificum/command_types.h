@@ -38,6 +38,7 @@ enum class Tag
     QuickToggle,
     Raft,
     Restart,
+    Retract,
     Roof,
     Support,
     Sparse,
