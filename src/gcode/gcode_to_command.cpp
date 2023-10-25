@@ -64,22 +64,12 @@ struct VisitCommand
     }
     void update_state(const gcode::ast::G92& command)
     {
-        if (command.X)
-        {
-            state.X = *command.X;
-        }
-        if (command.Y)
-        {
-            state.Y = *command.Y;
-        }
-        if (command.Z)
-        {
-            state.Z = *command.Z;
-        }
-        if (command.E)
-        {
-            state.E[state.active_tool] = *command.E;
-        }
+        state.origin_x = state.X - (command.X ? *command.X : 0.0);
+        state.origin_y = state.Y - (command.Y ? *command.Y : 0.0);
+        state.origin_z = state.Z - (command.Z ? *command.Z : 0.0);
+        state.X = command.X ? *command.X : 0.0;
+        state.Y = command.Y ? *command.Y : 0.0;
+        state.Z = command.X ? *command.Z : 0.0;
     }
     void update_state(const gcode::ast::G280& command)
     {
@@ -249,12 +239,6 @@ struct VisitCommand
     }
     void to_proto_path(const gcode::ast::G92& command)
     {
-        state.origin_x = state.X - (command.X ? *command.X : 0.0);
-        state.origin_y = state.Y - (command.Y ? *command.Y : 0.0);
-        state.origin_z = state.Z - (command.Z ? *command.Z : 0.0);
-        state.X = command.X ? *command.X : 0.0;
-        state.Y = command.Y ? *command.Y : 0.0;
-        state.Z = command.X ? *command.Z : 0.0;
     }
     void to_proto_path(const gcode::ast::G280& command)
     {
