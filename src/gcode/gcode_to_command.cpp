@@ -202,14 +202,26 @@ struct VisitCommand
     void update_state(const gcode::ast::Unknown& command)
     {
     }
+
     void to_proto_path(const gcode::ast::G0_G1& command)
     {
         const auto move = std::make_shared<botcmd::Move>();
+        // if position is not specified for an axis, move with a relative delta 0 move
         move->point = {
-            state.X + state.origin_x, state.Y + state.origin_y, state.Z + state.origin_z, state.E[0], state.E[1],
+            command.X ? *command.X : 0.0,
+            command.Y ? *command.Y : 0.0,
+            command.Z ? *command.Z : 0.0,
+            state.active_tool == 0 && command.E ? *command.E : 0.0,
+            state.active_tool == 1 && command.E ? *command.E : 0.0,
         };
         move->feedrate = state.F[state.active_tool];
-        move->is_point_relative = { false, false, false, false, false };
+        move->is_point_relative = {
+            command.X ? state.X_positioning == Positioning::Relative : true,
+            command.Y ? state.Y_positioning == Positioning::Relative : true,
+            command.Z ? state.Z_positioning == Positioning::Relative : true,
+            state.active_tool == 0 && command.E ? state.E_positioning == Positioning::Relative : true,
+            state.active_tool == 1 && command.E ? state.E_positioning == Positioning::Relative : true,
+        };
         proto_path.emplace_back(move);
     }
     void to_proto_path(const gcode::ast::G4& command)
