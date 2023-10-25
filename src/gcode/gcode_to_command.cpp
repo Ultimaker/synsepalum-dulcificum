@@ -224,7 +224,7 @@ struct VisitCommand
         };
 
         double delta_e;
-        if (!command.E)
+        if (! command.E)
         {
             delta_e = 0.0;
         }
