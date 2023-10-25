@@ -24,8 +24,8 @@ struct State
     unsigned int active_tool{ 0 };
 
     unsigned int layer{ 0 };
-    std::string_view mesh{ "" };
-    std::string_view feature_type{ "" };
+    std::string mesh{ "" };
+    std::string feature_type{ "" };
 
     // needed for g92 commands, which set the current position
     // of the extruder, and thereby changing the origin

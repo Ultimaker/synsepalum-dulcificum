@@ -28,7 +28,7 @@ class Mesh : public Entry<R"(;MESH:(?<M>.*))">
 public:
     Mesh() = delete;
     Mesh(size_t index, std::string line);
-    std::optional<std::string_view> M;
+    std::optional<std::string> M;
 };
 
 /*!
@@ -40,7 +40,7 @@ class FeatureType : public Entry<R"(;TYPE:(?<T>.*))">
 public:
     FeatureType() = delete;
     FeatureType(size_t index, std::string line);
-    std::optional<std::string_view> T;
+    std::optional<std::string> T;
 };
 
 /*!
