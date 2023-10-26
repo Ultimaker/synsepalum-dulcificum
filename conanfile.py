@@ -164,5 +164,16 @@ class DulcificumConan(ConanFile):
 
     def package(self):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
-        packager = AutoPackager(self)
-        packager.run()
+        for ext in ("*.pyi", "*.so", "*.lib", "*.a", "*.pyd"):
+            copy(self, ext, src = self.build_folder, dst = os.path.join(self.package_folder, "lib"), keep_path = False)
+
+        for ext in ("*.dll", "*.so", "*.dylib"):
+            copy(self, ext, src = self.build_folder, dst = os.path.join(self.package_folder, "bin"), keep_path = False)
+        copy(self, "*.h", os.path.join(self.source_folder, "include"), os.path.join(self.package_folder, "include"))
+
+    def package_info(self):
+        self.cpp_info.libdirs = [ os.path.join(self.package_folder, "lib") ]
+        if self.in_local_cache:
+            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.package_folder, "lib"))
+        else:
+            self.runenv_info.append_path("PYTHONPATH", self.build_folder)
