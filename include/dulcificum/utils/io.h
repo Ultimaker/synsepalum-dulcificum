@@ -15,7 +15,7 @@ namespace details
 
 [[nodiscard]] std::optional<std::string> readFile(const std::filesystem::path& filename) noexcept;
 
-[[nodiscard]] bool writeFile(const std::filesystem::path& filename, std::string& content) noexcept;
+bool writeFile(const std::filesystem::path& filename, const std::string& content);
 
 } // namespace dulcificum::utils
 
