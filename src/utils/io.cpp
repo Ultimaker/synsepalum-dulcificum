@@ -31,7 +31,7 @@ namespace details
     return details::readGcodeFile(filename);
 }
 
-[[nodiscard]] bool writeFile(const std::filesystem::path& filename, std::string& content) noexcept
+bool writeFile(const std::filesystem::path& filename, const std::string& content)
 {
     std::ofstream outfile{ filename };
     outfile << content;

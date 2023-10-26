@@ -1,6 +1,8 @@
 #ifndef DULCIFICUM_INCLUDE_DULCIFICUM_H
 #define DULCIFICUM_INCLUDE_DULCIFICUM_H
 
+#include <nlohmann/json_fwd.hpp>
+#include <string>
 #ifndef DULCIFICUM_VERSION
 #define DULCIFICUM_VERSION "0.1.0"
 #endif
