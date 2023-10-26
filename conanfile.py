@@ -72,6 +72,8 @@ class DulcificumConan(ConanFile):
     def configure(self):
         if self.options.shared:
             self.options.rm_safe("fPIC")
+        if is_msvc(self):
+            self.options["cpython"].shared = True
 
     def layout(self):
         cmake_layout(self)
