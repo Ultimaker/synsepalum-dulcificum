@@ -107,7 +107,7 @@ nlohmann::json getCommandParameters(const botcmd::Command& cmd)
     if (cmd.type == botcmd::CommandType::kLayerChange)
     {
         const auto dcmd = static_cast<const botcmd::LayerChange&>(cmd);
-        auto comment = botcmd::Comment {};
+        auto comment = botcmd::Comment{};
         // TODO what data should be placed in the parenthesis?
         comment.comment = "Layer Section " + std::to_string(dcmd.layer) + " (0)";
         const auto com = static_cast<const botcmd::Comment&>(comment);
