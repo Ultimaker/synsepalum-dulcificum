@@ -131,7 +131,7 @@ class DulcificumConan(ConanFile):
         if self.options.with_apps:
             tc.variables["APP_VERSION"] = self.version
 
-        tc.variables["WITH_PYTHON_BINDINGS"] = self.otions.with_python_bindings
+        tc.variables["WITH_PYTHON_BINDINGS"] = self.options.with_python_bindings
         if self.options.with_python_bindings:
             tc.variables["PYTHON_EXECUTABLE"] = self.deps_user_info["cpython"].python.replace("\\", "/")
             tc.variables["Python_USE_STATIC_LIBS"] = not self.options["cpython"].shared
