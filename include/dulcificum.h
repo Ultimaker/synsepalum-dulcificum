@@ -9,9 +9,9 @@
 
 #include <fmt/format.h>
 #include <fmt/ranges.h>
+#include <range/v3/to_container.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/to_container.hpp>
 
 #include <dulcificum/gcode/gcode_to_command.h>
 #include <dulcificum/gcode/parse.h>
@@ -25,12 +25,12 @@ namespace dulcificum
     auto gcode_ast = dulcificum::gcode::parse(content);
     auto command_list = dulcificum::gcode::toCommand(gcode_ast);
     auto commands = command_list
-        | ranges::views::transform([](const auto& command)
-             {
-                 return dulcificum::miracle_jtp::toJson(*command).dump();
-             })
-        | ranges::views::join(",\n")
-        | ranges::to<std::string>();
+                  | ranges::views::transform(
+                        [](const auto& command)
+                        {
+                            return dulcificum::miracle_jtp::toJson(*command).dump();
+                        })
+                  | ranges::views::join(",\n") | ranges::to<std::string>();
     return fmt::format("[\n{}\n]", commands);
 }
 
