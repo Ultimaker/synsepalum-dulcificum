@@ -13,6 +13,7 @@
 
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/join.hpp>
+#include <range/v3/to_container.hpp>
 
 #include <fmt/format.h>
 #include <fmt/ranges.h>
@@ -29,7 +30,8 @@ namespace dulcificum
              {
                  return dulcificum::miracle_jtp::toJson(*command).dump();
              })
-        | ranges::views::join(",\n");
+        | ranges::views::join(",\n")
+        | ranges::to<std::string>();
     return fmt::format("[\n{}\n]", commands);
 }
 
