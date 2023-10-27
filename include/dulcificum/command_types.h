@@ -157,7 +157,7 @@ struct LayerChange : public Command
     {
     }
 
-    size_t layer { 0 };
+    size_t layer{ 0 };
 };
 
 CommandPtr spawnCommandPtr(const CommandType& type) noexcept;
