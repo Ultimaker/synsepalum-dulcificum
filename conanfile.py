@@ -35,7 +35,7 @@ class DulcificumConan(ConanFile):
         "shared": False,
         "fPIC": True,
         "enable_extensive_warnings": False,
-        "with_apps": True,
+        "with_apps": False,
         "with_python_bindings": True,
     }
 
@@ -56,6 +56,12 @@ class DulcificumConan(ConanFile):
             "msvc": "192",
             "visual_studio": "17",
         }
+
+    @property
+    def _run_tests(self):
+        if self.settings.compiler == "apple-clang" and Version(self.settings.compiler.version) <= Version("14"):
+            return False
+        return not self.conf.get("tools.build:skip_test", False, check_type = bool)
 
     def export_sources(self):
         copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
@@ -93,7 +99,7 @@ class DulcificumConan(ConanFile):
 
     def build_requirements(self):
         self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
-        if not self.conf.get("tools.build:skip_test", False, check_type = bool):
+        if self._run_tests:
             self.test_requires("gtest/[>=1.12.1]")
 
     def validate(self):
@@ -111,7 +117,7 @@ class DulcificumConan(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
-        tc.variables["ENABLE_TESTS"] = not self.conf.get("tools.build:skip_test", False, check_type = bool)
+        tc.variables["ENABLE_TESTS"] = self._run_tests
         tc.variables["EXTENSIVE_WARNINGS"] = self.options.enable_extensive_warnings
         tc.variables["DULCIFICUM_VERSION"] = self.version
 
@@ -147,7 +153,7 @@ class DulcificumConan(ConanFile):
                 copy(self, "*.dll", dep.cpp_info.libdirs[0], self.build_folder)
             if len(dep.cpp_info.bindirs) > 0:
                 copy(self, "*.dll", dep.cpp_info.bindirs[0], self.build_folder)
-            if not self.conf.get("tools.build:skip_test", False, check_type = bool):
+            if self._run_tests:
                 test_path = os.path.join(self.build_folder,  "tests")
                 if not os.path.exists(test_path):
                     mkdir(self, test_path)
