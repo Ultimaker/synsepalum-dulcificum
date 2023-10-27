@@ -25,6 +25,7 @@ enum class CommandType
     kChangeTool, // change active tool
     kComment, // do nothing, only emit comments
     kDelay, // delay - command to wait for event
+    kLayerChange, // layer - denoting a layer is changed
     kWaitForTemperature, // firmware delays until temp reached
     kPause, // Command to allow for user defined pause.
 };
@@ -147,6 +148,16 @@ struct Delay : public Command
     }
 
     double seconds{ 0.0 };
+};
+
+struct LayerChange : public Command
+{
+    constexpr LayerChange() noexcept
+        : Command(CommandType::kLayerChange)
+    {
+    }
+
+    size_t layer { 0 };
 };
 
 CommandPtr spawnCommandPtr(const CommandType& type) noexcept;

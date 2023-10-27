@@ -394,6 +394,16 @@ struct VisitCommand
     }
     void to_proto_path(const gcode::ast::Layer& command)
     {
+        const auto layer = std::make_shared<botcmd::LayerChange>();
+        if (command.L)
+        {
+            layer->layer = *command.L;
+        }
+        else
+        {
+            spdlog::warn("Layer command without layer number");
+        }
+        proto_path.emplace_back(layer);
     }
     void to_proto_path(const gcode::ast::Mesh& command)
     {

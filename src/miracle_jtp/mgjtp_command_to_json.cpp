@@ -104,6 +104,16 @@ nlohmann::json getCommandParameters(const botcmd::Command& cmd)
         jparams[k_key_str::seconds] = dcmd.seconds;
         return jparams;
     }
+    if (cmd.type == botcmd::CommandType::kLayerChange)
+    {
+        const auto dcmd = static_cast<const botcmd::LayerChange&>(cmd);
+        auto comment = botcmd::Comment {};
+        // TODO what data should be placed in the parenthesis?
+        comment.comment = "Layer Section " + std::to_string(dcmd.layer) + " (0)";
+        const auto com = static_cast<const botcmd::Comment&>(comment);
+        jparams[k_key_str::comment] = com.comment;
+        return jparams;
+    }
     return jparams;
 }
 
