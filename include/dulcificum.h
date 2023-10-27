@@ -7,15 +7,14 @@
 #define DULCIFICUM_VERSION "0.1.0"
 #endif
 
+#include <fmt/format.h>
+#include <fmt/ranges.h>
+#include <range/v3/view/join.hpp>
+#include <range/v3/view/transform.hpp>
+
 #include <dulcificum/gcode/gcode_to_command.h>
 #include <dulcificum/gcode/parse.h>
 #include <dulcificum/miracle_jtp/mgjtp_command_to_json.h>
-
-#include <range/v3/view/transform.hpp>
-#include <range/v3/view/join.hpp>
-
-#include <fmt/format.h>
-#include <fmt/ranges.h>
 
 namespace dulcificum
 {
@@ -25,11 +24,12 @@ namespace dulcificum
     auto gcode_ast = dulcificum::gcode::parse(content);
     auto command_list = dulcificum::gcode::toCommand(gcode_ast);
     auto commands = command_list
-        | ranges::views::transform([](const auto& command)
-             {
-                 return dulcificum::miracle_jtp::toJson(*command).dump();
-             })
-        | ranges::views::join(",\n");
+                  | ranges::views::transform(
+                        [](const auto& command)
+                        {
+                            return dulcificum::miracle_jtp::toJson(*command).dump();
+                        })
+                  | ranges::views::join(",\n");
     return fmt::format("[\n{}\n]", commands);
 }
 
