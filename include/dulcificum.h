@@ -10,9 +10,9 @@
 #include <fmt/format.h>
 #include <fmt/ranges.h>
 #include <range/v3/to_container.hpp>
+#include <range/v3/view/c_str.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/view/c_str.hpp>
 
 #include <dulcificum/gcode/gcode_to_command.h>
 #include <dulcificum/gcode/parse.h>
