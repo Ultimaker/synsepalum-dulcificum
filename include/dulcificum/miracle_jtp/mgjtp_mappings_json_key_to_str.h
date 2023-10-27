@@ -21,6 +21,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
       { CommandType::kSetTemperature, "set_toolhead_temperature" },
       { CommandType::kChangeTool, "change_toolhead" },
       { CommandType::kComment, "comment" },
+      { CommandType::kLayerChange, "comment" },
       { CommandType::kDelay, "delay" },
       { CommandType::kWaitForTemperature, "wait_for_temperature" },
       { CommandType::kPause, "pause" } })
