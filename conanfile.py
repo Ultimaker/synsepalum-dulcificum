@@ -78,12 +78,18 @@ class DulcificumConan(ConanFile):
     def configure(self):
         if self.options.shared:
             self.options.rm_safe("fPIC")
-        if is_msvc(self):
+        if self.options.with_python_bindings:
             self.options["cpython"].shared = True
 
     def layout(self):
         cmake_layout(self)
-        self.cpp.package.libs = ["dulcificum"]
+
+        self.cpp.build.bin = ["translator"]
+        self.cpp.build.bindirs = ["apps"]
+
+        self.cpp.package.lib = ["dulcificum", "pyDulcificum"]
+        self.cpp.package.libdirs = ["lib"]
+        self.cpp.package.bindirs = ["bin"]
 
     def requirements(self):
         self.requires("nlohmann_json/3.11.2", transitive_headers = True)
@@ -125,9 +131,9 @@ class DulcificumConan(ConanFile):
         if self.options.with_apps:
             tc.variables["APP_VERSION"] = self.version
 
-        tc.variables["WITH_PYTHON_BINDINGS"] = self.options.with_python_bindings
+        tc.variables["WITH_PYTHON_BINDINGS"] = self.otions.with_python_bindings
         if self.options.with_python_bindings:
-            tc.variables["Python_EXECUTABLE"] = self.deps_user_info["cpython"].python.replace("\\", "/")
+            tc.variables["PYTHON_EXECUTABLE"] = self.deps_user_info["cpython"].python.replace("\\", "/")
             tc.variables["Python_USE_STATIC_LIBS"] = not self.options["cpython"].shared
             tc.variables["Python_ROOT_DIR"] = self.deps_cpp_info["cpython"].rootpath.replace("\\", "/")
             tc.variables["Python_FIND_FRAMEWORK"] = "NEVER"
@@ -170,16 +176,12 @@ class DulcificumConan(ConanFile):
 
     def package(self):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
-        for ext in ("*.pyi", "*.so", "*.lib", "*.a", "*.pyd"):
-            copy(self, ext, src = self.build_folder, dst = os.path.join(self.package_folder, "lib"), keep_path = False)
-
-        for ext in ("*.dll", "*.so", "*.dylib"):
-            copy(self, ext, src = self.build_folder, dst = os.path.join(self.package_folder, "bin"), keep_path = False)
-        copy(self, "*.h", os.path.join(self.source_folder, "include"), os.path.join(self.package_folder, "include"))
+        copy(self, "translator*", src = os.path.join(self.build_folder, "apps"), dst = os.path.join(self.package_folder, "bin"), keep_path = False)
+        packager = AutoPackager(self)
+        packager.run()
 
     def package_info(self):
         if self.in_local_cache:
-            self.cpp_info.libdirs = [ os.path.join(self.package_folder, "lib") ]
-            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.package_folder, "lib"))
+            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.package_folder, "lib", "pyDulcificum"))
         else:
-            self.runenv_info.append_path("PYTHONPATH", self.build_folder)
+            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.build_folder, "pyDulcificum"))
