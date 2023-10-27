@@ -178,8 +178,8 @@ class DulcificumConan(ConanFile):
         copy(self, "*.h", os.path.join(self.source_folder, "include"), os.path.join(self.package_folder, "include"))
 
     def package_info(self):
-        self.cpp_info.libdirs = [ os.path.join(self.package_folder, "lib") ]
         if self.in_local_cache:
+            self.cpp_info.libdirs = [ os.path.join(self.package_folder, "lib") ]
             self.runenv_info.append_path("PYTHONPATH", os.path.join(self.package_folder, "lib"))
         else:
             self.runenv_info.append_path("PYTHONPATH", self.build_folder)
