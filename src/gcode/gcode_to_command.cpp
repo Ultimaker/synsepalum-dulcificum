@@ -1,9 +1,23 @@
 #include "dulcificum/command_types.h"
+#include "dulcificum/gcode/ast/acceleration.h"
 #include "dulcificum/gcode/ast/ast.h"
+#include "dulcificum/gcode/ast/bed_temperature.h"
+#include "dulcificum/gcode/ast/comment_commands.h"
+#include "dulcificum/gcode/ast/delay.h"
+#include "dulcificum/gcode/ast/extruder_temperature.h"
+#include "dulcificum/gcode/ast/fan.h"
+#include "dulcificum/gcode/ast/position.h"
+#include "dulcificum/gcode/ast/positioning_mode.h"
+#include "dulcificum/gcode/ast/purge.h"
+#include "dulcificum/gcode/ast/toolchange.h"
+#include "dulcificum/gcode/ast/translate.h"
 #include "dulcificum/state.h"
 
-#include <range/v3/view/zip.hpp>
 #include <spdlog/spdlog.h>
+
+#include <memory>
+#include <variant>
+#include <vector>
 
 namespace dulcificum::gcode
 {
@@ -21,7 +35,7 @@ struct VisitCommand
         previous_states.emplace_back(state);
     }
 
-    void update_state(const gcode::ast::G0_G1& command)
+    [[maybe_unused]] void update_state(const gcode::ast::G0_G1& command)
     {
         if (command.X)
         {
@@ -45,24 +59,24 @@ struct VisitCommand
             state.F[state.active_tool] = *command.F;
         }
     }
-    void update_state(const gcode::ast::G4& command)
+    [[maybe_unused]] void update_state(const gcode::ast::G4& command)
     {
     }
-    void update_state(const gcode::ast::G90& command)
+    [[maybe_unused]] void update_state([[maybe_unused]] const gcode::ast::G90& command)
     {
         state.X_positioning = Positioning::Absolute;
         state.Y_positioning = Positioning::Absolute;
         state.Z_positioning = Positioning::Absolute;
         state.E_positioning = Positioning::Absolute;
     }
-    void update_state(const gcode::ast::G91& command)
+    [[maybe_unused]] void update_state([[maybe_unused]] const gcode::ast::G91& command)
     {
         state.X_positioning = Positioning::Relative;
         state.Y_positioning = Positioning::Relative;
         state.Z_positioning = Positioning::Relative;
         state.E_positioning = Positioning::Relative;
     }
-    void update_state(const gcode::ast::G92& command)
+    [[maybe_unused]] void update_state(const gcode::ast::G92& command)
     {
         state.origin_x = state.X - (command.X ? *command.X : 0.0);
         state.origin_y = state.Y - (command.Y ? *command.Y : 0.0);
@@ -71,22 +85,22 @@ struct VisitCommand
         state.Y = command.Y ? *command.Y : 0.0;
         state.Z = command.X ? *command.Z : 0.0;
     }
-    void update_state(const gcode::ast::G280& command)
+    [[maybe_unused]] void update_state(const gcode::ast::G280& command)
     {
     }
-    void update_state(const gcode::ast::M82& command)
+    [[maybe_unused]] void update_state([[maybe_unused]] const gcode::ast::M82& command)
     {
         state.E_positioning = Positioning::Absolute;
     }
-    void update_state(const gcode::ast::M83& command)
+    [[maybe_unused]] void update_state([[maybe_unused]] const gcode::ast::M83& command)
     {
         state.E_positioning = Positioning::Relative;
     }
-    void update_state(const gcode::ast::M104& command)
+    [[maybe_unused]] void update_state(const gcode::ast::M104& command)
     {
         state.extruder_temperatures[state.active_tool] = *command.S;
     }
-    void update_state(const gcode::ast::M106& command)
+    [[maybe_unused]] void update_state(const gcode::ast::M106& command)
     {
         if (command.S)
         {
@@ -97,29 +111,29 @@ struct VisitCommand
             state.fan_speed = 255;
         }
     }
-    void update_state(const gcode::ast::M107& command)
+    [[maybe_unused]] void update_state([[maybe_unused]] const gcode::ast::M107& command)
     {
         state.fan_speed = 0;
     }
-    void update_state(const gcode::ast::M109& command)
+    [[maybe_unused]] void update_state(const gcode::ast::M109& command)
     {
         state.extruder_temperatures[state.active_tool] = *command.S;
     }
-    void update_state(const gcode::ast::M140& command)
+    [[maybe_unused]] void update_state(const gcode::ast::M140& command)
     {
         state.build_plate_temperature = *command.S;
     }
-    void update_state(const gcode::ast::M190& command)
+    [[maybe_unused]] void update_state(const gcode::ast::M190& command)
     {
         state.build_plate_temperature = *command.S;
     }
-    void update_state(const gcode::ast::M204& command)
+    [[maybe_unused]] void update_state([[maybe_unused]] const gcode::ast::M204& command)
     {
     }
-    void update_state(const gcode::ast::M205& command)
+    [[maybe_unused]] void update_state([[maybe_unused]] const gcode::ast::M205& command)
     {
     }
-    void update_state(const gcode::ast::Layer& command)
+    [[maybe_unused]] void update_state(const gcode::ast::Layer& command)
     {
         if (command.L)
         {
@@ -130,7 +144,7 @@ struct VisitCommand
             spdlog::warn("Layer command without layer index");
         }
     }
-    void update_state(const gcode::ast::Mesh& command)
+    [[maybe_unused]] void update_state(const gcode::ast::Mesh& command)
     {
         if (command.M)
         {
@@ -141,7 +155,7 @@ struct VisitCommand
             spdlog::warn("Mesh command without mesh index");
         }
     }
-    void update_state(const gcode::ast::FeatureType& command)
+    [[maybe_unused]] void update_state(const gcode::ast::FeatureType& command)
     {
         if (command.T)
         {
@@ -152,7 +166,7 @@ struct VisitCommand
             spdlog::warn("FeatureType command without feature type index");
         }
     }
-    void update_state(const gcode::ast::InitialTemperatureExtruder& command)
+    [[maybe_unused]] void update_state(const gcode::ast::InitialTemperatureExtruder& command)
     {
         if (command.T && command.S)
         {
@@ -163,7 +177,7 @@ struct VisitCommand
             spdlog::warn("InitialTemperatureExtruder command without tool index or temperature");
         }
     }
-    void update_state(const gcode::ast::InitialTemperatureBuildPlate& command)
+    [[maybe_unused]] void update_state(const gcode::ast::InitialTemperatureBuildPlate& command)
     {
         if (command.S)
         {
@@ -174,7 +188,7 @@ struct VisitCommand
             spdlog::warn("InitialTemperatureBuildPlate command without temperature");
         }
     }
-    void update_state(const gcode::ast::BuildVolumeTemperature& command)
+    [[maybe_unused]] void update_state(const gcode::ast::BuildVolumeTemperature& command)
     {
         if (command.S)
         {
@@ -185,10 +199,10 @@ struct VisitCommand
             spdlog::warn("BuildVolumeTemperature command without temperature");
         }
     }
-    void update_state(const gcode::ast::Comment& command)
+    [[maybe_unused]] void update_state([[maybe_unused]] const gcode::ast::Comment& command)
     {
     }
-    void update_state(const gcode::ast::T& command)
+    [[maybe_unused]] void update_state(const gcode::ast::T& command)
     {
         if (command.S)
         {
@@ -199,11 +213,11 @@ struct VisitCommand
             spdlog::warn("Tool change command without tool index");
         }
     }
-    void update_state(const gcode::ast::Unknown& command)
+    [[maybe_unused]] void update_state([[maybe_unused]] const gcode::ast::Unknown& command)
     {
     }
 
-    void to_proto_path(const gcode::ast::G0_G1& command)
+    [[maybe_unused]] void to_proto_path(const gcode::ast::G0_G1& command)
     {
         const auto move = std::make_shared<botcmd::Move>();
         // if position is not specified for an axis, move with a relative delta 0 move
@@ -223,7 +237,7 @@ struct VisitCommand
             state.active_tool == 1 && command.E ? state.E_positioning == Positioning::Relative : true,
         };
 
-        double delta_e;
+        double delta_e{};
         if (! command.E)
         {
             delta_e = 0.0;
@@ -295,7 +309,7 @@ struct VisitCommand
         }
         proto_path.emplace_back(move);
     }
-    void to_proto_path(const gcode::ast::G4& command)
+    [[maybe_unused]] void to_proto_path(const gcode::ast::G4& command)
     {
         const auto delay = std::make_shared<botcmd::Delay>();
         if (command.S)
@@ -312,37 +326,37 @@ struct VisitCommand
         }
         proto_path.emplace_back(delay);
     }
-    void to_proto_path(const gcode::ast::G90& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::G90& command)
     {
         // absolute positioning
     }
-    void to_proto_path(const gcode::ast::G91& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::G91& command)
     {
         // relative positioning
     }
-    void to_proto_path(const gcode::ast::G92& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::G92& command)
     {
     }
-    void to_proto_path(const gcode::ast::G280& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::G280& command)
     {
         // prime blob; TODO: implement
     }
-    void to_proto_path(const gcode::ast::M82& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M82& command)
     {
         // extruder absolute positioning
     }
-    void to_proto_path(const gcode::ast::M83& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M83& command)
     {
         // extruder relative positioning
     }
-    void to_proto_path(const gcode::ast::M104& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M104& command)
     {
         const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
         set_temperature->temperature = state.extruder_temperatures[state.active_tool];
         set_temperature->index = state.active_tool;
         proto_path.emplace_back(set_temperature);
     }
-    void to_proto_path(const gcode::ast::M106& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M106& command)
     {
         // turn fan on
         const auto toggle_fan = std::make_shared<botcmd::FanToggle>();
@@ -356,25 +370,25 @@ struct VisitCommand
         set_fan_speed->index = 0; // TODO; implement fan index
         proto_path.emplace_back(set_fan_speed);
     }
-    void to_proto_path(const gcode::ast::M107& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M107& command)
     {
         const auto toggle_fan = std::make_shared<botcmd::FanToggle>();
         toggle_fan->is_on = false;
         toggle_fan->index = 0; // TODO: implement fan index
         proto_path.emplace_back(toggle_fan);
     }
-    void to_proto_path(const gcode::ast::M109& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M109& command)
     {
         const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
         set_temperature->temperature = state.build_plate_temperature;
         set_temperature->index = state.active_tool;
         proto_path.emplace_back(set_temperature);
     }
-    void to_proto_path(const gcode::ast::M140& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M140& command)
     {
         // TODO set heated bed temperature
     }
-    void to_proto_path(const gcode::ast::M190& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M190& command)
     {
         const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
         set_temperature->temperature = state.build_plate_temperature;
@@ -385,14 +399,14 @@ struct VisitCommand
         wait_temperature->index = state.active_tool;
         proto_path.emplace_back(wait_temperature);
     }
-    void to_proto_path(const gcode::ast::M204& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M204& command)
     {
         // TODO set acceleration
     }
-    void to_proto_path(const gcode::ast::M205& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::M205& command)
     {
     }
-    void to_proto_path(const gcode::ast::Layer& command)
+    [[maybe_unused]] void to_proto_path(const gcode::ast::Layer& command)
     {
         const auto layer = std::make_shared<botcmd::LayerChange>();
         if (command.L)
@@ -405,34 +419,34 @@ struct VisitCommand
         }
         proto_path.emplace_back(layer);
     }
-    void to_proto_path(const gcode::ast::Mesh& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::Mesh& command)
     {
     }
-    void to_proto_path(const gcode::ast::FeatureType& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::FeatureType& command)
     {
     }
-    void to_proto_path(const gcode::ast::InitialTemperatureExtruder& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::InitialTemperatureExtruder& command)
     {
     }
-    void to_proto_path(const gcode::ast::InitialTemperatureBuildPlate& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::InitialTemperatureBuildPlate& command)
     {
     }
-    void to_proto_path(const gcode::ast::BuildVolumeTemperature& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::BuildVolumeTemperature& command)
     {
     }
-    void to_proto_path(const gcode::ast::Comment& command)
+    [[maybe_unused]] void to_proto_path(const gcode::ast::Comment& command)
     {
         const auto comment = std::make_shared<botcmd::Comment>();
         comment->comment = command.C;
         proto_path.emplace_back(comment);
     }
-    void to_proto_path(const gcode::ast::T& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::T& command)
     {
         const auto tool_change = std::make_shared<botcmd::ChangeTool>();
         tool_change->index = state.active_tool;
         proto_path.emplace_back(tool_change);
     }
-    void to_proto_path(const gcode::ast::Unknown& command)
+    [[maybe_unused]] void to_proto_path([[maybe_unused]] const gcode::ast::Unknown& command)
     {
     }
 };
