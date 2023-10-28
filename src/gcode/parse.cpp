@@ -19,7 +19,7 @@ gcode::ast::ast_t parse(std::string_view content)
     std::string line;
     gcode::ast::ast_t ast;
 
-    size_t index{ 0 };
+    size_t index{ 1 };
     while (std::getline(stream, line))
     {
         ast.emplace_back(gcode::ast::factory(index++, line));
