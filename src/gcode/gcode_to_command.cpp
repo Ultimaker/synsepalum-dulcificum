@@ -16,6 +16,7 @@
 #include <spdlog/spdlog.h>
 
 #include <memory>
+#include <unordered_map>
 #include <variant>
 #include <vector>
 
@@ -217,26 +218,30 @@ struct VisitCommand
     {
     }
 
-    [[maybe_unused]] void to_proto_path(const gcode::ast::G0_G1& command)
+    std::vector<double> getMovePoints(const gcode::ast::G0_G1& command) const
     {
-        const auto move = std::make_shared<botcmd::Move>();
-        // if position is not specified for an axis, move with a relative delta 0 move
-        move->point = {
+        return {
             command.X ? *command.X : 0.0,
             command.Y ? *command.Y : 0.0,
             command.Z ? *command.Z : 0.0,
             state.active_tool == 0 && command.E ? *command.E : 0.0,
             state.active_tool == 1 && command.E ? *command.E : 0.0,
         };
-        move->feedrate = state.F[state.active_tool];
-        move->is_point_relative = {
+    }
+
+    std::vector<bool> getPointRelativeness(const gcode::ast::G0_G1& command) const
+    {
+        return {
             command.X ? state.X_positioning == Positioning::Relative : true,
             command.Y ? state.Y_positioning == Positioning::Relative : true,
             command.Z ? state.Z_positioning == Positioning::Relative : true,
             state.active_tool == 0 && command.E ? state.E_positioning == Positioning::Relative : true,
             state.active_tool == 1 && command.E ? state.E_positioning == Positioning::Relative : true,
         };
+    }
 
+    double calculateDeltaE(const gcode::ast::G0_G1& command)
+    {
         double delta_e{};
         if (! command.E)
         {
@@ -250,6 +255,34 @@ struct VisitCommand
         {
             const auto last_e = previous_states[previous_states.size() - 1].E[state.active_tool];
             delta_e = *command.E - last_e;
+        }
+        return delta_e;
+    }
+
+    void generateCommandTags(double delta_e, const std::shared_ptr<botcmd::Move>& move)
+    {
+        static const std::unordered_map<std::string, botcmd::Tag> tagMap = {
+            { "WALL-OUTER", botcmd::Tag::Inset },
+            { "INNER-OUTER", botcmd::Tag::Inset },
+            { "SKIN", botcmd::Tag::Roof },
+            { "TOP-SURFACE", botcmd::Tag::Roof },
+            { "PRIME-TOWER", botcmd::Tag::Purge },
+            { "FILL", botcmd::Tag::Infill },
+            { "FILL", botcmd::Tag::Sparse },
+            { "Purge", botcmd::Tag::Raft },
+            { "SUPPORT", botcmd::Tag::Sparse },
+            { "SUPPORT", botcmd::Tag::Support },
+            { "SUPPORT-INTERFACE", botcmd::Tag::Support },
+        };
+
+        auto iter = tagMap.find(state.feature_type);
+        if (iter == tagMap.end())
+        {
+            move->tags.emplace_back(iter->second);
+        }
+        else
+        {
+            spdlog::warn("Unknown feature type: {}", state.feature_type);
         }
 
         if (state.is_retracted)
@@ -273,42 +306,21 @@ struct VisitCommand
         {
             move->tags.emplace_back(botcmd::Tag::TravelMove);
         }
-        if (state.feature_type == "WALL-OUTER" || state.feature_type == "INNER-OUTER")
-        {
-            move->tags.emplace_back(botcmd::Tag::Inset);
-        }
-        else if (state.feature_type == "SKIN")
-        {
-            move->tags.emplace_back(botcmd::Tag::Roof);
-        }
-        else if (state.feature_type == "TOP-SURFACE")
-        {
-            move->tags.emplace_back(botcmd::Tag::Roof);
-        }
-        else if (state.feature_type == "PRIME-TOWER")
-        {
-            move->tags.emplace_back(botcmd::Tag::Purge);
-        }
-        else if (state.feature_type == "FILL")
-        {
-            move->tags.emplace_back(botcmd::Tag::Infill);
-            move->tags.emplace_back(botcmd::Tag::Sparse);
-        }
-        else if (state.feature_type == "Purge")
-        {
-            move->tags.emplace_back(botcmd::Tag::Raft);
-        }
-        else if (state.feature_type == "SUPPORT")
-        {
-            move->tags.emplace_back(botcmd::Tag::Sparse);
-            move->tags.emplace_back(botcmd::Tag::Support);
-        }
-        else if (state.feature_type == "SUPPORT-INTERFACE")
-        {
-            move->tags.emplace_back(botcmd::Tag::Support);
-        }
+    }
+
+    [[maybe_unused]] void to_proto_path(const gcode::ast::G0_G1& command)
+    {
+        const auto move = std::make_shared<botcmd::Move>();
+
+        move->point = getMovePoints(command);
+        move->is_point_relative = getPointRelativeness(command);
+
+        const double delta_e = calculateDeltaE(command);
+        generateCommandTags(delta_e, move);
+
         proto_path.emplace_back(move);
     }
+
     [[maybe_unused]] void to_proto_path(const gcode::ast::G4& command)
     {
         const auto delay = std::make_shared<botcmd::Delay>();
