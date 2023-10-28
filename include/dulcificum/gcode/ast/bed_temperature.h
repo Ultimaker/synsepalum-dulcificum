@@ -15,7 +15,7 @@ class M140 : public Entry<R"(M140((?:\sS(?<S>\d+(?:\.\d+)?)))*$)">
 {
 public:
     M140() = delete;
-    M140(size_t index, std::string line);
+    M140(size_t idx, std::string raw_line);
     std::optional<double> S;
 };
 
@@ -28,7 +28,7 @@ class M190 : public Entry<R"(M190((?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sR(?<R>\d+(?:\.
 {
 public:
     M190() = delete;
-    M190(size_t index, std::string line);
+    M190(size_t idx, std::string raw_line);
     std::optional<double> S;
     std::optional<double> R;
 };

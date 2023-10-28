@@ -15,7 +15,7 @@ class Layer : public Entry<R"(;LAYER:(?<L>-?\d+))">
 {
 public:
     Layer() = delete;
-    Layer(size_t index, std::string line);
+    Layer(size_t idx, std::string raw_line);
     std::optional<size_t> L;
 };
 
@@ -27,7 +27,7 @@ class Mesh : public Entry<R"(;MESH:(?<M>.*))">
 {
 public:
     Mesh() = delete;
-    Mesh(size_t index, std::string line);
+    Mesh(size_t idx, std::string raw_line);
     std::optional<std::string> M;
 };
 
@@ -39,7 +39,7 @@ class FeatureType : public Entry<R"(;TYPE:(?<T>.*))">
 {
 public:
     FeatureType() = delete;
-    FeatureType(size_t index, std::string line);
+    FeatureType(size_t idx, std::string raw_line);
     std::optional<std::string> T;
 };
 
@@ -52,7 +52,7 @@ class InitialTemperatureExtruder : public Entry<R"(;EXTRUDER_TRAIN\.(?<T>\d)\.IN
 {
 public:
     InitialTemperatureExtruder() = delete;
-    InitialTemperatureExtruder(size_t index, std::string line);
+    InitialTemperatureExtruder(size_t idx, std::string raw_line);
     std::optional<size_t> T;
     std::optional<double> S;
 };
@@ -65,7 +65,7 @@ class InitialTemperatureBuildPlate : public Entry<R"(;BUILD_PLATE.INITIAL_TEMPER
 {
 public:
     InitialTemperatureBuildPlate() = delete;
-    InitialTemperatureBuildPlate(size_t index, std::string line);
+    InitialTemperatureBuildPlate(size_t idx, std::string raw_line);
     std::optional<double> S;
 };
 
@@ -77,7 +77,7 @@ class BuildVolumeTemperature : public Entry<R"(;BUILD_VOLUME.TEMPERATURE:(?<S>([
 {
 public:
     BuildVolumeTemperature() = delete;
-    BuildVolumeTemperature(size_t index, std::string line);
+    BuildVolumeTemperature(size_t idx, std::string raw_line);
     std::optional<double> S;
 };
 
@@ -89,7 +89,7 @@ class Comment : public Entry<R"(;(?<C>\.*))">
 {
 public:
     Comment() = delete;
-    Comment(size_t index, std::string line);
+    Comment(size_t idx, std::string raw_line);
     std::string C;
 };
 

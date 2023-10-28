@@ -15,7 +15,7 @@ class M106 : public Entry<R"(M106((?:\sS(?<S>\d+(?:\.\d+)?)))*$)">
 {
 public:
     M106() = delete;
-    M106(size_t index, std::string line);
+    M106(size_t idx, std::string raw_line);
     std::optional<double> S;
 };
 
@@ -26,8 +26,8 @@ class M107 : public Entry<R"(M107)">
 {
 public:
     M107() = delete;
-    M107(size_t index, std::string line)
-        : Entry{ index, std::move(line) } {};
+    M107(size_t idx, std::string raw_line)
+        : Entry{ idx, std::move(raw_line) } {};
 };
 } // namespace dulcificum::gcode::ast
 

@@ -1,6 +1,7 @@
 #include "dulcificum/gcode/gcode_to_command.h"
 
 #include "dulcificum/command_types.h"
+#include "dulcificum/gcode/ast/ast.h"
 #include "dulcificum/gcode/ast/bed_temperature.h"
 #include "dulcificum/gcode/ast/comment_commands.h"
 #include "dulcificum/gcode/ast/delay.h"
@@ -368,46 +369,19 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M190& comman
     proto_path.emplace_back(wait_temperature);
 }
 
-void VisitCommand::to_proto_path(const gcode::ast::Layer& command)
-{
-    const auto layer = std::make_shared<botcmd::LayerChange>();
-    if (command.L)
-    {
-        layer->layer = *command.L;
-    }
-    else
-    {
-        spdlog::warn("Layer command without layer number");
-    }
-    proto_path.emplace_back(layer);
-}
-
-void VisitCommand::to_proto_path(const gcode::ast::Comment& command)
-{
-    const auto comment = std::make_shared<botcmd::Comment>();
-    comment->comment = command.C;
-    proto_path.emplace_back(comment);
-}
-
-void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::T& command)
-{
-    const auto tool_change = std::make_shared<botcmd::ChangeTool>();
-    tool_change->index = state.active_tool;
-    proto_path.emplace_back(tool_change);
-}
 
 botcmd::CommandList toCommand(gcode::ast::ast_t& gcode)
 {
     spdlog::info("Translating the GCode AST to CommandList");
 
-    VisitCommand visit_command{};
+    VisitCommand visit_command;
 
     for (const auto& instruction : gcode)
     {
         std::visit(visit_command, instruction);
     }
 
-    return visit_command.proto_path;
+    return {}; // visit_command.proto_path;
 }
 
 } // namespace dulcificum::gcode

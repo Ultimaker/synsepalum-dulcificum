@@ -12,7 +12,7 @@ class T : public Entry<R"(T(?<S>\d))">
 {
 public:
     T() = delete;
-    T(size_t index, std::string line);
+    T(size_t idx, std::string raw_line);
     std::optional<size_t> S;
 };
 } // namespace dulcificum::gcode::ast

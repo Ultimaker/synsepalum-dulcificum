@@ -18,7 +18,7 @@ class G92 : public Entry<R"(G92((?:\sX(?<X>-?\d+(?:\.\d+)?))|(?:\sY(?<Y>-?\d+(?:
 {
 public:
     G92() = delete;
-    G92(size_t index, std::string line);
+    G92(size_t idx, std::string raw_line);
     std::optional<double> X;
     std::optional<double> Y;
     std::optional<double> Z;

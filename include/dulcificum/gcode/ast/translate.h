@@ -30,7 +30,7 @@ public:
     std::optional<double> F;
 
     G0_G1() = delete;
-    G0_G1(size_t index, std::string line);
+    G0_G1(size_t idx, std::string raw_line);
 };
 
 } // namespace dulcificum::gcode::ast

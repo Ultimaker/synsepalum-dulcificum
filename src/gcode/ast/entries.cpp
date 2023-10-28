@@ -12,10 +12,11 @@
 
 #include <fmt/format.h>
 
+
 namespace dulcificum::gcode::ast
 {
-BuildVolumeTemperature::BuildVolumeTemperature(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+BuildVolumeTemperature::BuildVolumeTemperature(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"S">())
@@ -28,8 +29,8 @@ BuildVolumeTemperature::BuildVolumeTemperature(size_t index, std::string line)
     }
 }
 
-FeatureType::FeatureType(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+FeatureType::FeatureType(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"T">())
@@ -42,8 +43,8 @@ FeatureType::FeatureType(size_t index, std::string line)
     }
 }
 
-G0_G1::G0_G1(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+G0_G1::G0_G1(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     // clang-format off
@@ -59,8 +60,8 @@ G0_G1::G0_G1(size_t index, std::string line)
     }
 }
 
-G4::G4(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+G4::G4(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"P">())
@@ -74,8 +75,8 @@ G4::G4(size_t index, std::string line)
     }
 }
 
-G280::G280(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+G280::G280(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"S">())
@@ -88,8 +89,8 @@ G280::G280(size_t index, std::string line)
     }
 }
 
-G92::G92(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+G92::G92(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     // clang-format off
@@ -104,8 +105,8 @@ G92::G92(size_t index, std::string line)
     }
 }
 
-InitialTemperatureBuildPlate::InitialTemperatureBuildPlate(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+InitialTemperatureBuildPlate::InitialTemperatureBuildPlate(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"S">())
@@ -118,8 +119,8 @@ InitialTemperatureBuildPlate::InitialTemperatureBuildPlate(size_t index, std::st
     }
 }
 
-InitialTemperatureExtruder::InitialTemperatureExtruder(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+InitialTemperatureExtruder::InitialTemperatureExtruder(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     // clang-format off
@@ -132,8 +133,8 @@ InitialTemperatureExtruder::InitialTemperatureExtruder(size_t index, std::string
     }
 }
 
-Layer::Layer(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+Layer::Layer(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"L">())
@@ -146,8 +147,8 @@ Layer::Layer(size_t index, std::string line)
     }
 }
 
-M104::M104(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+M104::M104(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     // clang-format off
@@ -160,8 +161,8 @@ M104::M104(size_t index, std::string line)
     }
 }
 
-M106::M106(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+M106::M106(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"S">())
@@ -174,8 +175,8 @@ M106::M106(size_t index, std::string line)
     }
 }
 
-M109::M109(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+M109::M109(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     // clang-format off
@@ -189,8 +190,8 @@ M109::M109(size_t index, std::string line)
     }
 }
 
-M140::M140(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+M140::M140(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"S">())
@@ -203,8 +204,8 @@ M140::M140(size_t index, std::string line)
     }
 }
 
-M190::M190(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+M190::M190(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     // clang-format off
@@ -217,8 +218,8 @@ M190::M190(size_t index, std::string line)
     }
 }
 
-M204::M204(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+M204::M204(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     // clang-format off
@@ -232,8 +233,8 @@ M204::M204(size_t index, std::string line)
     }
 }
 
-M205::M205(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+M205::M205(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     // clang-format off
@@ -248,8 +249,8 @@ M205::M205(size_t index, std::string line)
     }
 }
 
-Mesh::Mesh(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+Mesh::Mesh(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"M">())
@@ -262,8 +263,8 @@ Mesh::Mesh(size_t index, std::string line)
     }
 }
 
-Comment::Comment(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+Comment::Comment(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"C">())
@@ -276,8 +277,8 @@ Comment::Comment(size_t index, std::string line)
     }
 }
 
-T::T(size_t index, std::string line)
-    : Entry{ index, std::move(line) }
+T::T(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
     if (const auto& value = matches.get<"S">())

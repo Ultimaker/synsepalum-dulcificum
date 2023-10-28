@@ -16,7 +16,7 @@ class M204 : public Entry<R"(M204((?:\sP(?<P>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.
 {
 public:
     M204() = delete;
-    M204(size_t index, std::string line);
+    M204(size_t idx, std::string raw_line);
     std::optional<double> P;
     std::optional<double> T;
     std::optional<double> S;
@@ -33,7 +33,7 @@ class M205 : public Entry<R"(M205((?:\sX(?<X>-?\d+(?:\.\d+)?))|(?:\sY(?<Y>-?\d+(
 {
 public:
     M205() = delete;
-    M205(size_t index, std::string line);
+    M205(size_t idx, std::string raw_line);
     std::optional<double> X;
     std::optional<double> Y;
     std::optional<double> Z;

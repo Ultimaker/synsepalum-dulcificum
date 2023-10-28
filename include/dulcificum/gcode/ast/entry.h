@@ -25,9 +25,14 @@ public:
     using value_type = std::map<std::string_view, std::variant<double, int, std::string_view>>;
 
     Entry() = delete;
-    Entry(size_t index, std::string line)
-        : index{ index }
-        , line{ std::move(line) } {};
+    Entry(size_t idx, std::string raw_line)
+        : index{ idx }
+        , line{ std::move(raw_line) } {};
+    Entry(const Entry&) = default;
+    Entry(Entry&&) = default;
+    Entry& operator=(const Entry&) = default;
+    Entry& operator=(Entry&&) = default;
+    virtual ~Entry() = default;
 
     size_t index;
     std::string line;

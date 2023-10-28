@@ -14,7 +14,7 @@ class G280 : public Entry<R"(G280((?:\sS(?<S>\d+(?:\.\d+)?)))*$)">
 {
 public:
     G280() = delete;
-    G280(size_t index, std::string line);
+    G280(size_t idx, std::string raw_line);
     std::optional<size_t> S;
 };
 } // namespace dulcificum::gcode::ast
