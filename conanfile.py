@@ -177,6 +177,7 @@ class DulcificumConan(ConanFile):
     def package(self):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
         copy(self, "translator*", src = os.path.join(self.build_folder, "apps"), dst = os.path.join(self.package_folder, "bin"), keep_path = False)
+        copy(self, "*.pyd", src = os.path.join(self.build_folder, "pyDulcificum"), dst = os.path.join(self.package_folder, "lib", "pyDulcificum"), keep_path = False)
         packager = AutoPackager(self)
         packager.run()
 
