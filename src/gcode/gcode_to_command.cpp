@@ -366,6 +366,10 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M109& comman
     set_temperature->temperature = command.S.value();
     set_temperature->index = command.T ? command.T.value() : state.active_tool;
     proto_path.emplace_back(set_temperature);
+
+    const auto wait_temperature = std::make_shared<botcmd::WaitForTemperature>();
+    wait_temperature->index = command.T ? command.T.value() : state.active_tool;
+    proto_path.emplace_back(wait_temperature);
 }
 
 void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::Layer& command)
