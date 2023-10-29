@@ -17,17 +17,17 @@ namespace botcmd
 
 enum class CommandType
 {
-    kInvalid,
-    kMove, // most commands are move commands
-    kActiveFanEnable, // look at m_fan_state
-    kActiveFanDuty, // look at m_fan_speed
-    kSetTemperature, // change temperature for active tool
-    kChangeTool, // change active tool
-    kComment, // do nothing, only emit comments
-    kDelay, // delay - command to wait for event
-    kLayerChange, // layer - denoting a layer is changed
-    kWaitForTemperature, // firmware delays until temp reached
-    kPause, // Command to allow for user defined pause.
+    Invalid,
+    Move, // most commands are move commands
+    ActiveFanEnable, // look at m_fan_state
+    ActiveFanDuty, // look at m_fan_speed
+    SetTemperature, // change temperature for active tool
+    ChangeTool, // change active tool
+    Comment, // do nothing, only emit comments
+    Delay, // delay - command to wait for event
+    LayerChange, // layer - denoting a layer is changed
+    WaitForTemperature, // firmware delays until temp reached
+    Pause, // Command to allow for user defined pause.
 };
 
 enum class Tag
@@ -67,7 +67,7 @@ using CommandList = std::vector<CommandPtr>;
 struct Comment : public Command
 {
     Comment() noexcept
-        : Command(CommandType::kComment)
+        : Command(CommandType::Comment)
     {
     }
 
@@ -77,7 +77,7 @@ struct Comment : public Command
 struct Move : public Command
 {
     Move() noexcept
-        : Command(CommandType::kMove)
+        : Command(CommandType::Move)
     {
     }
 
@@ -89,7 +89,7 @@ struct Move : public Command
 struct FanDuty : public Command
 {
     FanDuty() noexcept
-        : Command(CommandType::kActiveFanDuty)
+        : Command(CommandType::ActiveFanDuty)
     {
     }
 
@@ -100,7 +100,7 @@ struct FanDuty : public Command
 struct FanToggle : public Command
 {
     FanToggle() noexcept
-        : Command(CommandType::kActiveFanEnable)
+        : Command(CommandType::ActiveFanEnable)
     {
     }
 
@@ -111,7 +111,7 @@ struct FanToggle : public Command
 struct SetTemperature : public Command
 {
     SetTemperature() noexcept
-        : Command(CommandType::kSetTemperature)
+        : Command(CommandType::SetTemperature)
     {
     }
 
@@ -122,7 +122,7 @@ struct SetTemperature : public Command
 struct WaitForTemperature : public Command
 {
     WaitForTemperature() noexcept
-        : Command(CommandType::kWaitForTemperature)
+        : Command(CommandType::WaitForTemperature)
     {
     }
 
@@ -132,7 +132,7 @@ struct WaitForTemperature : public Command
 struct ChangeTool : public Command
 {
     ChangeTool() noexcept
-        : Command(CommandType::kChangeTool)
+        : Command(CommandType::ChangeTool)
     {
     }
 
@@ -143,7 +143,7 @@ struct ChangeTool : public Command
 struct Delay : public Command
 {
     Delay() noexcept
-        : Command(CommandType::kDelay)
+        : Command(CommandType::Delay)
     {
     }
 
@@ -153,7 +153,7 @@ struct Delay : public Command
 struct LayerChange : public Command
 {
     LayerChange() noexcept
-        : Command(CommandType::kLayerChange)
+        : Command(CommandType::LayerChange)
     {
     }
 

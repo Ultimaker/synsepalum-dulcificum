@@ -14,17 +14,17 @@ namespace botcmd
 
 NLOHMANN_JSON_SERIALIZE_ENUM(
     CommandType,
-    { { CommandType::kInvalid, "invalid" },
-      { CommandType::kMove, "move" },
-      { CommandType::kActiveFanEnable, "toggle_fan" },
-      { CommandType::kActiveFanDuty, "fan_duty" },
-      { CommandType::kSetTemperature, "set_toolhead_temperature" },
-      { CommandType::kChangeTool, "change_toolhead" },
-      { CommandType::kComment, "comment" },
-      { CommandType::kLayerChange, "comment" },
-      { CommandType::kDelay, "delay" },
-      { CommandType::kWaitForTemperature, "wait_for_temperature" },
-      { CommandType::kPause, "pause" } })
+    { { CommandType::Invalid, "invalid" },
+      { CommandType::Move, "move" },
+      { CommandType::ActiveFanEnable, "toggle_fan" },
+      { CommandType::ActiveFanDuty, "fan_duty" },
+      { CommandType::SetTemperature, "set_toolhead_temperature" },
+      { CommandType::ChangeTool, "change_toolhead" },
+      { CommandType::Comment, "comment" },
+      { CommandType::LayerChange, "comment" },
+      { CommandType::Delay, "delay" },
+      { CommandType::WaitForTemperature, "wait_for_temperature" },
+      { CommandType::Pause, "pause" } })
 
 NLOHMANN_JSON_SERIALIZE_ENUM(
     Tag,
