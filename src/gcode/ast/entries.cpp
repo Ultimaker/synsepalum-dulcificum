@@ -11,6 +11,7 @@
 #include "dulcificum/utils/svtod.h"
 
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 
 namespace dulcificum::gcode::ast
@@ -139,7 +140,7 @@ Layer::Layer(size_t idx, std::string raw_line)
     const auto& matches = get();
     if (const auto& value = matches.get<"L">())
     {
-        L = utils::StringViewToDouble(value.to_view());
+        L = static_cast<int64_t>(utils::StringViewToDouble(value.to_view()));
     }
     else
     {

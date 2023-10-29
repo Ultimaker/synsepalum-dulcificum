@@ -16,7 +16,7 @@ class Layer : public Entry<R"(;LAYER:(?<L>-?\d+))">
 public:
     Layer() = delete;
     Layer(size_t idx, std::string raw_line);
-    std::optional<size_t> L;
+    std::optional<int64_t> L;
 };
 
 /*!

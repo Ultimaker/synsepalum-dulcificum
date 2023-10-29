@@ -4,6 +4,7 @@
 
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/zip.hpp>
+#include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
 namespace dulcificum::miracle_jtp
@@ -111,7 +112,7 @@ nlohmann::json getCommandParameters(const botcmd::Command& cmd)
         const auto dcmd = static_cast<const botcmd::LayerChange&>(cmd);
         auto comment = botcmd::Comment{};
         // TODO what data should be placed in the parenthesis?
-        comment.comment = "Layer Section " + std::to_string(dcmd.layer) + " (0)";
+        comment.comment = fmt::format("Layer Section {} ({})", dcmd.layer, 0);
         const auto com = static_cast<const botcmd::Comment&>(comment);
         jparams[k_key_str::comment] = com.comment;
         return jparams;

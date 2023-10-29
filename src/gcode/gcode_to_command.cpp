@@ -26,7 +26,6 @@ namespace dulcificum::gcode
 
 void VisitCommand::update_state(const gcode::ast::G0_G1& command)
 {
-    spdlog::debug("Updating state for {}: {}", command.index, command.line);
     if (command.X)
     {
         state.X = state.X_positioning == Positioning::Absolute ? *command.X : *command.X + state.X;
@@ -125,9 +124,13 @@ void VisitCommand::update_state(const gcode::ast::M190& command)
 
 void VisitCommand::update_state(const gcode::ast::Layer& command)
 {
-    if (command.L)
+    if (command.L) [[likely]]
     {
-        state.layer = *command.L;
+        if (! state.layer_index_offset.has_value()) [[unlikely]]
+        {
+            state.layer_index_offset = -1 * command.L.value();
+        }
+        state.layer = command.L.value();
     }
     else
     {
@@ -375,7 +378,7 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::Layer& comma
     const auto layer = std::make_shared<botcmd::LayerChange>();
     if (command.L)
     {
-        layer->layer = *command.L;
+        layer->layer = command.L.value() + state.layer_index_offset.value();
     }
     else
     {

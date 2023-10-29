@@ -25,7 +25,8 @@ struct State
 
     bool is_retracted{ false };
 
-    unsigned int layer{ 0 };
+    int64_t layer{ 0 };
+    std::optional<int64_t> layer_index_offset{ std::nullopt };
     std::string mesh{ "" };
     std::string feature_type{ "" };
 

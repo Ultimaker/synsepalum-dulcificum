@@ -7,6 +7,7 @@
 #include <dulcificum/miracle_jtp/mgjtp_command_to_json.h>
 #include <dulcificum/gcode/gcode_to_command.h>
 #include <dulcificum/utils/io.h>
+#include <dulcificum.h>
 #include <map>
 
 #include <nlohmann/json.hpp>
@@ -40,18 +41,6 @@ int main(int argc, const char** argv)
     spdlog::info("Tasting the menu");
 
     auto input{ dulcificum::utils::readFile(args.at("INPUT").asString()).value() };
-    auto gcode_ast = dulcificum::gcode::parse(input);
-    auto command_list = dulcificum::gcode::toCommand(gcode_ast);
-
-    auto json_commands = nlohmann::json::array();
-    for (const auto& command: command_list)
-    {
-        json_commands.emplace_back(dulcificum::miracle_jtp::toJson(*command));
-    }
-
-    spdlog::info("Writing JSON to file");
-    auto output = json_commands.dump();
-    dulcificum::utils::writeFile(args.at("OUTPUT").asString(), output);
-
-    auto x = 1;
+    auto translated = dulcificum::GCode2Miracle_JTP(input);
+    dulcificum::utils::writeFile(args.at("OUTPUT").asString(), translated);
 }

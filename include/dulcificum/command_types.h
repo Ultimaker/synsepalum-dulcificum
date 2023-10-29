@@ -137,7 +137,7 @@ struct ChangeTool : public Command
     }
 
     ExtruderIndex index{ 0 };
-    ParamPoint position{ NAN, NAN, NAN, NAN, NAN };
+    ParamPoint position{ NAN, NAN, NAN, NAN, NAN }; // Badman
 };
 
 struct Delay : public Command
@@ -157,7 +157,7 @@ struct LayerChange : public Command
     {
     }
 
-    size_t layer{ 0 };
+    int64_t layer{ 0 };
 };
 
 CommandPtr spawnCommandPtr(const CommandType& type) noexcept;
