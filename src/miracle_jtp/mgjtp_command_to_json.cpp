@@ -5,6 +5,8 @@
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/zip.hpp>
 
+#include <spdlog/spdlog.h>
+
 namespace dulcificum::miracle_jtp
 {
 
@@ -82,7 +84,8 @@ nlohmann::json getCommandParameters(const botcmd::Command& cmd)
     {
         const auto dcmd = static_cast<const botcmd::SetTemperature&>(cmd);
         jparams[k_key_str::index] = dcmd.index;
-        jparams[k_key_str::temperature] = dcmd.temperature;
+        // Methods require temperature commands to be expressed in whole degrees
+        jparams[k_key_str::temperature] = static_cast<size_t>(dcmd.temperature);
         return jparams;
     }
     if (cmd.type == botcmd::CommandType::kWaitForTemperature)
