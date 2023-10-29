@@ -2,9 +2,9 @@
 
 #include "dulcificum/miracle_jtp/mgjtp_mappings_json_key_to_str.h"
 
+#include <fmt/format.h>
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/zip.hpp>
-#include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
 namespace dulcificum::miracle_jtp
