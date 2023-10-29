@@ -94,9 +94,9 @@ private:
     void to_proto_path(const ast::M107& command);
     void to_proto_path(const ast::M109& command);
     void to_proto_path(const ast::M190& command);
-    //    void to_proto_path(const ast::Layer& command);
-    //    void to_proto_path(const ast::Comment& command);
-    //    void to_proto_path(const ast::T& command);
+    void to_proto_path(const ast::Layer& command);
+    void to_proto_path(const ast::Comment& command);
+    void to_proto_path(const ast::T& command);
 };
 
 } // namespace dulcificum::gcode
