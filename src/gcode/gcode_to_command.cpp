@@ -166,7 +166,7 @@ void VisitCommand::update_state(const gcode::ast::InitialTemperatureExtruder& co
 {
     if (command.T && command.S)
     {
-        state.extruder_temperatures[*command.T] = *command.S;
+        state.extruder_temperatures[command.T.value()] = command.S.value();
     }
     else
     {
@@ -385,6 +385,14 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::Layer& comma
         spdlog::warn("Layer command without layer number");
     }
     proto_path.emplace_back(layer);
+}
+
+void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::InitialTemperatureExtruder& command)
+{
+    const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
+    set_temperature->temperature = command.S.value();
+    set_temperature->index = command.T.value();
+    proto_path.emplace_back(set_temperature);
 }
 
 void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::Comment& command)

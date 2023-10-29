@@ -82,7 +82,6 @@ private:
         // TODO: M205
         // TODO: Mesh
         // TODO: FeatureType
-        // TODO: InitialTemperatureExtruder
         // TODO: InitialTemperatureBuildPlate
         // TODO: BuildVolumeTemperature
         // TODO: Unknown
@@ -97,6 +96,7 @@ private:
     void to_proto_path(const ast::Layer& command);
     void to_proto_path(const ast::Comment& command);
     void to_proto_path(const ast::T& command);
+    void to_proto_path(const ast::InitialTemperatureExtruder& command);
 };
 
 } // namespace dulcificum::gcode
