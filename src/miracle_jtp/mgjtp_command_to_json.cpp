@@ -4,7 +4,6 @@
 
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/zip.hpp>
-
 #include <spdlog/spdlog.h>
 
 namespace dulcificum::miracle_jtp
