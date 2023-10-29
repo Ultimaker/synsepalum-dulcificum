@@ -28,24 +28,24 @@ void VisitCommand::update_state(const gcode::ast::G0_G1& command)
 {
     if (command.X)
     {
-        state.X = state.X_positioning == Positioning::Absolute ? *command.X : *command.X + state.X;
+        state.X = state.X_positioning == Positioning::Absolute ? command.X.value() : command.X.value() + state.X;
     }
     if (command.Y)
     {
-        state.Y = state.Y_positioning == Positioning::Absolute ? *command.Y : *command.Y + state.Y;
+        state.Y = state.Y_positioning == Positioning::Absolute ? command.Y.value() : command.Y.value() + state.Y;
     }
     if (command.Z)
     {
-        state.Z = state.Z_positioning == Positioning::Absolute ? *command.Z : *command.Z + state.Z;
+        state.Z = state.Z_positioning == Positioning::Absolute ? command.Z.value() : command.Z.value() + state.Z;
     }
     if (command.E)
     {
-        state.E[state.active_tool] = state.E_positioning == Positioning::Absolute ? *command.E : *command.E + state.E[state.active_tool];
+        state.E[state.active_tool] = state.E_positioning == Positioning::Absolute ? command.E.value() : command.E.value() + state.E[state.active_tool];
     }
 
     if (command.F)
     {
-        state.F[state.active_tool] = *command.F;
+        state.F[state.active_tool] = command.F.value();
     }
 }
 
@@ -67,12 +67,12 @@ void VisitCommand::update_state([[maybe_unused]] const gcode::ast::G91& command)
 
 void VisitCommand::update_state(const gcode::ast::G92& command)
 {
-    state.origin_x = state.X - (command.X ? *command.X : 0.0);
-    state.origin_y = state.Y - (command.Y ? *command.Y : 0.0);
-    state.origin_z = state.Z - (command.Z ? *command.Z : 0.0);
-    state.X = command.X ? *command.X : 0.0;
-    state.Y = command.Y ? *command.Y : 0.0;
-    state.Z = command.X ? *command.Z : 0.0;
+    state.origin_x = state.X - (command.X ? command.X.value() : 0.0);
+    state.origin_y = state.Y - (command.Y ? command.Y.value() : 0.0);
+    state.origin_z = state.Z - (command.Z ? command.Z.value() : 0.0);
+    state.X = command.X ? command.X.value() : 0.0;
+    state.Y = command.Y ? command.Y.value() : 0.0;
+    state.Z = command.X ? command.Z.value() : 0.0;
 }
 
 void VisitCommand::update_state([[maybe_unused]] const gcode::ast::M82& command)
@@ -87,14 +87,14 @@ void VisitCommand::update_state([[maybe_unused]] const gcode::ast::M83& command)
 
 void VisitCommand::update_state(const gcode::ast::M104& command)
 {
-    state.extruder_temperatures[state.active_tool] = *command.S;
+    state.extruder_temperatures[state.active_tool] = command.S.value();
 }
 
 void VisitCommand::update_state(const gcode::ast::M106& command)
 {
     if (command.S)
     {
-        state.fan_speed = *command.S;
+        state.fan_speed = command.S.value();
     }
     else
     {
@@ -142,7 +142,7 @@ void VisitCommand::update_state(const gcode::ast::Mesh& command)
 {
     if (command.M)
     {
-        state.mesh = *command.M;
+        state.mesh = command.M.value();
     }
     else
     {
@@ -154,7 +154,7 @@ void VisitCommand::update_state(const gcode::ast::FeatureType& command)
 {
     if (command.T)
     {
-        state.feature_type = *command.T;
+        state.feature_type = command.T.value();
     }
     else
     {
@@ -178,7 +178,7 @@ void VisitCommand::update_state(const gcode::ast::InitialTemperatureBuildPlate& 
 {
     if (command.S)
     {
-        state.build_plate_temperature = *command.S;
+        state.build_plate_temperature = command.S.value();
     }
     else
     {
@@ -190,7 +190,7 @@ void VisitCommand::update_state(const gcode::ast::BuildVolumeTemperature& comman
 {
     if (command.S)
     {
-        state.chamber_temperature = *command.S;
+        state.chamber_temperature = command.S.value();
     }
     else
     {
@@ -202,7 +202,7 @@ void VisitCommand::update_state(const gcode::ast::T& command)
 {
     if (command.S)
     {
-        state.active_tool = *command.S;
+        state.active_tool = command.S.value();
     }
     else
     {
@@ -215,11 +215,11 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     const auto move = std::make_shared<botcmd::Move>();
     // if position is not specified for an axis, move with a relative delta 0 move
     move->point = {
-        command.X ? *command.X : 0.0,
-        command.Y ? *command.Y : 0.0,
-        command.Z ? *command.Z : 0.0,
-        state.active_tool == 0 && command.E ? *command.E : 0.0,
-        state.active_tool == 1 && command.E ? *command.E : 0.0,
+        command.X ? command.X.value() : 0.0,
+        command.Y ? command.Y.value() : 0.0,
+        command.Z ? command.Z.value() : 0.0,
+        state.active_tool == 0 && command.E ? command.E.value() : 0.0,
+        state.active_tool == 1 && command.E ? command.E.value() : 0.0,
     };
     // gcode is in mm / min, bot cmd uses mm / sec
     move->feedrate = state.F[state.active_tool] / 60.0;
@@ -238,12 +238,12 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (state.E_positioning == Positioning::Relative)
     {
-        delta_e = *command.E;
+        delta_e = command.E.value();
     }
     else
     {
         const auto last_e = previous_states[previous_states.size() - 1].E[state.active_tool];
-        delta_e = *command.E - last_e;
+        delta_e = command.E.value() - last_e;
     }
 
     if (state.is_retracted)
@@ -309,11 +309,11 @@ void VisitCommand::to_proto_path(const gcode::ast::G4& command)
     const auto delay = std::make_shared<botcmd::Delay>();
     if (command.S)
     {
-        delay->seconds = *command.S;
+        delay->seconds = command.S.value();
     }
     else if (command.P)
     {
-        delay->seconds = *command.P * 1000.0;
+        delay->seconds = command.P.value() * 1000.0;
     }
     else
     {
