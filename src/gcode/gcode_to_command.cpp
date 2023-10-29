@@ -381,7 +381,7 @@ botcmd::CommandList toCommand(gcode::ast::ast_t& gcode)
         std::visit(visit_command, instruction);
     }
 
-    return {}; // visit_command.proto_path;
+    return visit_command.proto_path;
 }
 
 } // namespace dulcificum::gcode
