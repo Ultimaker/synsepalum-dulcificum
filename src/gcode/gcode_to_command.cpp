@@ -109,17 +109,17 @@ void VisitCommand::update_state([[maybe_unused]] const gcode::ast::M107& command
 
 void VisitCommand::update_state(const gcode::ast::M109& command)
 {
-    state.extruder_temperatures[state.active_tool] = *command.S;
+    state.extruder_temperatures[state.active_tool] = command.S.value();
 }
 
 void VisitCommand::update_state(const gcode::ast::M140& command)
 {
-    state.build_plate_temperature = *command.S;
+    state.build_plate_temperature = command.S.value();
 }
 
 void VisitCommand::update_state(const gcode::ast::M190& command)
 {
-    state.build_plate_temperature = *command.S;
+    state.build_plate_temperature = command.S.value();
 }
 
 void VisitCommand::update_state(const gcode::ast::Layer& command)
@@ -356,7 +356,7 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M107& comman
 void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M109& command)
 {
     const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
-    set_temperature->temperature = state.build_plate_temperature;
+    set_temperature->temperature = command.S.value();
     set_temperature->index = state.active_tool;
     proto_path.emplace_back(set_temperature);
 }
@@ -364,7 +364,7 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M109& comman
 void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M190& command)
 {
     const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
-    set_temperature->temperature = state.build_plate_temperature;
+    set_temperature->temperature = command.S.value();
     set_temperature->index = state.active_tool;
     proto_path.emplace_back(set_temperature);
 
