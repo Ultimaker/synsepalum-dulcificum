@@ -10,13 +10,15 @@ namespace dulcificum::gcode::ast
 /*!
  * /brief with no speed sets the fan to full speed.
  * S = Speed, from 0 to 255
+ * P = Fan index
  */
-class M106 : public Entry<R"(M106((?:\sS(?<S>\d+(?:\.\d+)?)))*$)">
+class M106 : public Entry<R"(M106((?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sP(?<P>\d+(?:\.\d+)?)))*$)">
 {
 public:
     M106() = delete;
     M106(size_t idx, std::string raw_line);
     std::optional<double> S;
+    std::optional<size_t> P;
 };
 
 /*!

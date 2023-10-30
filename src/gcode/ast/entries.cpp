@@ -166,11 +166,11 @@ M106::M106(size_t idx, std::string raw_line)
     : Entry{ idx, std::move(raw_line) }
 {
     const auto& matches = get();
-    if (const auto& value = matches.get<"S">())
-    {
-        S = utils::StringViewToDouble(value.to_view());
-    }
-    else
+    // clang-format off
+    if (const auto& value = matches.get<"S">()) { S = utils::StringViewToDouble(value.to_view()); }
+    if (const auto& value = matches.get<"P">()) { P = static_cast<size_t>(utils::StringViewToDouble(value.to_view())); }
+    // clang-format on
+    if (S == std::nullopt && P == std::nullopt)
     {
         throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
     }
