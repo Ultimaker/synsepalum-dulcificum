@@ -90,23 +90,6 @@ void VisitCommand::update_state(const gcode::ast::M104& command)
     state.extruder_temperatures[command.T ? command.T.value() : state.active_tool] = command.S.value();
 }
 
-void VisitCommand::update_state(const gcode::ast::M106& command)
-{
-    if (command.S)
-    {
-        state.fan_speed = command.S.value();
-    }
-    else
-    {
-        state.fan_speed = 255;
-    }
-}
-
-void VisitCommand::update_state([[maybe_unused]] const gcode::ast::M107& command)
-{
-    state.fan_speed = 0;
-}
-
 void VisitCommand::update_state(const gcode::ast::M109& command)
 {
     if (command.S)
@@ -341,14 +324,14 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M106& comman
 {
     // turn fan on
     const auto toggle_fan = std::make_shared<botcmd::FanToggle>();
-    toggle_fan->is_on = false;
-    toggle_fan->index = 0; // TODO: implement fan index
+    toggle_fan->is_on = true;
+    toggle_fan->index = command.P.has_value() ? command.P.value() : 0;
     proto_path.emplace_back(toggle_fan);
 
     // set fan speed
     const auto set_fan_speed = std::make_shared<botcmd::FanDuty>();
-    set_fan_speed->duty = state.fan_speed;
-    set_fan_speed->index = 0; // TODO; implement fan index
+    set_fan_speed->duty = command.S.has_value() ? command.S.value() : 255;
+    set_fan_speed->index = toggle_fan->index;
     proto_path.emplace_back(set_fan_speed);
 }
 
@@ -356,7 +339,7 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M107& comman
 {
     const auto toggle_fan = std::make_shared<botcmd::FanToggle>();
     toggle_fan->is_on = false;
-    toggle_fan->index = 0; // TODO: implement fan index
+    toggle_fan->index = command.P.has_value() ? command.P.value() : 0;
     proto_path.emplace_back(toggle_fan);
 }
 

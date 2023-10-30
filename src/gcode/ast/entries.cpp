@@ -176,6 +176,15 @@ M106::M106(size_t idx, std::string raw_line)
     }
 }
 
+M107::M107(size_t idx, std::string raw_line)
+    : Entry{ idx, std::move(raw_line) }
+{
+    const auto& matches = get();
+    // clang-format off
+    if (const auto& value = matches.get<"P">()) { P = static_cast<size_t>(utils::StringViewToDouble(value.to_view())); }
+    // clang-format on
+}
+
 M109::M109(size_t idx, std::string raw_line)
     : Entry{ idx, std::move(raw_line) }
 {

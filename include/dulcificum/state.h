@@ -20,8 +20,8 @@ enum class Positioning
 
 struct State
 {
-    unsigned int num_extruders{ 2 };
-    unsigned int active_tool{ 0 };
+    size_t num_extruders{ 2 };
+    size_t active_tool{ 0 };
 
     bool is_retracted{ false };
 
@@ -51,8 +51,6 @@ struct State
     std::vector<double> F = std::vector<double>(num_extruders, 0.0);
 
     std::vector<double> extruder_temperatures = std::vector<double>(num_extruders, 0.0);
-
-    double fan_speed{ 0.0 };
 
     double build_plate_temperature{ 0.0 };
 
