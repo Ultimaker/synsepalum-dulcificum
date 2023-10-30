@@ -55,8 +55,8 @@ private:
     void update_state(const ast::M82& command);
     void update_state(const ast::M83& command);
     void update_state(const ast::M104& command);
-//    void update_state(const ast::M106& command);
-//    void update_state(const ast::M107& command);
+    //    void update_state(const ast::M106& command);
+    //    void update_state(const ast::M107& command);
     void update_state(const ast::M109& command);
     void update_state(const ast::M140& command);
     void update_state(const ast::M190& command);
