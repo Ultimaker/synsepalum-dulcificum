@@ -1,7 +1,9 @@
-#include <dulcificum/miracle_jtp/mgjtp_command_to_json.h>
-#include <dulcificum/miracle_jtp/mgjtp_json_to_command.h>
+#include <dulcificum.h>
+#include <dulcificum/utils/io.h>
+#include <filesystem>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <string>
 
 #ifndef PYDULCIFICUM_VERSION
 #define PYDULCIFICUM_VERSION "0.1.0"
@@ -22,10 +24,24 @@ PYBIND11_MODULE(pyDulcificum, module)
     )pbdoc";
     module.attr("__version__") = PYDULCIFICUM_VERSION;
 
-    py::class_<dulcificum::botcmd::Move>(module, "Move")
-        .def(py::init<>())
-        .def_readwrite("point", &dulcificum::botcmd::Move::point, "The point of the move command")
-        .def_readwrite("feedrate", &dulcificum::botcmd::Move::feedrate, "The feedrate of the move command")
-        .def_readwrite("is_point_relative", &dulcificum::botcmd::Move::is_point_relative, "Components of the point relative")
-        ;
+    module.def(
+        "read_file",
+        [](const std::string& path)
+        {
+            return dulcificum::utils::readFile(std::filesystem::path(path));
+        },
+        py::arg("filename"),
+        "Reads the content of a file and returns it as a string.");
+
+    module.def(
+        "write_file",
+        [](const std::string& path, std::string& content)
+        {
+            return dulcificum::utils::writeFile(std::filesystem::path(path), content);
+        },
+        py::arg("filename"),
+        py::arg("content"),
+        "Writes a given string to a file.");
+
+    module.def("gcode_2_miracle_jtp", &dulcificum::GCode2Miracle_JTP, "Converts GGode to Miracle JSON Toolpaths", py::arg("content"));
 }

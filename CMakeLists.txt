@@ -22,18 +22,28 @@ message(STATUS "Configuring Dulcificum version: ${DULCIFICUM_VERSION}")
 find_package(nlohmann_json REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(range-v3 REQUIRED)
+find_package(ctre REQUIRED)
 
 # --- Setup the shared C++ mgjtp library ---
 set(DULCIFICUM_SRC
-        src/command_types.cpp
+        src/gcode/ast/ast.cpp
+        src/gcode/ast/entries.cpp
+        src/gcode/parse.cpp
+
         src/miracle_jtp/mgjtp_command_to_json.cpp
         src/miracle_jtp/mgjtp_json_to_command.cpp
+
+        src/gcode/gcode_to_command.cpp
+
+        src/utils/io.cpp
+        src/utils/svtod.cpp
+        src/command_types.cpp
 )
 add_library(dulcificum ${DULCIFICUM_SRC})
 target_link_libraries(dulcificum
         PUBLIC
         nlohmann_json::nlohmann_json
-        PRIVATE
+        ctre::ctre
         range-v3::range-v3
         spdlog::spdlog)
 

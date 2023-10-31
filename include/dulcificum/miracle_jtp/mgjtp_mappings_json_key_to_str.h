@@ -1,5 +1,5 @@
-#ifndef DULCIFICUM_MIRACLE_GRUE_JSONTOOLPATH_JSON_KEYS_H
-#define DULCIFICUM_MIRACLE_GRUE_JSONTOOLPATH_JSON_KEYS_H
+#ifndef INCLUDE_DULCIFICUM_MIRACLE_JTP_MGJTP_MAPPINGS_JSON_KEY_TO_STR_H
+#define INCLUDE_DULCIFICUM_MIRACLE_JTP_MGJTP_MAPPINGS_JSON_KEY_TO_STR_H
 
 #include "dulcificum/miracle_jtp/mgjtp_command_to_json.h"
 
@@ -14,16 +14,17 @@ namespace botcmd
 
 NLOHMANN_JSON_SERIALIZE_ENUM(
     CommandType,
-    { { CommandType::kInvalid, "invalid" },
-      { CommandType::kMove, "move" },
-      { CommandType::kActiveFanEnable, "toggle_fan" },
-      { CommandType::kActiveFanDuty, "fan_duty" },
-      { CommandType::kSetTemperature, "set_toolhead_temperature" },
-      { CommandType::kChangeTool, "change_toolhead" },
-      { CommandType::kComment, "comment" },
-      { CommandType::kDelay, "delay" },
-      { CommandType::kWaitForTemperature, "wait_for_temperature" },
-      { CommandType::kPause, "pause" } })
+    { { CommandType::Invalid, "invalid" },
+      { CommandType::Move, "move" },
+      { CommandType::ActiveFanEnable, "toggle_fan" },
+      { CommandType::ActiveFanDuty, "fan_duty" },
+      { CommandType::SetTemperature, "set_toolhead_temperature" },
+      { CommandType::ChangeTool, "change_toolhead" },
+      { CommandType::Comment, "comment" },
+      { CommandType::LayerChange, "comment" },
+      { CommandType::Delay, "delay" },
+      { CommandType::WaitForTemperature, "wait_for_temperature" },
+      { CommandType::Pause, "pause" } })
 
 NLOHMANN_JSON_SERIALIZE_ENUM(
     Tag,
@@ -34,6 +35,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
       { Tag::QuickToggle, "Quick Toggle" },
       { Tag::Raft, "Raft" },
       { Tag::Restart, "Restart" },
+      { Tag::Retract, "Retract" },
       { Tag::Roof, "Roof" },
       { Tag::Sparse, "Sparse" },
       { Tag::Support, "Support" },
@@ -67,4 +69,4 @@ constexpr static std::array<const std::string_view, 5> k_param_point_names{ x, y
 
 } // namespace dulcificum
 
-#endif // DULCIFICUM_MIRACLE_GRUE_JSONTOOLPATH_JSON_KEYS_H
+#endif // INCLUDE_DULCIFICUM_MIRACLE_JTP_MGJTP_MAPPINGS_JSON_KEY_TO_STR_H

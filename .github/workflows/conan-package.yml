@@ -43,6 +43,7 @@ on:
       - 'test_package/**'
       - 'conanfile.py'
       - 'CMakeLists.txt'
+      - 'pyDulcificum/**'
       - '.github/workflows/conan-package.yml'
       - '.github/worflows/requirements-conan-package.txt'
     branches:

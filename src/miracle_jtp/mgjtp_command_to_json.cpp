@@ -2,8 +2,10 @@
 
 #include "dulcificum/miracle_jtp/mgjtp_mappings_json_key_to_str.h"
 
+#include <fmt/format.h>
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/zip.hpp>
+#include <spdlog/spdlog.h>
 
 namespace dulcificum::miracle_jtp
 {
@@ -39,7 +41,7 @@ nlohmann::json zipListsIgnoreNan(const KeyListType& keys, const ValListType& val
 nlohmann::json getCommandMetadata(const botcmd::Command& cmd)
 {
     nlohmann::json jmetadata({});
-    if (cmd.type == botcmd::CommandType::kMove)
+    if (cmd.type == botcmd::CommandType::Move)
     {
         auto move = static_cast<const botcmd::Move&>(cmd);
         jmetadata["relative"] = zipListsToJson(k_key_str::k_param_point_names, move.is_point_relative);
@@ -51,57 +53,68 @@ nlohmann::json getCommandMetadata(const botcmd::Command& cmd)
 nlohmann::json getCommandParameters(const botcmd::Command& cmd)
 {
     nlohmann::json jparams({});
-    if (cmd.type == botcmd::CommandType::kMove)
+    if (cmd.type == botcmd::CommandType::Move)
     {
         const auto move = static_cast<const botcmd::Move&>(cmd);
         jparams = zipListsToJson(k_key_str::k_param_point_names, move.point);
         jparams[k_key_str::feedrate] = move.feedrate;
         return jparams;
     }
-    if (cmd.type == botcmd::CommandType::kComment)
+    if (cmd.type == botcmd::CommandType::Comment)
     {
         const auto com = static_cast<const botcmd::Comment&>(cmd);
         jparams[k_key_str::comment] = com.comment;
         return jparams;
     }
-    if (cmd.type == botcmd::CommandType::kActiveFanDuty)
+    if (cmd.type == botcmd::CommandType::ActiveFanDuty)
     {
         const auto dut = static_cast<const botcmd::FanDuty&>(cmd);
         jparams[k_key_str::index] = dut.index;
         jparams[k_key_str::value] = dut.duty;
         return jparams;
     }
-    if (cmd.type == botcmd::CommandType::kActiveFanEnable)
+    if (cmd.type == botcmd::CommandType::ActiveFanEnable)
     {
         const auto fan = static_cast<const botcmd::FanToggle&>(cmd);
         jparams[k_key_str::index] = fan.index;
         jparams[k_key_str::value] = fan.is_on;
         return jparams;
     }
-    if (cmd.type == botcmd::CommandType::kSetTemperature)
+    if (cmd.type == botcmd::CommandType::SetTemperature)
     {
         const auto dcmd = static_cast<const botcmd::SetTemperature&>(cmd);
         jparams[k_key_str::index] = dcmd.index;
-        jparams[k_key_str::temperature] = dcmd.temperature;
+        // Methods require temperature commands to be expressed in whole degrees
+        jparams[k_key_str::temperature] = static_cast<size_t>(dcmd.temperature);
         return jparams;
     }
-    if (cmd.type == botcmd::CommandType::kWaitForTemperature)
+    if (cmd.type == botcmd::CommandType::WaitForTemperature)
     {
         const auto dcmd = static_cast<const botcmd::WaitForTemperature&>(cmd);
         jparams[k_key_str::index] = dcmd.index;
         return jparams;
     }
-    if (cmd.type == botcmd::CommandType::kChangeTool)
+    if (cmd.type == botcmd::CommandType::ChangeTool)
     {
         const auto dcmd = static_cast<const botcmd::ChangeTool&>(cmd);
         jparams = zipListsIgnoreNan(k_key_str::k_param_point_names, dcmd.position);
         jparams[k_key_str::index] = dcmd.index;
         return jparams;
     }
-    if (cmd.type == botcmd::CommandType::kDelay)
+    if (cmd.type == botcmd::CommandType::Delay)
     {
         const auto dcmd = static_cast<const botcmd::Delay&>(cmd);
         jparams[k_key_str::seconds] = dcmd.seconds;
+        return jparams;
+    }
+    if (cmd.type == botcmd::CommandType::LayerChange)
+    {
+        const auto dcmd = static_cast<const botcmd::LayerChange&>(cmd);
+        auto comment = botcmd::Comment{};
+        // TODO what data should be placed in the parenthesis?
+        comment.comment = fmt::format("Layer Section {} ({})", dcmd.layer, 0);
+        const auto com = static_cast<const botcmd::Comment&>(comment);
+        jparams[k_key_str::comment] = com.comment;
         return jparams;
     }
     return jparams;

@@ -1,5 +1,5 @@
-#ifndef DULCIFICUM_COMMAND_TYPES_H
-#define DULCIFICUM_COMMAND_TYPES_H
+#ifndef INCLUDE_DULCIFICUM_COMMAND_TYPES_H
+#define INCLUDE_DULCIFICUM_COMMAND_TYPES_H
 
 #include <cmath>
 #include <memory>
@@ -17,16 +17,17 @@ namespace botcmd
 
 enum class CommandType
 {
-    kInvalid,
-    kMove, // most commands are move commands
-    kActiveFanEnable, // look at m_fan_state
-    kActiveFanDuty, // look at m_fan_speed
-    kSetTemperature, // change temperature for active tool
-    kChangeTool, // change active tool
-    kComment, // do nothing, only emit comments
-    kDelay, // delay - command to wait for event
-    kWaitForTemperature, // firmware delays until temp reached
-    kPause, // Command to allow for user defined pause.
+    Invalid,
+    Move, // most commands are move commands
+    ActiveFanEnable, // look at m_fan_state
+    ActiveFanDuty, // look at m_fan_speed
+    SetTemperature, // change temperature for active tool
+    ChangeTool, // change active tool
+    Comment, // do nothing, only emit comments
+    Delay, // delay - command to wait for event
+    LayerChange, // layer - denoting a layer is changed
+    WaitForTemperature, // firmware delays until temp reached
+    Pause, // Command to allow for user defined pause.
 };
 
 enum class Tag
@@ -38,6 +39,7 @@ enum class Tag
     QuickToggle,
     Raft,
     Restart,
+    Retract,
     Roof,
     Support,
     Sparse,
@@ -50,7 +52,7 @@ struct Command
 {
     Command() = delete;
 
-    constexpr explicit Command(CommandType type) noexcept
+    explicit Command(CommandType type) noexcept
         : type{ type }
     {
     }
@@ -65,7 +67,7 @@ using CommandList = std::vector<CommandPtr>;
 struct Comment : public Command
 {
     Comment() noexcept
-        : Command(CommandType::kComment)
+        : Command(CommandType::Comment)
     {
     }
 
@@ -74,8 +76,8 @@ struct Comment : public Command
 
 struct Move : public Command
 {
-    constexpr Move() noexcept
-        : Command(CommandType::kMove)
+    Move() noexcept
+        : Command(CommandType::Move)
     {
     }
 
@@ -86,8 +88,8 @@ struct Move : public Command
 
 struct FanDuty : public Command
 {
-    constexpr FanDuty() noexcept
-        : Command(CommandType::kActiveFanDuty)
+    FanDuty() noexcept
+        : Command(CommandType::ActiveFanDuty)
     {
     }
 
@@ -97,8 +99,8 @@ struct FanDuty : public Command
 
 struct FanToggle : public Command
 {
-    constexpr FanToggle() noexcept
-        : Command(CommandType::kActiveFanEnable)
+    FanToggle() noexcept
+        : Command(CommandType::ActiveFanEnable)
     {
     }
 
@@ -108,8 +110,8 @@ struct FanToggle : public Command
 
 struct SetTemperature : public Command
 {
-    constexpr SetTemperature() noexcept
-        : Command(CommandType::kSetTemperature)
+    SetTemperature() noexcept
+        : Command(CommandType::SetTemperature)
     {
     }
 
@@ -119,8 +121,8 @@ struct SetTemperature : public Command
 
 struct WaitForTemperature : public Command
 {
-    constexpr WaitForTemperature() noexcept
-        : Command(CommandType::kWaitForTemperature)
+    WaitForTemperature() noexcept
+        : Command(CommandType::WaitForTemperature)
     {
     }
 
@@ -129,23 +131,33 @@ struct WaitForTemperature : public Command
 
 struct ChangeTool : public Command
 {
-    constexpr ChangeTool() noexcept
-        : Command(CommandType::kChangeTool)
+    ChangeTool() noexcept
+        : Command(CommandType::ChangeTool)
     {
     }
 
     ExtruderIndex index{ 0 };
-    ParamPoint position{ NAN, NAN, NAN, NAN, NAN };
+    ParamPoint position{ NAN, NAN, NAN, NAN, NAN }; // Badman
 };
 
 struct Delay : public Command
 {
-    constexpr Delay() noexcept
-        : Command(CommandType::kDelay)
+    Delay() noexcept
+        : Command(CommandType::Delay)
     {
     }
 
     double seconds{ 0.0 };
+};
+
+struct LayerChange : public Command
+{
+    LayerChange() noexcept
+        : Command(CommandType::LayerChange)
+    {
+    }
+
+    int64_t layer{ 0 };
 };
 
 CommandPtr spawnCommandPtr(const CommandType& type) noexcept;
@@ -153,4 +165,4 @@ CommandPtr spawnCommandPtr(const CommandType& type) noexcept;
 } // namespace botcmd
 } // namespace dulcificum
 
-#endif // DULCIFICUM_COMMAND_TYPES_H
+#endif // INCLUDE_DULCIFICUM_COMMAND_TYPES_H

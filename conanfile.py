@@ -35,7 +35,7 @@ class DulcificumConan(ConanFile):
         "shared": False,
         "fPIC": True,
         "enable_extensive_warnings": False,
-        "with_apps": True,
+        "with_apps": False,
         "with_python_bindings": True,
     }
 
@@ -57,6 +57,12 @@ class DulcificumConan(ConanFile):
             "visual_studio": "17",
         }
 
+    @property
+    def _run_tests(self):
+        if self.settings.compiler == "apple-clang" and Version(self.settings.compiler.version) <= Version("14"):
+            return False
+        return not self.conf.get("tools.build:skip_test", False, check_type = bool)
+
     def export_sources(self):
         copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
         copy(self, "*", os.path.join(self.recipe_folder, "src"), os.path.join(self.export_sources_folder, "src"))
@@ -72,15 +78,25 @@ class DulcificumConan(ConanFile):
     def configure(self):
         if self.options.shared:
             self.options.rm_safe("fPIC")
+        if self.options.with_python_bindings:
+            self.options["cpython"].shared = True
 
     def layout(self):
         cmake_layout(self)
-        self.cpp.package.libs = ["dulcificum"]
+
+        self.cpp.build.bin = ["translator"]
+        self.cpp.build.bindirs = ["apps"]
+
+        self.cpp.package.lib = ["dulcificum", "pyDulcificum"]
+        self.cpp.package.libdirs = ["lib"]
+        self.cpp.package.bindirs = ["bin"]
 
     def requirements(self):
         self.requires("nlohmann_json/3.11.2", transitive_headers = True)
         self.requires("range-v3/0.12.0")
         self.requires("spdlog/1.10.0")
+        self.requires("ctre/3.7.2")
+        self.requires("range-v3/0.12.0")
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
         if self.options.with_python_bindings:
@@ -89,7 +105,7 @@ class DulcificumConan(ConanFile):
 
     def build_requirements(self):
         self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
-        if not self.conf.get("tools.build:skip_test", False, check_type = bool):
+        if self._run_tests:
             self.test_requires("gtest/[>=1.12.1]")
 
     def validate(self):
@@ -107,7 +123,7 @@ class DulcificumConan(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
-        tc.variables["ENABLE_TESTS"] = not self.conf.get("tools.build:skip_test", False, check_type = bool)
+        tc.variables["ENABLE_TESTS"] = self._run_tests
         tc.variables["EXTENSIVE_WARNINGS"] = self.options.enable_extensive_warnings
         tc.variables["DULCIFICUM_VERSION"] = self.version
 
@@ -117,7 +133,7 @@ class DulcificumConan(ConanFile):
 
         tc.variables["WITH_PYTHON_BINDINGS"] = self.options.with_python_bindings
         if self.options.with_python_bindings:
-            tc.variables["Python_EXECUTABLE"] = self.deps_user_info["cpython"].python.replace("\\", "/")
+            tc.variables["PYTHON_EXECUTABLE"] = self.deps_user_info["cpython"].python.replace("\\", "/")
             tc.variables["Python_USE_STATIC_LIBS"] = not self.options["cpython"].shared
             tc.variables["Python_ROOT_DIR"] = self.deps_cpp_info["cpython"].rootpath.replace("\\", "/")
             tc.variables["Python_FIND_FRAMEWORK"] = "NEVER"
@@ -143,7 +159,7 @@ class DulcificumConan(ConanFile):
                 copy(self, "*.dll", dep.cpp_info.libdirs[0], self.build_folder)
             if len(dep.cpp_info.bindirs) > 0:
                 copy(self, "*.dll", dep.cpp_info.bindirs[0], self.build_folder)
-            if not self.conf.get("tools.build:skip_test", False, check_type = bool):
+            if self._run_tests:
                 test_path = os.path.join(self.build_folder,  "tests")
                 if not os.path.exists(test_path):
                     mkdir(self, test_path)
@@ -160,5 +176,13 @@ class DulcificumConan(ConanFile):
 
     def package(self):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
+        copy(self, "translator*", src = os.path.join(self.build_folder, "apps"), dst = os.path.join(self.package_folder, "bin"), keep_path = False)
+        copy(self, "*.pyd", src = os.path.join(self.build_folder, "pyDulcificum"), dst = os.path.join(self.package_folder, "lib", "pyDulcificum"), keep_path = False)
         packager = AutoPackager(self)
         packager.run()
+
+    def package_info(self):
+        if self.in_local_cache:
+            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.package_folder, "lib", "pyDulcificum"))
+        else:
+            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.build_folder, "pyDulcificum"))

@@ -27,47 +27,47 @@ std::shared_ptr<botcmd::Move> toMove(const nlohmann::json& jmove)
 
 botcmd::CommandPtr toParamOnlyCommand(const botcmd::CommandType type, const nlohmann::json& jparam)
 {
-    if (type == botcmd::CommandType::kComment)
+    if (type == botcmd::CommandType::Comment)
     {
         auto com = std::make_shared<botcmd::Comment>();
         com->comment = jparam.at(k_key_str::comment);
         return com;
     }
-    if (type == botcmd::CommandType::kActiveFanDuty)
+    if (type == botcmd::CommandType::ActiveFanDuty)
     {
         auto cmd = std::make_shared<botcmd::FanDuty>();
         cmd->index = jparam[k_key_str::index];
         cmd->duty = jparam[k_key_str::value];
         return cmd;
     }
-    if (type == botcmd::CommandType::kActiveFanEnable)
+    if (type == botcmd::CommandType::ActiveFanEnable)
     {
         auto cmd = std::make_shared<botcmd::FanToggle>();
         cmd->index = jparam[k_key_str::index];
         cmd->is_on = jparam[k_key_str::value];
         return cmd;
     }
-    if (type == botcmd::CommandType::kSetTemperature)
+    if (type == botcmd::CommandType::SetTemperature)
     {
         auto cmd = std::make_shared<botcmd::SetTemperature>();
         cmd->index = jparam[k_key_str::index];
         cmd->temperature = jparam[k_key_str::temperature];
         return cmd;
     }
-    if (type == botcmd::CommandType::kWaitForTemperature)
+    if (type == botcmd::CommandType::WaitForTemperature)
     {
         auto cmd = std::make_shared<botcmd::WaitForTemperature>();
         cmd->index = jparam[k_key_str::index];
         return cmd;
     }
-    if (type == botcmd::CommandType::kChangeTool)
+    if (type == botcmd::CommandType::ChangeTool)
     {
         auto cmd = std::make_shared<botcmd::SetTemperature>();
         cmd->index = jparam[k_key_str::index];
         cmd->temperature = jparam[k_key_str::temperature];
         return cmd;
     }
-    if (type == botcmd::CommandType::kDelay)
+    if (type == botcmd::CommandType::Delay)
     {
         auto cmd = std::make_shared<botcmd::Delay>();
         cmd->seconds = jparam[k_key_str::seconds];
@@ -98,11 +98,11 @@ botcmd::CommandPtr toCommand(const nlohmann::json& jin)
 {
     auto jcmd = jin[k_key_str::command];
     botcmd::CommandType type = jcmd[k_key_str::function];
-    if (type == botcmd::CommandType::kMove)
+    if (type == botcmd::CommandType::Move)
     {
         return toMove(jcmd);
     }
-    if (type == botcmd::CommandType::kChangeTool)
+    if (type == botcmd::CommandType::ChangeTool)
     {
         return toChangeTool(jcmd);
     }
