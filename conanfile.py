@@ -41,7 +41,7 @@ class DulcificumConan(ConanFile):
 
     def set_version(self):
         if not self.version:
-            self.version = "0.1.0-alpha"
+            self.version = "0.1.0-beta"
 
     @property
     def _min_cppstd(self):
