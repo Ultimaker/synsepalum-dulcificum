@@ -176,7 +176,7 @@ void VisitCommand::update_state(const gcode::ast::InitialTemperatureExtruder& co
 {
     if (command.S)
     {
-        state.extruder_temperatures[command.T.hasValue() ? command.T.value() : state.active_tool] = command.S.value();
+        state.extruder_temperatures[command.T.has_value() ? command.T.value() : state.active_tool] = command.S.value();
     }
     else
     {
