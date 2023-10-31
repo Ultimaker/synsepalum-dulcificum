@@ -87,7 +87,7 @@ void VisitCommand::update_state(const gcode::ast::G92& command)
 
     if (command.E.has_value())
     {
-        for (size_t idx = 0; idx < state.num_extruders; idx ++)
+        for (size_t idx = 0; idx < state.num_extruders; idx++)
         {
             state.origin_e[idx] = state.E[idx] - command.E.value();
             state.E[idx] = command.E.value();
