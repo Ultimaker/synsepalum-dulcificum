@@ -67,12 +67,32 @@ void VisitCommand::update_state([[maybe_unused]] const gcode::ast::G91& command)
 
 void VisitCommand::update_state(const gcode::ast::G92& command)
 {
-    state.origin_x = state.X - (command.X ? command.X.value() : 0.0);
-    state.origin_y = state.Y - (command.Y ? command.Y.value() : 0.0);
-    state.origin_z = state.Z - (command.Z ? command.Z.value() : 0.0);
-    state.X = command.X ? command.X.value() : 0.0;
-    state.Y = command.Y ? command.Y.value() : 0.0;
-    state.Z = command.X ? command.Z.value() : 0.0;
+    if (command.X.has_value())
+    {
+        state.origin_x = state.X - command.X.value();
+        state.X = command.X.value();
+    }
+
+    if (command.Y.has_value())
+    {
+        state.origin_y = state.Y - command.Y.value();
+        state.Y = command.Y.value();
+    }
+
+    if (command.Z.has_value())
+    {
+        state.origin_z = state.Z - command.Z.value();
+        state.Z = command.Z.value();
+    }
+
+    if (command.E.has_value())
+    {
+        for (size_t idx = 0; idx < state.num_extruders; idx ++)
+        {
+            state.origin_e[idx] = state.E[idx] - command.E.value();
+            state.E[idx] = command.E.value();
+        }
+    }
 }
 
 void VisitCommand::update_state([[maybe_unused]] const gcode::ast::M82& command)
@@ -203,26 +223,9 @@ void VisitCommand::update_state(const gcode::ast::T& command)
 void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
 {
     const auto move = std::make_shared<botcmd::Move>();
-    // if position is not specified for an axis, move with a relative delta 0 move
-    move->point = {
-        command.X ? command.X.value() : 0.0,
-        command.Y ? command.Y.value() : 0.0,
-        command.Z ? command.Z.value() : 0.0,
-        state.active_tool == 0 && command.E ? command.E.value() : 0.0,
-        state.active_tool == 1 && command.E ? command.E.value() : 0.0,
-    };
-    // gcode is in mm / min, bot cmd uses mm / sec
-    move->feedrate = state.F[state.active_tool] / 60.0;
-    move->is_point_relative = {
-        command.X ? state.X_positioning == Positioning::Relative : true,
-        command.Y ? state.Y_positioning == Positioning::Relative : true,
-        command.Z ? state.Z_positioning == Positioning::Relative : true,
-        state.active_tool == 0 && command.E ? state.E_positioning == Positioning::Relative : true,
-        state.active_tool == 1 && command.E ? state.E_positioning == Positioning::Relative : true,
-    };
 
     double delta_e{};
-    if (! command.E)
+    if (! command.E.has_value())
     {
         delta_e = 0.0;
     }
@@ -232,9 +235,29 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else
     {
-        const auto last_e = previous_states[previous_states.size() - 1].E[state.active_tool];
-        delta_e = command.E.value() - last_e;
+        const auto& prev_state = previous_states[previous_states.size() - 1];
+        const auto last_e = prev_state.E[state.active_tool] + prev_state.origin_e[state.active_tool];
+        const auto curr_e = command.E.value() + state.origin_e[state.active_tool];
+        delta_e = curr_e - last_e;
     }
+
+    // if position is not specified for an axis, move with a relative delta 0 move
+    move->point = {
+        command.X.has_value() ? (command.X.value() + (state.X_positioning == Positioning::Absolute ? state.origin_x : 0.0)) : 0.0,
+        command.Y.has_value() ? (command.Y.value() + (state.Y_positioning == Positioning::Absolute ? state.origin_y : 0.0)) : 0.0,
+        command.Z.has_value() ? (command.Z.value() + (state.Z_positioning == Positioning::Absolute ? state.origin_z : 0.0)) : 0.0,
+        state.active_tool == 0 && command.E.has_value() ? delta_e : 0.0,
+        state.active_tool == 1 && command.E.has_value() ? delta_e : 0.0,
+    };
+    // gcode is in mm / min, bot cmd uses mm / sec
+    move->feedrate = state.F[state.active_tool] / 60.0;
+    move->is_point_relative = {
+        command.X ? state.X_positioning == Positioning::Relative : true,
+        command.Y ? state.Y_positioning == Positioning::Relative : true,
+        command.Z ? state.Z_positioning == Positioning::Relative : true,
+        true,
+        true,
+    };
 
     if (state.is_retracted)
     {

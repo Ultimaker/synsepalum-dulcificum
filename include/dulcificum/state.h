@@ -35,6 +35,7 @@ struct State
     double origin_x{ 0.0 };
     double origin_y{ 0.0 };
     double origin_z{ 0.0 };
+    std::vector<double> origin_e = std::vector<double>(num_extruders, 0.0);
 
     double X{ 0.0 };
     Positioning X_positioning{ Positioning::Absolute };
