@@ -1,8 +1,30 @@
 cmake_minimum_required(VERSION 3.23)
 project(dulcificum)
+SET(CMAKE_CXX_STANDARD 20)
+SET(CMAKE_CXX_STANDARD_DEFAULT 20)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+
+if(LAUNCH_BUILD_FROM_CMAKE)
+    if (NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+        message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+        file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
+                "${CMAKE_BINARY_DIR}/conan.cmake")
+    endif ()
+
+    include(${CMAKE_BINARY_DIR}/conan.cmake)
+
+    conan_cmake_run(CONANFILE conanfile.py
+            BASIC_SETUP TARGETS
+            BUILD missing
+            CONAN_CMAKE_CXX_STANDARD 20
+            #        KEEP_RPATHS
+
+    )
+    set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
+endif()
 
 find_package(standardprojectsettings REQUIRED)
-option(EXTENSIVE_WARNINGS "Build with all warnings" ON)
+option(EXTENSIVE_WARNINGS "Build with all warnings" OFF)
 option(ENABLE_TESTS "Build with unit test" ON)
 option(WITH_APPS "Build with apps" ON)
 if(WITH_APPS)
@@ -10,7 +32,7 @@ if(WITH_APPS)
     message(STATUS "Configuring translator app version: ${APP_VERSION}")
 endif ()
 
-option(WITH_PYTHON_BINDINGS "Build with Python bindings: `pyDulcificum`" ON)
+option(WITH_PYTHON_BINDINGS "Build with Python bindings: `pyDulcificum`" OFF)
 if(WITH_PYTHON_BINDINGS)
     set(PYDULCIFICUM_VERSION "0.1.0" CACHE STRING "Version of the pyDulcificum python bindings" )
     message(STATUS "Configuring pyDulcificum version: ${PYDULCIFICUM_VERSION}")
@@ -54,14 +76,16 @@ target_include_directories(dulcificum
 )
 
 target_compile_definitions(dulcificum PRIVATE DULCIFICUM_VERSION="${DULCIFICUM_VERSION}")
+set_property(TARGET dulcificum PROPERTY CXX_STANDARD 20)
+#use_threads(dulcificum)
+#enable_sanitizers(dulcificum)
+#if (${EXTENSIVE_WARNINGS})
+#    set_project_warnings(dulcificum)
+#endif ()
 
-use_threads(dulcificum)
-enable_sanitizers(dulcificum)
-if (${EXTENSIVE_WARNINGS})
-    set_project_warnings(dulcificum)
-endif ()
 
 # --- Setup Python bindings ---
+message(STATUS "!!!! $pybindings? ${WITH_PYTHON_BINDINGS}")
 if (WITH_PYTHON_BINDINGS)
     add_subdirectory(pyDulcificum)
 endif ()

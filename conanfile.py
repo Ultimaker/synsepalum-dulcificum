@@ -23,7 +23,7 @@ class DulcificumConan(ConanFile):
     homepage = "https://ultimaker.com"
     topics = ("cura", "curaengine", "gcode-generation", "3D-printing", "miraclegrue", "toolpath")
     package_type = "library"
-    settings = "os", "arch", "compiler", "build_type"
+    settings = "os", "arch", "compiler", "build_type", "cppstd"
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
@@ -35,9 +35,10 @@ class DulcificumConan(ConanFile):
         "shared": False,
         "fPIC": True,
         "enable_extensive_warnings": False,
-        "with_apps": False,
-        "with_python_bindings": True,
+        "with_apps": True,
+        "with_python_bindings": False,
     }
+    generators = ["cmake_find_package"]
 
     def set_version(self):
         if not self.version:

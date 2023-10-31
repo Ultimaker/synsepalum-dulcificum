@@ -44,3 +44,18 @@ TEST(miracle_jtp_tests, rwrw)
         EXPECT_EQ(jcmd, jcmd1);
     }
 }
+
+TEST(ack, ack)
+{
+    std::filesystem::path example_path = "/home/scott/Programs/planar_paths_sandbox/slicings/curas/shirleys_good_mask_cura_30oct_MMXL/print.jsontoolpath";
+    ASSERT_TRUE(std::filesystem::exists(example_path));
+    std::ifstream fin(example_path);
+    nlohmann::json jin = nlohmann::json::parse(fin);
+    for (const auto& jcmd : jin)
+    {
+        const auto cmd0 = miracle_jtp::toCommand(jcmd);
+        std::cout << static_cast<int>(cmd0->type) << std::endl;
+        const auto jcmd1 = miracle_jtp::toJson(*cmd0);
+        EXPECT_EQ(jcmd, jcmd1);
+    }
+}
