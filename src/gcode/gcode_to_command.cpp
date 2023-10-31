@@ -210,7 +210,7 @@ void VisitCommand::update_state(const gcode::ast::BuildVolumeTemperature& comman
 
 void VisitCommand::update_state(const gcode::ast::T& command)
 {
-    if (command.S)
+    if (command.S.has_value())
     {
         state.active_tool = command.S.value();
     }
@@ -409,9 +409,12 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::Comment& com
 
 void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::T& command)
 {
-    const auto tool_change = std::make_shared<botcmd::ChangeTool>();
-    tool_change->index = state.active_tool;
-    proto_path.emplace_back(tool_change);
+    if (command.S.has_value())
+    {
+        const auto tool_change = std::make_shared<botcmd::ChangeTool>();
+        tool_change->index = command.S.value();
+        proto_path.emplace_back(tool_change);
+    }
 }
 
 botcmd::CommandList toCommand(gcode::ast::ast_t& gcode)
