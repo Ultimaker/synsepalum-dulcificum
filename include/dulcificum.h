@@ -7,7 +7,6 @@
 #define DULCIFICUM_VERSION "0.1.0"
 #endif
 
-#include <fmt/format.h>
 #include <fmt/ranges.h>
 #include <range/v3/to_container.hpp>
 #include <range/v3/view/c_str.hpp>
@@ -31,8 +30,9 @@ namespace dulcificum
                         {
                             return dulcificum::miracle_jtp::toJson(*command).dump();
                         })
-                  | ranges::views::join(ranges::views::c_str(",\n")) | ranges::to<std::string>();
-    return fmt::format("[\n{}\n]", commands);
+                  | ranges::views::join(ranges::views::c_str(",\n"))
+                  | ranges::to<std::string>();
+    return "[\n" + commands + "}\n]";
 }
 
 
