@@ -54,10 +54,12 @@ TEST(ack, ack)
     for (const auto& jcmd : jin)
     {
         const auto cmd0 = miracle_jtp::toCommand(jcmd);
-        if (cmd0->type == botcmd::CommandType::Move) {
+        if (cmd0->type == botcmd::CommandType::Move)
+        {
             const auto& move_cmd = static_cast<const botcmd::Move&>(*cmd0);
-            for (const auto& foo : move_cmd.point) std::cout << foo << " ";
-            std::cout  << std::endl;
+            for (const auto& foo : move_cmd.point)
+                std::cout << foo << " ";
+            std::cout << std::endl;
         }
         const auto jcmd1 = miracle_jtp::toJson(*cmd0);
         EXPECT_EQ(jcmd, jcmd1);
