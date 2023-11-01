@@ -8,11 +8,11 @@ namespace dulcificum::gcode::ast
 /*!
  * /brief Switch to the specified tool
  */
-class T : public Entry<R"(T(?<S>\d))">
+class T : public Entry<R"(T(?<S>\d))", ctre::captured_content<1, ctre::id<'S'>>>
 {
 public:
     T() = delete;
-    T(size_t idx, std::string raw_line);
+    T(size_t idx, std::string raw_line, regex_result_t captured);
     std::optional<size_t> S;
 };
 } // namespace dulcificum::gcode::ast

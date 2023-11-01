@@ -11,11 +11,11 @@ namespace dulcificum::gcode::ast
  * /brief The layer index
  * L = index
  */
-class Layer : public Entry<R"(;LAYER:(?<L>-?\d+))">
+class Layer : public Entry<R"(;LAYER:(?<L>-?\d+))", ctre::captured_content<1, ctre::id<'L'>>>
 {
 public:
     Layer() = delete;
-    Layer(size_t idx, std::string raw_line);
+    Layer(size_t idx, std::string line, regex_result_t captured);
     std::optional<int64_t> L;
 };
 
@@ -23,11 +23,11 @@ public:
  * /brief The mesh name
  * M = mesh name
  */
-class Mesh : public Entry<R"(;MESH:(?<M>.*))">
+class Mesh : public Entry<R"(;MESH:(?<M>.*))", ctre::captured_content<1, ctre::id<'M'>>>
 {
 public:
     Mesh() = delete;
-    Mesh(size_t idx, std::string raw_line);
+    Mesh(size_t idx, std::string raw_line, regex_result_t captured);
     std::optional<std::string> M;
 };
 
@@ -35,11 +35,11 @@ public:
  * /brief Feature type
  * T = feature type (WALL-OUTER, WALL_INNER, SKIN, SUPPORT, SKIRT, FILL, SUPPORT-INTERFACE, PRIME_TOWER)
  */
-class FeatureType : public Entry<R"(;TYPE:(?<T>.*))">
+class FeatureType : public Entry<R"(;TYPE:(?<T>.*))", ctre::captured_content<1, ctre::id<'T'>>>
 {
 public:
     FeatureType() = delete;
-    FeatureType(size_t idx, std::string raw_line);
+    FeatureType(size_t idx, std::string line, regex_result_t captured);
     std::optional<std::string> T;
 };
 
@@ -48,11 +48,12 @@ public:
  * T = tool index
  * S = Temperature
  */
-class InitialTemperatureExtruder : public Entry<R"(;EXTRUDER_TRAIN\.(?<T>\d)\.INITIAL_TEMPERATURE:(?<S>([\d|\.]*)))">
+class InitialTemperatureExtruder
+    : public Entry<R"(;EXTRUDER_TRAIN\.(?<T>\d)\.INITIAL_TEMPERATURE:(?<S>(?:[\d|\.]*)))", ctre::captured_content<1, ctre::id<'T'>>, ctre::captured_content<2, ctre::id<'S'>>>
 {
 public:
     InitialTemperatureExtruder() = delete;
-    InitialTemperatureExtruder(size_t idx, std::string raw_line);
+    InitialTemperatureExtruder(size_t idx, std::string line, regex_result_t captured);
     std::optional<size_t> T;
     std::optional<double> S;
 };
@@ -61,11 +62,11 @@ public:
  * /brief Initial build plate temperature
  * S = Temperature
  */
-class InitialTemperatureBuildPlate : public Entry<R"(;BUILD_PLATE.INITIAL_TEMPERATURE:(?<S>([\d|\.]*)))">
+class InitialTemperatureBuildPlate : public Entry<R"(;BUILD_PLATE.INITIAL_TEMPERATURE:(?<S>(?:[\d|\.]*)))", ctre::captured_content<1, ctre::id<'S'>>>
 {
 public:
     InitialTemperatureBuildPlate() = delete;
-    InitialTemperatureBuildPlate(size_t idx, std::string raw_line);
+    InitialTemperatureBuildPlate(size_t idx, std::string raw_line, regex_result_t captured);
     std::optional<double> S;
 };
 
@@ -73,11 +74,11 @@ public:
  * /brief Initial build volume temperature
  * S = Temperature
  */
-class BuildVolumeTemperature : public Entry<R"(;BUILD_VOLUME.TEMPERATURE:(?<S>([\d|\.]*)))">
+class BuildVolumeTemperature : public Entry<R"(;BUILD_VOLUME.TEMPERATURE:(?<S>(?:[\d|\.]*)))", ctre::captured_content<1, ctre::id<'S'>>>
 {
 public:
     BuildVolumeTemperature() = delete;
-    BuildVolumeTemperature(size_t idx, std::string raw_line);
+    BuildVolumeTemperature(size_t idx, std::string line, regex_result_t captured);
     std::optional<double> S;
 };
 
@@ -85,14 +86,13 @@ public:
  * /brief A generic comment
  * comment = The text of the comment
  */
-class Comment : public Entry<R"(;(?<C>\.*))">
+class Comment : public Entry<R"(;(?<C>\.*))", ctre::captured_content<1, ctre::id<'C'>>>
 {
 public:
     Comment() = delete;
-    Comment(size_t idx, std::string raw_line);
+    Comment(size_t idx, std::string raw_line, regex_result_t captured);
     std::string C;
 };
-
 
 } // namespace dulcificum::gcode::ast
 

@@ -30,14 +30,16 @@ struct VisitCommand
     dulcificum::botcmd::CommandList proto_path = {};
 
     VisitCommand()
-        : previous_states{ state } {};
+        : previous_states{ state }
+    {
+    }
 
     void operator()(const auto& command)
     {
         update_state(command);
         to_proto_path(command);
         previous_states.emplace_back(state);
-    };
+    }
 
 private:
     constexpr void update_state([[maybe_unused]] const auto& command) noexcept

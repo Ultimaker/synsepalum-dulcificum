@@ -3,13 +3,12 @@
 #include <spdlog/spdlog.h>
 
 #include <docopt/docopt.h>
+#include <dulcificum.h>
+#include <dulcificum/gcode/gcode_to_command.h>
 #include <dulcificum/gcode/parse.h>
 #include <dulcificum/miracle_jtp/mgjtp_command_to_json.h>
-#include <dulcificum/gcode/gcode_to_command.h>
 #include <dulcificum/utils/io.h>
-#include <dulcificum.h>
 #include <map>
-
 #include <nlohmann/json.hpp>
 
 template<typename... Ts>

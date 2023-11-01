@@ -8,48 +8,55 @@
 namespace dulcificum::gcode::ast
 {
 
-node_t factory(size_t index, const std::string& line)
+template<class Command>
+void singleMatch(size_t index, const std::string& line, std::optional<node_t>& result)
 {
-    using Creator = std::function<node_t(size_t, const std::string&)>;
-    // clang-format off
-    std::map<std::string, Creator> const creators
+    if (! result)
     {
-        { "G1", [](size_t index, const std::string& line) { return G0_G1{ index, line }; } },
-        { "G0", [](size_t index, const std::string& line) { return G0_G1{ index, line }; } },
-        { "G4", [](size_t index, const std::string& line) { return G4{ index, line }; } },
-        { "T", [](size_t index, const std::string& line) { return T{ index, line }; } },
-        { "G90", [](size_t index, const std::string& line) { return G90{ index, line }; } },
-        { "G91", [](size_t index, const std::string& line) { return G91{ index, line }; } },
-        { "G92", [](size_t index, const std::string& line) { return G92{ index, line }; } },
-        { "G280", [](size_t index, const std::string& line) { return G280{ index, line }; } },
-        { "M82", [](size_t index, const std::string& line) { return M82{ index, line }; } },
-        { "M83", [](size_t index, const std::string& line) { return M83{ index, line }; } },
-        { "M104", [](size_t index, const std::string& line) { return M104{ index, line }; } },
-        { "M106", [](size_t index, const std::string& line) { return M106{ index, line }; } },
-        { "M107", [](size_t index, const std::string& line) { return M107{ index, line }; } },
-        { "M109", [](size_t index, const std::string& line) { return M109{ index, line }; } },
-        { "M140", [](size_t index, const std::string& line) { return M140{ index, line }; } },
-        { "M190", [](size_t index, const std::string& line) { return M190{ index, line }; } },
-        { "M204", [](size_t index, const std::string& line) { return M204{ index, line }; } },
-        { "M205", [](size_t index, const std::string& line) { return M205{ index, line }; } },
-        { ";LAYER:", [](size_t index, const std::string& line) { return Layer{ index, line }; } },
-        { ";MESH:", [](size_t index, const std::string& line) { return Mesh{ index, line }; } },
-        { ";TYPE:", [](size_t index, const std::string& line) { return FeatureType{ index, line }; } },
-        { ";BUILD_PLATE.INITIAL_TEMPERATURE:", [](size_t index, const std::string& line) { return InitialTemperatureBuildPlate{ index, line }; } },
-        { ";BUILD_VOLUME.TEMPERATURE:", [](size_t index, const std::string& line) { return BuildVolumeTemperature{ index, line }; } },
-        { ";EXTRUDER_TRAIN.0.INITIAL_TEMPERATURE:", [](size_t index, const std::string& line) { return InitialTemperatureExtruder{ index, line }; } },
-        { ";EXTRUDER_TRAIN.1.INITIAL_TEMPERATURE:", [](size_t index, const std::string& line) { return InitialTemperatureExtruder{ index, line }; } },
-//        { ";", [](size_t index, const std::string& line) { return Comment{ index, line }; } },
-    };
-    // clang-format on
-    for (const auto& [id, creator] : creators)
-    {
-        if (line.starts_with(id))
+        if (auto re_match = Command::match(line))
         {
-            return creator(index, line);
+            result = std::make_optional(Command(index, line, re_match));
         }
     }
-    return Unknown{ index, line };
+}
+
+template<class... Commands>
+std::optional<node_t> match(size_t index, const std::string& line)
+{
+    std::optional<node_t> result;
+    (singleMatch<Commands>(index, line, result), ...);
+    return result;
+}
+
+node_t factory(size_t index, const std::string& line)
+{
+    // Make sure to list the commands classes in order of most probable appearance in the gcode file for better performance
+    return match<
+               G0_G1,
+               M204,
+               M205,
+               M104,
+               M106,
+               M107,
+               M109,
+               M140,
+               M190,
+               G4,
+               T,
+               G90,
+               G91,
+               G92,
+               G280,
+               M82,
+               M83,
+               Layer,
+               Mesh,
+               FeatureType,
+               InitialTemperatureBuildPlate,
+               BuildVolumeTemperature,
+               InitialTemperatureExtruder,
+               Comment>(index, line)
+        .value_or(Unknown{ index, line });
 }
 
 } // namespace dulcificum::gcode::ast
