@@ -10,6 +10,7 @@ namespace dulcificum::gcode::ast
 /*!
  * /brief Set a new target hot end temperature (non-blocking).
  * S = Target temperature
+ * T = Tool index
  */
 class M104 : public Entry<R"(M104(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?)))*$)", ctre::captured_content<1, ctre::id<'S'>>, ctre::captured_content<2, ctre::id<'T'>>>
 {
@@ -24,6 +25,7 @@ public:
  * /brief Wait for the hot end to reach its target (blocking).
  * R = Target temperature (wait for cooling or heating).
  * S = Target temperature (wait only when heating)
+ * T = Tool index
  */
 class M109 : public Entry<
                  R"(M109(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sR(?<R>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?)))*$)",
