@@ -23,6 +23,7 @@ public:
 
 /*!
  * /brief Turn off a fan
+ * P = Fan index
  */
 class M107 : public Entry<R"(M107((?:\sP(?<P>\d+(?:\.\d+)?)))*$)">
 {
