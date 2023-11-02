@@ -6,13 +6,11 @@
 #define DULCIFICUM_VERSION "0.1.0"
 #endif
 
-#include "sstream"
-
-#include "range/v3/view/enumerate.hpp"
-
 #include "dulcificum/gcode/gcode_to_command.h"
 #include "dulcificum/gcode/parse.h"
 #include "dulcificum/miracle_jtp/mgjtp_command_to_json.h"
+#include "range/v3/view/enumerate.hpp"
+#include "sstream"
 
 namespace dulcificum
 {
