@@ -20,7 +20,7 @@ class M204 : public Entry<
 {
 public:
     M204() = delete;
-    M204(size_t idx, std::string raw_line, regex_result_t captured);
+    M204(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> P;
     std::optional<double> T;
     std::optional<double> S;
@@ -42,7 +42,7 @@ class M205 : public Entry<
 {
 public:
     M205() = delete;
-    M205(size_t idx, std::string raw_line, regex_result_t captured);
+    M205(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> X;
     std::optional<double> Y;
     std::optional<double> Z;

@@ -12,7 +12,7 @@ class G4 : public Entry<R"(G4(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sP(?<P>\d+(?:\.\d
 {
 public:
     G4() = delete;
-    G4(size_t idx, std::string raw_line, regex_result_t captured);
+    G4(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> S;
     std::optional<double> P;
 };

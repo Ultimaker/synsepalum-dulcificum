@@ -24,9 +24,9 @@ class Entry
 public:
     using regex_result_t = ctre::regex_results<std::string::const_iterator, Captures...>;
 
-    Entry(size_t index, const std::string& line)
-        : index{ index }
-        , line(std::move(line))
+    Entry(size_t line_index, const std::string& raw_line)
+        : line_index{ line_index }
+        , line(raw_line)
     {
     }
     Entry() = delete;
@@ -43,7 +43,7 @@ public:
         return ctre::match<pattern>(line);
     }
 
-    size_t index;
+    size_t line_index;
     std::string line;
 };
 

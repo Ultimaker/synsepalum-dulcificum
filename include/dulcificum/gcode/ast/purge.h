@@ -14,7 +14,7 @@ class G280 : public Entry<R"(G280(?:(?:\sS(?<S>\d+(?:\.\d+)?)))*$)", ctre::captu
 {
 public:
     G280() = delete;
-    G280(size_t idx, std::string raw_line, regex_result_t captured);
+    G280(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<size_t> S;
 };
 } // namespace dulcificum::gcode::ast

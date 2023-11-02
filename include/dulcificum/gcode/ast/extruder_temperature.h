@@ -15,7 +15,7 @@ class M104 : public Entry<R"(M104(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:
 {
 public:
     M104() = delete;
-    M104(size_t idx, std::string raw_line, regex_result_t captured);
+    M104(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> S;
     std::optional<size_t> T;
 };
@@ -33,7 +33,7 @@ class M109 : public Entry<
 {
 public:
     M109() = delete;
-    M109(size_t idx, std::string raw_line, regex_result_t captured);
+    M109(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> S;
     std::optional<double> R;
     std::optional<size_t> T;

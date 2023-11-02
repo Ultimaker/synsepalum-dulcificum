@@ -15,7 +15,7 @@ class Layer : public Entry<R"(;LAYER:(?<L>-?\d+))", ctre::captured_content<1, ct
 {
 public:
     Layer() = delete;
-    Layer(size_t idx, std::string line, regex_result_t captured);
+    Layer(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<int64_t> L;
 };
 
@@ -27,7 +27,7 @@ class Mesh : public Entry<R"(;MESH:(?<M>.*))", ctre::captured_content<1, ctre::i
 {
 public:
     Mesh() = delete;
-    Mesh(size_t idx, std::string raw_line, regex_result_t captured);
+    Mesh(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<std::string> M;
 };
 
@@ -39,7 +39,7 @@ class FeatureType : public Entry<R"(;TYPE:(?<T>.*))", ctre::captured_content<1, 
 {
 public:
     FeatureType() = delete;
-    FeatureType(size_t idx, std::string line, regex_result_t captured);
+    FeatureType(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<std::string> T;
 };
 
@@ -53,7 +53,7 @@ class InitialTemperatureExtruder
 {
 public:
     InitialTemperatureExtruder() = delete;
-    InitialTemperatureExtruder(size_t idx, std::string line, regex_result_t captured);
+    InitialTemperatureExtruder(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<size_t> T;
     std::optional<double> S;
 };
@@ -66,7 +66,7 @@ class InitialTemperatureBuildPlate : public Entry<R"(;BUILD_PLATE.INITIAL_TEMPER
 {
 public:
     InitialTemperatureBuildPlate() = delete;
-    InitialTemperatureBuildPlate(size_t idx, std::string raw_line, regex_result_t captured);
+    InitialTemperatureBuildPlate(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> S;
 };
 
@@ -78,7 +78,7 @@ class BuildVolumeTemperature : public Entry<R"(;BUILD_VOLUME.TEMPERATURE:(?<S>(?
 {
 public:
     BuildVolumeTemperature() = delete;
-    BuildVolumeTemperature(size_t idx, std::string line, regex_result_t captured);
+    BuildVolumeTemperature(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> S;
 };
 
@@ -90,7 +90,7 @@ class Comment : public Entry<R"(;(?<C>\.*))", ctre::captured_content<1, ctre::id
 {
 public:
     Comment() = delete;
-    Comment(size_t idx, std::string raw_line, regex_result_t captured);
+    Comment(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::string C;
 };
 

@@ -35,7 +35,7 @@ public:
     std::optional<double> F;
 
     G0_G1() = delete;
-    G0_G1(size_t idx, std::string line, regex_result_t captured);
+    G0_G1(size_t line_index, const std::string& raw_line, regex_result_t captured);
 };
 
 } // namespace dulcificum::gcode::ast

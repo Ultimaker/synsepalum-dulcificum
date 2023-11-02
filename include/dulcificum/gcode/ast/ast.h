@@ -52,7 +52,7 @@ using node_t = std::variant<
     Unknown>;
 using ast_t = std::vector<node_t>;
 
-node_t factory(size_t index, const std::string& line);
+node_t factory(size_t line_index, const std::string& raw_line);
 
 } // namespace dulcificum::gcode::ast
 
