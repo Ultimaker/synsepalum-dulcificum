@@ -8,7 +8,7 @@
 #include "dulcificum/gcode/ast/purge.h"
 #include "dulcificum/gcode/ast/toolchange.h"
 #include "dulcificum/gcode/ast/translate.h"
-#include "dulcificum/utils/svtod.h"
+#include "dulcificum/utils/string_convert.h"
 
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
@@ -17,21 +17,21 @@
 namespace dulcificum::gcode::ast
 {
 
-BuildVolumeTemperature::BuildVolumeTemperature(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+BuildVolumeTemperature::BuildVolumeTemperature(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"S">())
     {
-        S = utils::StringViewToDouble(value.to_view());
+        S = utils::stringConvert<double>(value.to_view());
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-FeatureType::FeatureType(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+FeatureType::FeatureType(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"T">())
     {
@@ -39,213 +39,216 @@ FeatureType::FeatureType(size_t index, std::string line, regex_result_t captured
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-G0_G1::G0_G1(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+G0_G1::G0_G1(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"X">()) { X = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"Y">()) { Y = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"Z">()) { Z = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"E">()) { E = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"F">()) { F = utils::StringViewToDouble(value.to_view()); }
+    if (const auto& value = captured.get<"X">()) { X = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"Y">()) { Y = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"Z">()) { Z = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"E">()) { E = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"F">()) { F = utils::stringConvert<double>(value.to_view()); }
     // clang-format on
     if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt && F == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-G4::G4(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+G4::G4(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"P">())
-        P = utils::StringViewToDouble(value.to_view());
+    {
+        P = utils::stringConvert<double>(value.to_view());
+    }
     if (const auto& value = captured.get<"S">())
-        S = utils::StringViewToDouble(value.to_view());
+    {
+        S = utils::stringConvert<double>(value.to_view());
+    }
 
     if (P == std::nullopt && S == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-G280::G280(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+G280::G280(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"S">())
     {
-        S = utils::StringViewToDouble(value.to_view());
+        S = utils::stringConvert<size_t>(value.to_view());
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-G92::G92(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+G92::G92(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"X">()) { X = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"Y">()) { Y = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"Z">()) { Z = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"E">()) { E = utils::StringViewToDouble(value.to_view()); }
+    if (const auto& value = captured.get<"X">()) { X = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"Y">()) { Y = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"Z">()) { Z = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"E">()) { E = utils::stringConvert<double>(value.to_view()); }
     // clang-format on
     if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-InitialTemperatureBuildPlate::InitialTemperatureBuildPlate(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+InitialTemperatureBuildPlate::InitialTemperatureBuildPlate(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"S">())
     {
-        S = utils::StringViewToDouble(value.to_view());
+        S = utils::stringConvert<double>(value.to_view());
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-InitialTemperatureExtruder::InitialTemperatureExtruder(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+InitialTemperatureExtruder::InitialTemperatureExtruder(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"T">()) { T = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"S">()) { S = utils::StringViewToDouble(value.to_view()); }
+    if (const auto& value = captured.get<"T">()) { T = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"S">()) { S = utils::stringConvert<double>(value.to_view()); }
     // clang-format on
     if (T == std::nullopt && S == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-Layer::Layer(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+Layer::Layer(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"L">())
     {
-        L = static_cast<int64_t>(utils::StringViewToDouble(value.to_view()));
+        L = utils::stringConvert<int64_t>(value.to_view());
     }
     else
     {
-        // throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, ""));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-M104::M104(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+M104::M104(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"S">()) { S = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"T">()) { T = utils::StringViewToDouble(value.to_view()); }
+    if (const auto& value = captured.get<"S">()) { S = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"T">()) { T = utils::stringConvert<size_t>(value.to_view()); }
     // clang-format on
     if (S == std::nullopt && T == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-M106::M106(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+M106::M106(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"S">()) { S = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"P">()) { P = static_cast<size_t>(utils::StringViewToDouble(value.to_view())); }
+    if (const auto& value = captured.get<"S">()) { S = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"P">()) { P = utils::stringConvert<size_t>(value.to_view()); }
     // clang-format on
     if (S == std::nullopt && P == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-M107::M107(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+M107::M107(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"P">()) { P = static_cast<size_t>(utils::StringViewToDouble(value.to_view())); }
+    if (const auto& value = captured.get<"P">()) { P = utils::stringConvert<size_t>(value.to_view()); }
     // clang-format on
 }
 
-M109::M109(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+M109::M109(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"S">()) { S = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"R">()) { R = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"T">()) { T = utils::StringViewToDouble(value.to_view()); }
+    if (const auto& value = captured.get<"S">()) { S = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"R">()) { R = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"T">()) { T = utils::stringConvert<size_t>(value.to_view()); }
     // clang-format on
     if (S == std::nullopt && R == std::nullopt && T == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-M140::M140(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+M140::M140(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"S">())
     {
-        S = utils::StringViewToDouble(value.to_view());
+        S = utils::stringConvert<double>(value.to_view());
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-M190::M190(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+M190::M190(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"S">()) { S = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"R">()) { R = utils::StringViewToDouble(value.to_view()); }
+    if (const auto& value = captured.get<"S">()) { S = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"R">()) { R = utils::stringConvert<double>(value.to_view()); }
     // clang-format on
     if (S == std::nullopt && R == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-M204::M204(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+M204::M204(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"P">()) { P = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"T">()) { T = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"S">()) { S = utils::StringViewToDouble(value.to_view()); }
+    if (const auto& value = captured.get<"P">()) { P = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"T">()) { T = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"S">()) { S = utils::stringConvert<double>(value.to_view()); }
     // clang-format on
     if (P == std::nullopt && T == std::nullopt && S == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-M205::M205(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+M205::M205(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     // clang-format off
-    if (const auto& value = captured.get<"X">()) { X = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"Y">()) { Y = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"Z">()) { Z = utils::StringViewToDouble(value.to_view()); }
-    if (const auto& value = captured.get<"E">()) { E = utils::StringViewToDouble(value.to_view()); }
+    if (const auto& value = captured.get<"X">()) { X = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"Y">()) { Y = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"Z">()) { Z = utils::stringConvert<double>(value.to_view()); }
+    if (const auto& value = captured.get<"E">()) { E = utils::stringConvert<double>(value.to_view()); }
     // clang-format on
     if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-Mesh::Mesh(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+Mesh::Mesh(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"M">())
     {
@@ -253,12 +256,12 @@ Mesh::Mesh(size_t index, std::string line, regex_result_t captured)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-Comment::Comment(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+Comment::Comment(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"C">())
     {
@@ -266,20 +269,20 @@ Comment::Comment(size_t index, std::string line, regex_result_t captured)
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 
-T::T(size_t index, std::string line, regex_result_t captured)
-    : Entry{ index, line }
+T::T(size_t line_index, const std::string& raw_line, regex_result_t captured)
+    : Entry{ line_index, raw_line }
 {
     if (const auto& value = captured.get<"S">())
     {
-        S = utils::StringViewToDouble(value.to_view());
+        S = utils::stringConvert<size_t>(value.to_view());
     }
     else
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", index, line));
+        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
 }
 

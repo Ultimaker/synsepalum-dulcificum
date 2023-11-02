@@ -13,8 +13,8 @@ class G90 : public Entry<R"(G90)">
 {
 public:
     G90() = delete;
-    G90(size_t idx, std::string raw_line, regex_result_t captured)
-        : Entry{ idx, raw_line } {};
+    G90(size_t line_index, const std::string& raw_line, regex_result_t captured)
+        : Entry{ line_index, raw_line } {};
 };
 
 /*!
@@ -24,8 +24,8 @@ class G91 : public Entry<R"(G91)">
 {
 public:
     G91() = delete;
-    G91(size_t idx, std::string raw_line, regex_result_t captured)
-        : Entry{ idx, raw_line } {};
+    G91(size_t line_index, const std::string& raw_line, regex_result_t captured)
+        : Entry{ line_index, raw_line } {};
 };
 
 /*!
@@ -35,8 +35,8 @@ class M82 : public Entry<R"(M82)">
 {
 public:
     M82() = delete;
-    M82(size_t idx, std::string raw_line, regex_result_t captured)
-        : Entry{ idx, raw_line } {};
+    M82(size_t line_index, const std::string& raw_line, regex_result_t captured)
+        : Entry{ line_index, raw_line } {};
 };
 
 /*!
@@ -46,8 +46,8 @@ class M83 : public Entry<R"(M83)">
 {
 public:
     M83() = delete;
-    M83(size_t idx, std::string raw_line, regex_result_t captured)
-        : Entry{ idx, raw_line } {};
+    M83(size_t line_index, const std::string& raw_line, regex_result_t captured)
+        : Entry{ line_index, raw_line } {};
 };
 
 } // namespace dulcificum::gcode::ast

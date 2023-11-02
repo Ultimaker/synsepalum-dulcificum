@@ -15,7 +15,7 @@ class M140 : public Entry<R"(M140(?:(?:\sS(?<S>\d+(?:\.\d+)?)))*$)", ctre::captu
 {
 public:
     M140() = delete;
-    M140(size_t idx, std::string raw_line, regex_result_t captured);
+    M140(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> S;
 };
 
@@ -28,7 +28,7 @@ class M190 : public Entry<R"(M190(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sR(?<R>\d+(?:
 {
 public:
     M190() = delete;
-    M190(size_t idx, std::string raw_line, regex_result_t captured);
+    M190(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> S;
     std::optional<double> R;
 };

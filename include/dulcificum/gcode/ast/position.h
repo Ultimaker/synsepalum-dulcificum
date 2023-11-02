@@ -23,7 +23,7 @@ class G92 : public Entry<
 {
 public:
     G92() = delete;
-    G92(size_t idx, std::string raw_line, regex_result_t captured);
+    G92(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<double> X;
     std::optional<double> Y;
     std::optional<double> Z;
