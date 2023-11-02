@@ -234,10 +234,17 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else
     {
-        const auto& prev_state = previous_states[previous_states.size() - 1];
-        const auto last_e = prev_state.E[state.active_tool] + prev_state.origin_e[state.active_tool];
         const auto curr_e = command.E.value() + state.origin_e[state.active_tool];
-        delta_e = curr_e - last_e;
+        if (previous_states.empty())
+        {
+            delta_e = curr_e;
+        }
+        else
+        {
+            const auto& prev_state = previous_states[previous_states.size() - 1];
+            const auto last_e = prev_state.E[state.active_tool] + prev_state.origin_e[state.active_tool];
+            delta_e = curr_e - last_e;
+        }
     }
 
     // if position is not specified for an axis, move with a relative delta 0 move
