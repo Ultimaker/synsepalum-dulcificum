@@ -12,7 +12,7 @@ namespace dulcificum::gcode::ast
  * S = Target temperature
  * T = Tool index
  */
-class M104 : public Entry<R"(M104(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?)))*$)", ctre::captured_content<1, ctre::id<'S'>>, ctre::captured_content<2, ctre::id<'T'>>>
+class M104 : public Entry<R"(^M104(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?)))*$)", ctre::captured_content<1, ctre::id<'S'>>, ctre::captured_content<2, ctre::id<'T'>>>
 {
 public:
     M104() = delete;
@@ -28,7 +28,7 @@ public:
  * T = Tool index
  */
 class M109 : public Entry<
-                 R"(M109(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sR(?<R>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?)))*$)",
+                 R"(^M109(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sR(?<R>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?)))*$)",
                  ctre::captured_content<1, ctre::id<'S'>>,
                  ctre::captured_content<2, ctre::id<'R'>>,
                  ctre::captured_content<3, ctre::id<'T'>>>

@@ -13,7 +13,7 @@ namespace dulcificum::gcode::ast
  * T = Travel acceleration. Used for moves that include no extrusion
  */
 class M204 : public Entry<
-                 R"(M204(?:(?:\sP(?<P>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?))|(?:\sS(?<S>\d+(?:\.\d+)?)))*$)",
+                 R"(^M204(?:(?:\sP(?<P>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?))|(?:\sS(?<S>\d+(?:\.\d+)?)))*$)",
                  ctre::captured_content<1, ctre::id<'P'>>,
                  ctre::captured_content<2, ctre::id<'T'>>,
                  ctre::captured_content<3, ctre::id<'S'>>>
@@ -34,7 +34,7 @@ public:
  * E = E max jerk (units/s)
  */
 class M205 : public Entry<
-                 R"(M205(?:(?:\sX(?<X>-?\d+(?:\.\d+)?))|(?:\sY(?<Y>-?\d+(?:\.\d+)?))|(?:\sZ(?<Z>-?\d+(?:\.\d+)?))|(?:\sE(?<E>-?\d+(?:\.\d+)?)))*$)",
+                 R"(^M205(?:(?:\sX(?<X>-?\d+(?:\.\d+)?))|(?:\sY(?<Y>-?\d+(?:\.\d+)?))|(?:\sZ(?<Z>-?\d+(?:\.\d+)?))|(?:\sE(?<E>-?\d+(?:\.\d+)?)))*$)",
                  ctre::captured_content<1, ctre::id<'X'>>,
                  ctre::captured_content<2, ctre::id<'Y'>>,
                  ctre::captured_content<3, ctre::id<'Z'>>,

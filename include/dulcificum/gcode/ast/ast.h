@@ -22,7 +22,7 @@
 namespace dulcificum::gcode::ast
 {
 
-using Unknown = Entry<R"((.*))">;
+using Unknown = Entry<R"(^(.*)$)">;
 
 using node_t = std::variant<
     G0_G1,

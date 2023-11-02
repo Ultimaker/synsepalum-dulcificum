@@ -11,7 +11,7 @@ namespace dulcificum::gcode::ast
  * P = Time to delay in milliseconds
  * when both S and P are specified, S takes precedence
  */
-class G4 : public Entry<R"(G4(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sP(?<P>\d+(?:\.\d+)?)))*$)", ctre::captured_content<1, ctre::id<'S'>>, ctre::captured_content<2, ctre::id<'P'>>>
+class G4 : public Entry<R"(^G4(?:(?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sP(?<P>\d+(?:\.\d+)?)))*$)", ctre::captured_content<1, ctre::id<'S'>>, ctre::captured_content<2, ctre::id<'P'>>>
 {
 public:
     G4() = delete;

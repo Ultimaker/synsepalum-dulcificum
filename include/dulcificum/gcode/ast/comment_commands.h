@@ -11,7 +11,7 @@ namespace dulcificum::gcode::ast
  * /brief The layer index
  * L = index
  */
-class Layer : public Entry<R"(;LAYER:(?<L>-?\d+))", ctre::captured_content<1, ctre::id<'L'>>>
+class Layer : public Entry<R"(^;LAYER:(?<L>-?\d+)$)", ctre::captured_content<1, ctre::id<'L'>>>
 {
 public:
     Layer() = delete;
@@ -23,7 +23,7 @@ public:
  * /brief The mesh name
  * M = mesh name
  */
-class Mesh : public Entry<R"(;MESH:(?<M>.*))", ctre::captured_content<1, ctre::id<'M'>>>
+class Mesh : public Entry<R"(^;MESH:(?<M>.*)$)", ctre::captured_content<1, ctre::id<'M'>>>
 {
 public:
     Mesh() = delete;
@@ -35,7 +35,7 @@ public:
  * /brief Feature type
  * T = feature type (WALL-OUTER, WALL_INNER, SKIN, SUPPORT, SKIRT, FILL, SUPPORT-INTERFACE, PRIME_TOWER)
  */
-class FeatureType : public Entry<R"(;TYPE:(?<T>.*))", ctre::captured_content<1, ctre::id<'T'>>>
+class FeatureType : public Entry<R"(^;TYPE:(?<T>.*)$)", ctre::captured_content<1, ctre::id<'T'>>>
 {
 public:
     FeatureType() = delete;
@@ -49,7 +49,7 @@ public:
  * S = Temperature
  */
 class InitialTemperatureExtruder
-    : public Entry<R"(;EXTRUDER_TRAIN\.(?<T>\d)\.INITIAL_TEMPERATURE:(?<S>(?:[\d|\.]*)))", ctre::captured_content<1, ctre::id<'T'>>, ctre::captured_content<2, ctre::id<'S'>>>
+    : public Entry<R"(^;EXTRUDER_TRAIN\.(?<T>\d)\.INITIAL_TEMPERATURE:(?<S>(?:[\d|\.]*))$)", ctre::captured_content<1, ctre::id<'T'>>, ctre::captured_content<2, ctre::id<'S'>>>
 {
 public:
     InitialTemperatureExtruder() = delete;
@@ -62,7 +62,7 @@ public:
  * /brief Initial build plate temperature
  * S = Temperature
  */
-class InitialTemperatureBuildPlate : public Entry<R"(;BUILD_PLATE.INITIAL_TEMPERATURE:(?<S>(?:[\d|\.]*)))", ctre::captured_content<1, ctre::id<'S'>>>
+class InitialTemperatureBuildPlate : public Entry<R"(^;BUILD_PLATE.INITIAL_TEMPERATURE:(?<S>(?:[\d|\.]*))$)", ctre::captured_content<1, ctre::id<'S'>>>
 {
 public:
     InitialTemperatureBuildPlate() = delete;
@@ -74,7 +74,7 @@ public:
  * /brief Initial build volume temperature
  * S = Temperature
  */
-class BuildVolumeTemperature : public Entry<R"(;BUILD_VOLUME.TEMPERATURE:(?<S>(?:[\d|\.]*)))", ctre::captured_content<1, ctre::id<'S'>>>
+class BuildVolumeTemperature : public Entry<R"(^;BUILD_VOLUME.TEMPERATURE:(?<S>(?:[\d|\.]*))$)", ctre::captured_content<1, ctre::id<'S'>>>
 {
 public:
     BuildVolumeTemperature() = delete;
@@ -86,7 +86,7 @@ public:
  * /brief A generic comment
  * comment = The text of the comment
  */
-class Comment : public Entry<R"(;(?<C>\.*))", ctre::captured_content<1, ctre::id<'C'>>>
+class Comment : public Entry<R"(^;(?<C>\.*)$)", ctre::captured_content<1, ctre::id<'C'>>>
 {
 public:
     Comment() = delete;

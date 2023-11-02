@@ -9,7 +9,7 @@ namespace dulcificum::gcode::ast
 /*!
  * /brief Switch to the specified tool
  */
-class T : public Entry<R"(T(?<S>\d))", ctre::captured_content<1, ctre::id<'S'>>>
+class T : public Entry<R"(^T(?<S>\d)$)", ctre::captured_content<1, ctre::id<'S'>>>
 {
 public:
     T() = delete;

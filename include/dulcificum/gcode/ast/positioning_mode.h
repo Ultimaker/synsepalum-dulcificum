@@ -9,7 +9,7 @@ namespace dulcificum::gcode::ast
 /*!
  * /brief Set the interpreter to absolute positions
  */
-class G90 : public Entry<R"(G90)">
+class G90 : public Entry<R"(^G90$)">
 {
 public:
     G90() = delete;
@@ -20,7 +20,7 @@ public:
 /*!
  * /brief Set the interpreter to relative positions
  */
-class G91 : public Entry<R"(G91)">
+class G91 : public Entry<R"(^G91$)">
 {
 public:
     G91() = delete;
@@ -31,7 +31,7 @@ public:
 /*!
  * /brief Set E to absolute positioning.
  */
-class M82 : public Entry<R"(M82)">
+class M82 : public Entry<R"(^M82$)">
 {
 public:
     M82() = delete;
@@ -42,7 +42,7 @@ public:
 /*!
  * /brief Set E to relative positioning.
  */
-class M83 : public Entry<R"(M83)">
+class M83 : public Entry<R"(^M83$)">
 {
 public:
     M83() = delete;

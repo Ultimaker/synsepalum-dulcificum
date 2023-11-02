@@ -15,7 +15,7 @@ namespace dulcificum::gcode::ast
  * E New extruder position
  */
 class G92 : public Entry<
-                R"(G92(?:(?:\sX(?<X>-?\d+(?:\.\d+)?))|(?:\sY(?<Y>-?\d+(?:\.\d+)?))|(?:\sZ(?<Z>-?\d+(?:\.\d+)?))|(?:\sE(?<E>-?\d+(?:\.\d+)?)))*$)",
+                R"(^G92(?:(?:\sX(?<X>-?\d+(?:\.\d+)?))|(?:\sY(?<Y>-?\d+(?:\.\d+)?))|(?:\sZ(?<Z>-?\d+(?:\.\d+)?))|(?:\sE(?<E>-?\d+(?:\.\d+)?)))*$)",
                 ctre::captured_content<1, ctre::id<'X'>>,
                 ctre::captured_content<2, ctre::id<'Y'>>,
                 ctre::captured_content<3, ctre::id<'Z'>>,

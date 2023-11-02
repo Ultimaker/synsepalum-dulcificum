@@ -10,7 +10,7 @@ namespace dulcificum::gcode::ast
 /*!
  * /brief Purge the tool
  */
-class G280 : public Entry<R"(G280(?:(?:\sS(?<S>\d+(?:\.\d+)?)))*$)", ctre::captured_content<1, ctre::id<'S'>>>
+class G280 : public Entry<R"(^G280(?:(?:\sS(?<S>\d+(?:\.\d+)?)))*$)", ctre::captured_content<1, ctre::id<'S'>>>
 {
 public:
     G280() = delete;
