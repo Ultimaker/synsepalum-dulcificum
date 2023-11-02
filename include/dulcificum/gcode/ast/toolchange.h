@@ -1,6 +1,8 @@
 #ifndef INCLUDE_DULCIFICUM_GCODE_AST_TOOLCHANGE_H
 #define INCLUDE_DULCIFICUM_GCODE_AST_TOOLCHANGE_H
 
+#include "optional"
+
 #include "dulcificum/gcode/ast/entry.h"
 
 namespace dulcificum::gcode::ast
