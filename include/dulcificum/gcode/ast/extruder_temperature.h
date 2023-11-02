@@ -25,6 +25,7 @@ public:
  * /brief Wait for the hot end to reach its target (blocking).
  * R = Target temperature (wait for cooling or heating).
  * S = Target temperature (wait only when heating)
+ * T = Tool index
  */
 class M109 : public Entry<R"(M109((?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sR(?<R>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?)))*$)">
 {
