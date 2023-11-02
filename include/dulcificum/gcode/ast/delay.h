@@ -7,6 +7,9 @@ namespace dulcificum::gcode::ast
 {
 /*!
  * /brief Dwell, or delay, for the specified time
+ * S = Time to delay in seconds
+ * P = Time to delay in milliseconds
+ * when both S and P are specified, S takes precedence
  */
 class G4 : public Entry<R"(G4((?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sP(?<P>\d+(?:\.\d+)?)))*$)">
 {
