@@ -27,7 +27,7 @@ public:
     Entry() = delete;
     Entry(size_t idx, std::string raw_line)
         : index{ idx }
-        , line{ std::move(raw_line) } {};
+        , line{ std::move(raw_line) } {}
     Entry(const Entry&) = default;
     Entry(Entry&&) = default;
     Entry& operator=(const Entry&) = default;
@@ -41,11 +41,6 @@ public:
     constexpr auto get()
     {
         return ctre::match<pattern>(line);
-    }
-
-    virtual value_type operator()()
-    {
-        return {};
     }
 };
 
