@@ -8,8 +8,9 @@
 
 namespace dulcificum::utils
 {
-template <typename T>
-concept stringlike = requires (const T& t) {
+template<typename T>
+concept stringlike = requires(const T& t)
+{
     { std::is_convertible_v<T, std::string> };
 };
 
