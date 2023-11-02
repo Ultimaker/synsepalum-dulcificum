@@ -10,6 +10,7 @@ namespace dulcificum::gcode::ast
 /*!
  * /brief Set a new target hot end temperature (non-blocking).
  * S = Target temperature
+ * T = Tool index
  */
 class M104 : public Entry<R"(M104((?:\sS(?<S>\d+(?:\.\d+)?))|(?:\sT(?<T>\d+(?:\.\d+)?)))*$)">
 {
