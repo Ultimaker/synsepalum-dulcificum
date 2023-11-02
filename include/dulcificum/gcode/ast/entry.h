@@ -41,12 +41,12 @@ public:
     constexpr auto get()
     {
         return ctre::match<pattern>(line);
-    };
+    }
 
     virtual value_type operator()()
     {
         return {};
-    };
+    }
 };
 
 } // namespace dulcificum::gcode::ast
