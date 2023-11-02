@@ -30,8 +30,7 @@ namespace dulcificum
                         {
                             return dulcificum::miracle_jtp::toJson(*command).dump();
                         })
-                  | ranges::views::join(ranges::views::c_str(",\n"))
-                  | ranges::to<std::string>();
+                  | ranges::views::join(ranges::views::c_str(",\n")) | ranges::to<std::string>();
     return "[\n" + commands + "}\n]";
 }
 
