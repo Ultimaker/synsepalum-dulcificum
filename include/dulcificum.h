@@ -2,7 +2,6 @@
 #define DULCIFICUM_INCLUDE_DULCIFICUM_H
 
 #include <nlohmann/json_fwd.hpp>
-#include <string>
 #ifndef DULCIFICUM_VERSION
 #define DULCIFICUM_VERSION "0.1.0"
 #endif
@@ -12,6 +11,7 @@
 #include <range/v3/view/c_str.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/enumerate.hpp>
 
 #include <dulcificum/gcode/gcode_to_command.h>
 #include <dulcificum/gcode/parse.h>
