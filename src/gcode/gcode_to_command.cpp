@@ -17,7 +17,6 @@
 
 #include <memory>
 #include <string>
-#include <unordered_map>
 #include <variant>
 #include <vector>
 
@@ -26,24 +25,24 @@ namespace dulcificum::gcode
 
 void VisitCommand::update_state(const gcode::ast::G0_G1& command)
 {
-    if (command.X)
+    if (command.X.has_value())
     {
         state.X = state.X_positioning == Positioning::Absolute ? command.X.value() : command.X.value() + state.X;
     }
-    if (command.Y)
+    if (command.Y.has_value())
     {
         state.Y = state.Y_positioning == Positioning::Absolute ? command.Y.value() : command.Y.value() + state.Y;
     }
-    if (command.Z)
+    if (command.Z.has_value())
     {
         state.Z = state.Z_positioning == Positioning::Absolute ? command.Z.value() : command.Z.value() + state.Z;
     }
-    if (command.E)
+    if (command.E.has_value())
     {
         state.E[state.active_tool] = state.E_positioning == Positioning::Absolute ? command.E.value() : command.E.value() + state.E[state.active_tool];
     }
 
-    if (command.F)
+    if (command.F.has_value())
     {
         state.F[state.active_tool] = command.F.value();
     }
@@ -107,14 +106,14 @@ void VisitCommand::update_state([[maybe_unused]] const gcode::ast::M83& command)
 
 void VisitCommand::update_state(const gcode::ast::M104& command)
 {
-    state.extruder_temperatures[command.T ? command.T.value() : state.active_tool] = command.S.value();
+    state.extruder_temperatures[command.T.has_value() ? command.T.value() : state.active_tool] = command.S.value();
 }
 
 void VisitCommand::update_state(const gcode::ast::M109& command)
 {
-    if (command.S)
+    if (command.S.has_value())
     {
-        state.extruder_temperatures[command.T ? command.T.value() : state.active_tool] = command.S.value();
+        state.extruder_temperatures[command.T.has_value() ? command.T.value() : state.active_tool] = command.S.value();
     }
     else
     {
@@ -134,7 +133,7 @@ void VisitCommand::update_state(const gcode::ast::M190& command)
 
 void VisitCommand::update_state(const gcode::ast::Layer& command)
 {
-    if (command.L) [[likely]]
+    if (command.L.has_value()) [[likely]]
     {
         if (! state.layer_index_offset.has_value()) [[unlikely]]
         {
@@ -150,7 +149,7 @@ void VisitCommand::update_state(const gcode::ast::Layer& command)
 
 void VisitCommand::update_state(const gcode::ast::Mesh& command)
 {
-    if (command.M)
+    if (command.M.has_value())
     {
         state.mesh = command.M.value();
     }
@@ -162,7 +161,7 @@ void VisitCommand::update_state(const gcode::ast::Mesh& command)
 
 void VisitCommand::update_state(const gcode::ast::FeatureType& command)
 {
-    if (command.T)
+    if (command.T.has_value())
     {
         state.feature_type = command.T.value();
     }
@@ -174,7 +173,7 @@ void VisitCommand::update_state(const gcode::ast::FeatureType& command)
 
 void VisitCommand::update_state(const gcode::ast::InitialTemperatureExtruder& command)
 {
-    if (command.S)
+    if (command.S.has_value())
     {
         state.extruder_temperatures[command.T.has_value() ? command.T.value() : state.active_tool] = command.S.value();
     }
@@ -186,7 +185,7 @@ void VisitCommand::update_state(const gcode::ast::InitialTemperatureExtruder& co
 
 void VisitCommand::update_state(const gcode::ast::InitialTemperatureBuildPlate& command)
 {
-    if (command.S)
+    if (command.S.has_value())
     {
         state.build_plate_temperature = command.S.value();
     }
@@ -198,7 +197,7 @@ void VisitCommand::update_state(const gcode::ast::InitialTemperatureBuildPlate& 
 
 void VisitCommand::update_state(const gcode::ast::BuildVolumeTemperature& command)
 {
-    if (command.S)
+    if (command.S.has_value())
     {
         state.chamber_temperature = command.S.value();
     }
@@ -252,9 +251,9 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     // gcode is in mm / min, bot cmd uses mm / sec
     move->feedrate = state.F[state.active_tool] / 60.0;
     move->is_point_relative = {
-        command.X ? state.X_positioning == Positioning::Relative : true,
-        command.Y ? state.Y_positioning == Positioning::Relative : true,
-        command.Z ? state.Z_positioning == Positioning::Relative : true,
+        command.X.has_value() ? state.X_positioning == Positioning::Relative : true,
+        command.Y.has_value() ? state.Y_positioning == Positioning::Relative : true,
+        command.Z.has_value() ? state.Z_positioning == Positioning::Relative : true,
         true,
         true,
     };
@@ -320,11 +319,11 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
 void VisitCommand::to_proto_path(const gcode::ast::G4& command)
 {
     const auto delay = std::make_shared<botcmd::Delay>();
-    if (command.S)
+    if (command.S.has_value())
     {
         delay->seconds = command.S.value();
     }
-    else if (command.P)
+    else if (command.P.has_value())
     {
         delay->seconds = command.P.value() * 1000.0;
     }
@@ -339,7 +338,7 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M104& comman
 {
     const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
     set_temperature->temperature = command.S.value();
-    set_temperature->index = command.T ? command.T.value() : state.active_tool;
+    set_temperature->index = command.T.has_value() ? command.T.value() : state.active_tool;
     proto_path.emplace_back(set_temperature);
 }
 
@@ -370,18 +369,18 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M109& comman
 {
     const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
     set_temperature->temperature = command.S.value();
-    set_temperature->index = command.T ? command.T.value() : state.active_tool;
+    set_temperature->index = command.T.has_value() ? command.T.value() : state.active_tool;
     proto_path.emplace_back(set_temperature);
 
     const auto wait_temperature = std::make_shared<botcmd::WaitForTemperature>();
-    wait_temperature->index = command.T ? command.T.value() : state.active_tool;
+    wait_temperature->index = command.T.has_value() ? command.T.value() : state.active_tool;
     proto_path.emplace_back(wait_temperature);
 }
 
 void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::Layer& command)
 {
     const auto layer = std::make_shared<botcmd::LayerChange>();
-    if (command.L)
+    if (command.L.has_value())
     {
         layer->layer = command.L.value() + state.layer_index_offset.value();
     }
@@ -396,7 +395,7 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::InitialTempe
 {
     const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
     set_temperature->temperature = command.S.value();
-    set_temperature->index = command.T ? command.T.value() : state.active_tool;
+    set_temperature->index = command.T.has_value() ? command.T.value() : state.active_tool;
     proto_path.emplace_back(set_temperature);
 }
 
