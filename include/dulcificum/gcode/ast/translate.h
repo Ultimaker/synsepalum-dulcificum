@@ -19,13 +19,14 @@ namespace dulcificum::gcode::ast
  * E = An absolute or relative coordinate on the E axis (in current units).
  * F = The maximum movement rate of the move between the start and end point.
  */
-class G0_G1 : public Entry<
-                  R"(^G[0|1](?:(?:\sX(?<X>-?\d*(?:\.\d*)?))|(?:\sY(?<Y>-?\d*(?:\.\d*)?))|(?:\sZ(?<Z>-?\d*(?:\.\d*)?))|(?:\sE(?<E>-?\d*(?:\.\d*)?))|(?:\sF(?<F>-?\d*(?:\.\d*)?)))*$)",
-                  ctre::captured_content<1, ctre::id<'X'>>,
-                  ctre::captured_content<2, ctre::id<'Y'>>,
-                  ctre::captured_content<3, ctre::id<'Z'>>,
-                  ctre::captured_content<4, ctre::id<'E'>>,
-                  ctre::captured_content<5, ctre::id<'F'>>>
+class G0_G1
+    : public Entry<
+          R"(^G[0|1](?:(?:\sX(?<X>-?\d*(?:\.\d*)?))|(?:\sY(?<Y>-?\d*(?:\.\d*)?))|(?:\sZ(?<Z>-?\d*(?:\.\d*)?))|(?:\sE(?<E>-?\d*(?:\.\d*)?))|(?:\sF(?<F>-?\d*(?:\.\d*)?)))*$)",
+          ctre::captured_content<1, ctre::id<'X'>>,
+          ctre::captured_content<2, ctre::id<'Y'>>,
+          ctre::captured_content<3, ctre::id<'Z'>>,
+          ctre::captured_content<4, ctre::id<'E'>>,
+          ctre::captured_content<5, ctre::id<'F'>>>
 {
 public:
     std::optional<double> X;
