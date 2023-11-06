@@ -1,4 +1,4 @@
-#include "mgjtp_command_stream.h"
+#include "dulcificum/miracle_jtp/mgjtp_file_stream.h"
 
 namespace dulcificum::miracle_jtp {
 
@@ -12,10 +12,10 @@ namespace dulcificum::miracle_jtp {
             }
             end_char = buffer->sbumpc();
             line += end_char;
-            if (end_char == CommandFStream::K_CMD_OPEN) {
+            if (end_char == CommandFileStream::K_CMD_OPEN) {
                 return in_stream;
             }
-            if (end_char == CommandFStream::K_CMD_CLOSE) {
+            if (end_char == CommandFileStream::K_CMD_CLOSE) {
                 return in_stream;
             }
         }
@@ -25,15 +25,26 @@ namespace dulcificum::miracle_jtp {
         return in_stream;
     }
 
-    std::string CommandFStream::get() {
+    std::string CommandFileStream::getCommandLine() {
         std::string line;
         if (!stream.is_open()) return line;
         while (!stream.eof()) {
             char last_char = 0;
-            getCmdLineTillCurlyBracket(stream, line, last_char);
-            if (last_char == CommandFStream::K_CMD_OPEN) bracket_depth++;
-            if (last_char == CommandFStream::K_CMD_CLOSE) bracket_depth--;
-            if (bracket_depth == 0) return line;
+            std::string line_till_bracket;
+            getCmdLineTillCurlyBracket(stream, line_till_bracket, last_char);
+            if (bracket_depth > 0) {
+                line += line_till_bracket;
+            }
+            if (last_char == CommandFileStream::K_CMD_OPEN) {
+                if (bracket_depth == 0) {
+                    line += CommandFileStream::K_CMD_OPEN;
+                }
+                bracket_depth++;
+            }
+            if (last_char == CommandFileStream::K_CMD_CLOSE) {
+                bracket_depth--;
+                if (bracket_depth <= 0) return line;
+            }
         }
         return line;
     }

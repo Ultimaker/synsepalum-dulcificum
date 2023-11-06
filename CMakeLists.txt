@@ -38,7 +38,9 @@ set(DULCIFICUM_SRC
         src/utils/io.cpp
         src/utils/svtod.cpp
         src/command_types.cpp
-        include/dulcificum/miracle_jtp/mgjtp_command_stream.cpp
+        src/miracle_jtp/mgjtp_file_stream.cpp
+        include/dulcificum/miracle_jtp/mgjtp_file_stream.h
+        src/miracle_jtp/mgjtp_command_stream.cpp
         include/dulcificum/miracle_jtp/mgjtp_command_stream.h
 )
 add_library(dulcificum ${DULCIFICUM_SRC})
