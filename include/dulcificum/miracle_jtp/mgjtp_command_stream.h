@@ -1,17 +1,23 @@
 #ifndef DULCIFICUM_MGJTP_COMMAND_STREAM_H
 #define DULCIFICUM_MGJTP_COMMAND_STREAM_H
 
-#include "mgjtp_command_file_stream.h"
 #include "../command_types.h"
+<<<<<<< HEAD
 #include "mgjtp_json_to_command.h"
 
+=======
+#include "mgjtp_command_file_stream.h"
+>>>>>>> 02de50b5febf71709526393981a1651516bc337a
 
 namespace dulcificum::miracle_jtp
 {
 
-    struct CommandStream {
-        CommandFileStream fstream;
+struct CommandStream
+{
+    CommandFileStream fstream;
+};
 
+<<<<<<< HEAD
     public:
         void open(const std::filesystem::path &path) {
             fstream.open(path);
@@ -34,5 +40,8 @@ namespace dulcificum::miracle_jtp
     };
 
 }
+=======
+} // namespace dulcificum::miracle_jtp
+>>>>>>> 02de50b5febf71709526393981a1651516bc337a
 
 #endif // DULCIFICUM_MGJTP_COMMAND_STREAM_H

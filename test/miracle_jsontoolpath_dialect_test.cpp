@@ -1,12 +1,15 @@
-#include <fstream>
-
-#include "gtest/gtest.h"
-
+#include "dulcificum/miracle_jtp/mgjtp_command_file_stream.h"
 #include "dulcificum/miracle_jtp/mgjtp_command_to_json.h"
 #include "dulcificum/miracle_jtp/mgjtp_json_to_command.h"
+<<<<<<< HEAD
 #include "dulcificum/miracle_jtp/mgjtp_command_stream.h"
 
+=======
+>>>>>>> 02de50b5febf71709526393981a1651516bc337a
 #include "test_data_dir.h"
+
+#include "gtest/gtest.h"
+#include <fstream>
 
 
 using namespace dulcificum;
@@ -56,9 +59,11 @@ TEST(miracle_jtp_tests, command_fstream) {
     miracle_jtp::CommandFileStream fstream;
     fstream.open(example_path);
     std::vector<std::string> command_lines;
-    while(!fstream.eof()) {
+    while (! fstream.eof())
+    {
         const auto& line = fstream.getCommandLine();
-        if (!line.empty()) {
+        if (! line.empty())
+        {
             command_lines.push_back(line);
         }
     }
