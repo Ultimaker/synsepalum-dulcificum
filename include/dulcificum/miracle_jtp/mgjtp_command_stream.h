@@ -4,7 +4,7 @@
 #include "../command_types.h"
 #include "mgjtp_command_file_stream.h"
 #include "mgjtp_json_to_command.h"
-
+#include "mgjtp_command_file_stream.h"
 namespace dulcificum::miracle_jtp
 {
 
@@ -29,9 +29,7 @@ struct CommandStream
         botcmd::CommandPtr getCommand();
 
         botcmd::CommandList getCommandList();
-
-    };
-
+ };
 }
 
 #endif // DULCIFICUM_MGJTP_COMMAND_STREAM_H

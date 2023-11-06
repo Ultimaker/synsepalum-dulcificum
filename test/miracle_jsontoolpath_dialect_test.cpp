@@ -9,7 +9,7 @@
 
 
 
-using namespace dulcificum;
+    using namespace dulcificum;
 
 TEST(miracle_jtp_tests, move)
 {
@@ -50,7 +50,8 @@ TEST(miracle_jtp_tests, rwrw)
     }
 }
 
-TEST(miracle_jtp_tests, command_fstream) {
+TEST(miracle_jtp_tests, command_fstream)
+{
     const std::filesystem::path example_path = kTestDataDir / "cmd_example.json";
     ASSERT_TRUE(std::filesystem::exists(example_path));
     miracle_jtp::CommandFileStream fstream;
@@ -68,7 +69,8 @@ TEST(miracle_jtp_tests, command_fstream) {
     EXPECT_EQ(command_lines.size(), 7);
 }
 
-TEST(miracle_jtp_tests, command_stream) {
+TEST(miracle_jtp_tests, command_stream)
+{
     const std::filesystem::path example_path = kTestDataDir / "cmd_example.json";
     ASSERT_TRUE(std::filesystem::exists(example_path));
     miracle_jtp::CommandStream stream;
