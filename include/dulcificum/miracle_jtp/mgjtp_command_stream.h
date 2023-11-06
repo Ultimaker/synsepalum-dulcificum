@@ -1,10 +1,11 @@
 #ifndef DULCIFICUM_MGJTP_COMMAND_STREAM_H
 #define DULCIFICUM_MGJTP_COMMAND_STREAM_H
 
-#include "mgjtp_file_stream.h"
+#include "mgjtp_command_file_stream.h"
 #include "../command_types.h"
 
-namespace dulcificum::miracle_jtp {
+namespace dulcificum::miracle_jtp
+{
 
     struct CommandStream {
         CommandFileStream fstream;
@@ -13,4 +14,4 @@ namespace dulcificum::miracle_jtp {
 
 }
 
-#endif //DULCIFICUM_MGJTP_COMMAND_STREAM_H
+#endif // DULCIFICUM_MGJTP_COMMAND_STREAM_H

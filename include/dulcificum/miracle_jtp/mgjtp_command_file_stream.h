@@ -1,5 +1,5 @@
-#ifndef DULCIFICUM_MGJTP_FILE_STREAM_H
-#define DULCIFICUM_MGJTP_FILE_STREAM_H
+#ifndef DULCIFICUM_MGJTP_COMMAND_FILE_STREAM_H
+#define DULCIFICUM_MGJTP_COMMAND_FILE_STREAM_H
 
 #include <filesystem>
 #include <fstream>
@@ -34,4 +34,4 @@ namespace dulcificum::miracle_jtp {
     };
 } //namespace dulcificum::miracle_jtp
 
-#endif //DULCIFICUM_MGJTP_FILE_STREAM_H
+#endif //DULCIFICUM_MGJTP_COMMAND_FILE_STREAM_H

@@ -1,4 +1,4 @@
-#include "dulcificum/miracle_jtp/mgjtp_file_stream.h"
+#include "dulcificum/miracle_jtp/mgjtp_command_file_stream.h"
 
 namespace dulcificum::miracle_jtp {
 
