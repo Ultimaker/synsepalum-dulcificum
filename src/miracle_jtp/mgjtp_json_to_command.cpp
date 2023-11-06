@@ -96,7 +96,8 @@ botcmd::CommandPtr toChangeTool(const nlohmann::json& jcmd)
 
 botcmd::CommandPtr toCommand(const nlohmann::json& jin)
 {
-    if (jin.empty()) return botcmd::spawnCommandPtr(botcmd::CommandType::Invalid);
+    if (jin.empty())
+        return botcmd::spawnCommandPtr(botcmd::CommandType::Invalid);
     auto jcmd = jin[k_key_str::command];
     botcmd::CommandType type = jcmd[k_key_str::function];
     if (type == botcmd::CommandType::Move)
