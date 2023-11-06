@@ -4,7 +4,7 @@
 
 #include "dulcificum/miracle_jtp/mgjtp_command_to_json.h"
 #include "dulcificum/miracle_jtp/mgjtp_json_to_command.h"
-#include "dulcificum/miracle_jtp/mgjtp_command_file_stream.h"
+#include "dulcificum/miracle_jtp/mgjtp_command_stream.h"
 
 #include "test_data_dir.h"
 
@@ -50,7 +50,7 @@ TEST(miracle_jtp_tests, rwrw)
     }
 }
 
-TEST(miracle_jtp_tests, command_stream) {
+TEST(miracle_jtp_tests, command_fstream) {
     const std::filesystem::path example_path = kTestDataDir / "cmd_example.json";
     ASSERT_TRUE(std::filesystem::exists(example_path));
     miracle_jtp::CommandFileStream fstream;
@@ -64,4 +64,14 @@ TEST(miracle_jtp_tests, command_stream) {
     }
     fstream.close();
     EXPECT_EQ(command_lines.size(), 7);
+}
+
+TEST(miracle_jtp_tests, command_stream) {
+    const std::filesystem::path example_path = kTestDataDir / "cmd_example.json";
+    ASSERT_TRUE(std::filesystem::exists(example_path));
+    miracle_jtp::CommandStream stream;
+    stream.open(example_path);
+    const auto& cmd_list = stream.getCommandList();
+    stream.close();
+    EXPECT_EQ(cmd_list.size(), 7);
 }
