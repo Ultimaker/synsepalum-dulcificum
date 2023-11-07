@@ -245,7 +245,7 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     move->point = {
         command.X.has_value() ? (command.X.value() + (state.X_positioning == Positioning::Absolute ? state.origin_x : 0.0)) : 0.0,
         command.Y.has_value() ? (command.Y.value() + (state.Y_positioning == Positioning::Absolute ? state.origin_y : 0.0)) : 0.0,
-        command.Z.has_value() ? (command.Z.value() + (state.Z_positioning == Positioning::Absolute ? state.origin_z : 0.0)) : 0.0,
+        state.Z + state.origin_z,
         state.active_tool == 0 && command.E.has_value() ? delta_e : 0.0,
         state.active_tool == 1 && command.E.has_value() ? delta_e : 0.0,
     };
@@ -254,7 +254,7 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     move->is_point_relative = {
         command.X ? state.X_positioning == Positioning::Relative : true,
         command.Y ? state.Y_positioning == Positioning::Relative : true,
-        command.Z ? state.Z_positioning == Positioning::Relative : true,
+        false,
         true,
         true,
     };
