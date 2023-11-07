@@ -252,11 +252,7 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     // gcode is in mm / min, bot cmd uses mm / sec
     move->feedrate = state.F[state.active_tool] / 60.0;
     move->is_point_relative = {
-        command.X ? state.X_positioning == Positioning::Relative : true,
-        command.Y ? state.Y_positioning == Positioning::Relative : true,
-        false,
-        true,
-        true,
+        command.X ? state.X_positioning == Positioning::Relative : true, command.Y ? state.Y_positioning == Positioning::Relative : true, false, true, true,
     };
 
     if (state.is_retracted)
