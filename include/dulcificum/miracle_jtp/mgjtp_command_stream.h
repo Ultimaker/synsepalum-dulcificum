@@ -4,32 +4,35 @@
 #include "../command_types.h"
 #include "mgjtp_command_file_stream.h"
 #include "mgjtp_json_to_command.h"
-#include "mgjtp_command_file_stream.h"
 namespace dulcificum::miracle_jtp
 {
 
 struct CommandStream
 {
     CommandFileStream fstream;
-    public:
-        void open(const std::filesystem::path &path) {
-            fstream.open(path);
-        }
 
-        void close() {
-            fstream.close();
-        }
+public:
+    void open(const std::filesystem::path& path)
+    {
+        fstream.open(path);
+    }
 
-        bool eof() {
-            return fstream.eof();
-        }
+    void close()
+    {
+        fstream.close();
+    }
 
-        nlohmann::json getCommandJson();
+    bool eof()
+    {
+        return fstream.eof();
+    }
 
-        botcmd::CommandPtr getCommand();
+    nlohmann::json getCommandJson();
 
-        botcmd::CommandList getCommandList();
- };
-}
+    botcmd::CommandPtr getCommand();
+
+    botcmd::CommandList getCommandList();
+};
+} // namespace dulcificum::miracle_jtp
 
 #endif // DULCIFICUM_MGJTP_COMMAND_STREAM_H

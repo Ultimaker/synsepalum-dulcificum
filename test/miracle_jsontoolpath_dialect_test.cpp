@@ -1,11 +1,10 @@
-#include "gtest/gtest.h"
-
 #include "dulcificum/miracle_jtp/mgjtp_command_file_stream.h"
+#include "dulcificum/miracle_jtp/mgjtp_command_stream.h"
 #include "dulcificum/miracle_jtp/mgjtp_command_to_json.h"
 #include "dulcificum/miracle_jtp/mgjtp_json_to_command.h"
-#include "dulcificum/miracle_jtp/mgjtp_command_stream.h"
-
 #include "test_data_dir.h"
+
+#include "gtest/gtest.h"
 
 using namespace dulcificum;
 
