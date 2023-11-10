@@ -101,12 +101,8 @@ TEST(miracle_jtp_tests, command_stream_vs_oneshot)
 
     // check types
     EXPECT_EQ(cmd_list_from_stream.size(), cmd_list_from_oneshot.size());
-    for (size_t cmd_ii=0; cmd_ii< cmd_list_from_stream.size(); cmd_ii++) {
-        EXPECT_EQ(
-            cmd_list_from_stream[cmd_ii]->type,
-            cmd_list_from_oneshot[cmd_ii]->type
-        );
+    for (size_t cmd_ii = 0; cmd_ii < cmd_list_from_stream.size(); cmd_ii++)
+    {
+        EXPECT_EQ(cmd_list_from_stream[cmd_ii]->type, cmd_list_from_oneshot[cmd_ii]->type);
     }
 }
-
-
