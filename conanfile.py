@@ -38,7 +38,6 @@ class DulcificumConan(ConanFile):
         "with_apps": False,
         "with_python_bindings": True,
     }
-    # generators=['cmake_find_package']
 
     def set_version(self):
         if not self.version:

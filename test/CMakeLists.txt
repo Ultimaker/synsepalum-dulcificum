@@ -4,7 +4,6 @@ enable_testing()
 find_package(GTest REQUIRED)
 
 set(UNIT_TEST_FILES
-        ack.cpp
         dulcificum_unit_tester.cpp
         miracle_jsontoolpath_dialect_test.cpp
 )
