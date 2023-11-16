@@ -234,10 +234,17 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else
     {
-        const auto& prev_state = previous_states[previous_states.size() - 1];
-        const auto last_e = prev_state.E[state.active_tool] + prev_state.origin_e[state.active_tool];
         const auto curr_e = command.E.value() + state.origin_e[state.active_tool];
-        delta_e = curr_e - last_e;
+        if (previous_states.empty())
+        {
+            delta_e = curr_e;
+        }
+        else
+        {
+            const auto& prev_state = previous_states[previous_states.size() - 1];
+            const auto last_e = prev_state.E[state.active_tool] + prev_state.origin_e[state.active_tool];
+            delta_e = curr_e - last_e;
+        }
     }
 
     // if position is not specified for an axis, move with a relative delta 0 move
@@ -250,6 +257,11 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     };
     // gcode is in mm / min, bot cmd uses mm / sec
     move->feedrate = state.F[state.active_tool] / 60.0;
+
+    // Since MakerBot doesn't support "reset extruder" commands commutative errors
+    // occur when setting extruders to absolute. As the printer can't keep up with
+    // the increasing extruder position it starts over extruding. As a solution
+    // every absolute extruder position to a relative move.
     move->is_point_relative = {
         command.X.has_value() ? state.X_positioning == Positioning::Relative : true, command.Y.has_value() ? state.Y_positioning == Positioning::Relative : true, false, true, true,
     };

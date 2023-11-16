@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <map>
 #include <memory>
+#include <optional>
 #include <set>
 #include <string_view>
 #include <variant>
@@ -20,7 +21,7 @@ enum class Positioning
 
 struct State
 {
-    size_t num_extruders{ 2 };
+    static constexpr size_t num_extruders{ 2 };
     size_t active_tool{ 0 };
 
     bool is_retracted{ false };

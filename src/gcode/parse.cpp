@@ -22,7 +22,11 @@ gcode::ast::ast_t parse(std::string_view content)
     size_t index{ 1 };
     while (std::getline(stream, line))
     {
-        ast.emplace_back(gcode::ast::factory(index++, line));
+        std::optional<ast::node_t> node = gcode::ast::factory(index++, line);
+        if (node)
+        {
+            ast.emplace_back(*node);
+        }
     }
 
     return ast;
