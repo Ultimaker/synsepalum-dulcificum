@@ -7,6 +7,7 @@
 
 namespace dulcificum::gcode::ast
 {
+// Split-up templates, see below as well.
 using node_likely_t = std::variant<G0_G1, M204, M205, M104, M106, M107, M109, M140, M190>;
 using node_occasional_t = std::variant<G4, T, G90, G91, G92, G280, M82, M83>;
 using node_rare_t = std::variant<Layer, Mesh, FeatureType, InitialTemperatureBuildPlate, BuildVolumeTemperature, InitialTemperatureExtruder, Comment>;
@@ -30,7 +31,10 @@ void factory_helper(size_t line_index, const std::string& raw_line, std::optiona
 
 node_t factory(size_t line_index, const std::string& raw_line)
 {
-    static const auto split_helpers = {
+    // Split-up all templates across multiple calls, in order to;
+    //  1. fix an issue where in at least one compiler (MSVC) it'd not work, and,
+    //  2. reduce compilation-time just a bit (still long though).
+    constexpr auto split_helpers = {
         factory_helper<node_likely_t>,
         factory_helper<node_occasional_t>,
         factory_helper<node_rare_t>,
