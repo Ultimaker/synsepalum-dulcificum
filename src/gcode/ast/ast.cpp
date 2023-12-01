@@ -33,7 +33,7 @@ node_t factory(size_t line_index, const std::string& raw_line)
     // Split-up all templates across multiple calls, in order to;
     //  1. fix an issue where in at least one compiler (MSVC) it'd not work, and,
     //  2. reduce compilation-time just a bit (still long though).
-    constexpr auto split_helpers = {
+    const static auto split_helpers = {
         factory_helper<node_normal_t>,
         factory_helper<node_difficult_t>,
     };
