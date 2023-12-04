@@ -41,7 +41,7 @@ class DulcificumConan(ConanFile):
 
     def set_version(self):
         if not self.version:
-            self.version = "0.1.0-beta"
+            self.version = self.conan_data["version"]
 
     @property
     def _min_cppstd(self):
@@ -100,7 +100,7 @@ class DulcificumConan(ConanFile):
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
         if self.options.with_python_bindings:
-            self.requires("cpython/3.10.4")
+            self.requires("cpython/3.10.4@ultimaker/stable")
             self.requires("pybind11/2.10.4")
 
     def build_requirements(self):
