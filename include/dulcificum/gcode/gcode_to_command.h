@@ -30,19 +30,21 @@ struct VisitCommand
     dulcificum::botcmd::CommandList proto_path = {};
 
     VisitCommand()
-        : previous_states{ state } {};
+        : previous_states{ state }
+    {
+    }
 
     void operator()(const auto& command)
     {
         update_state(command);
         to_proto_path(command);
         previous_states.emplace_back(state);
-    };
+    }
 
 private:
     constexpr void update_state([[maybe_unused]] const auto& command) noexcept
     {
-        spdlog::debug("Not updating state for {}: {}", command.index, command.line);
+        spdlog::debug("Not updating state for {}: {}", command.line_index, command.line);
         // TODO: G4
         // TODO: G280
         // TODO: M204
@@ -70,7 +72,7 @@ private:
 
     constexpr void to_proto_path(const auto& command)
     {
-        spdlog::debug("Not converting to proto_path {}: {}", command.index, command.line);
+        spdlog::debug("Not converting to proto_path {}: {}", command.line_index, command.line);
         // TODO: G90
         // TODO: G91
         // TODO: G92

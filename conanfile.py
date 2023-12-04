@@ -97,7 +97,6 @@ class DulcificumConan(ConanFile):
         self.requires("spdlog/1.12.0")
         self.requires("fmt/10.1.1")
         self.requires("ctre/3.7.2")
-        self.requires("range-v3/0.12.0")
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
         if self.options.with_python_bindings:

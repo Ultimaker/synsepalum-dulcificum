@@ -20,7 +20,13 @@ namespace dulcificum::gcode::ast
  * F = The maximum movement rate of the move between the start and end point.
  */
 class G0_G1
-    : public Entry<R"(G[0|1]((?:\sX(?<X>-?\d*(?:\.\d*)?))|(?:\sY(?<Y>-?\d*(?:\.\d*)?))|(?:\sZ(?<Z>-?\d*(?:\.\d*)?))|(?:\sE(?<E>-?\d*(?:\.\d*)?))|(?:\sF(?<F>-?\d*(?:\.\d*)?)))*$)">
+    : public Entry<
+          R"(^G[0|1](?:(?:\sX(?<X>-?\d*(?:\.\d*)?))|(?:\sY(?<Y>-?\d*(?:\.\d*)?))|(?:\sZ(?<Z>-?\d*(?:\.\d*)?))|(?:\sE(?<E>-?\d*(?:\.\d*)?))|(?:\sF(?<F>-?\d*(?:\.\d*)?)))*$)",
+          ctre::captured_content<1, ctre::id<'X'>>,
+          ctre::captured_content<2, ctre::id<'Y'>>,
+          ctre::captured_content<3, ctre::id<'Z'>>,
+          ctre::captured_content<4, ctre::id<'E'>>,
+          ctre::captured_content<5, ctre::id<'F'>>>
 {
 public:
     std::optional<double> X;
@@ -30,7 +36,7 @@ public:
     std::optional<double> F;
 
     G0_G1() = delete;
-    G0_G1(size_t idx, std::string raw_line);
+    G0_G1(size_t line_index, const std::string& raw_line, regex_result_t captured);
 };
 
 } // namespace dulcificum::gcode::ast

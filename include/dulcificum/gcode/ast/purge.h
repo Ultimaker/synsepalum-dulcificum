@@ -10,11 +10,11 @@ namespace dulcificum::gcode::ast
 /*!
  * /brief Purge the tool
  */
-class G280 : public Entry<R"(G280((?:\sS(?<S>\d+(?:\.\d+)?)))*$)">
+class G280 : public Entry<R"(^G280(?:(?:\sS(?<S>\d+(?:\.\d+)?)))*$)", ctre::captured_content<1, ctre::id<'S'>>>
 {
 public:
     G280() = delete;
-    G280(size_t idx, std::string raw_line);
+    G280(size_t line_index, const std::string& raw_line, regex_result_t captured);
     std::optional<size_t> S;
 };
 } // namespace dulcificum::gcode::ast
