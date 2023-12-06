@@ -13,6 +13,7 @@ Supported dialects include:
 ```angular2html
 mkdir build
 cd build
-cmake ..
-cmake --build .
+conan install .. -s build_type=Debug -o with_apps=True
+conan build ..
 ```
+
