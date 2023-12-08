@@ -5,7 +5,7 @@ from conan.errors import ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
 from conan.tools.env import VirtualBuildEnv
-from conan.tools.files import copy, mkdir, AutoPackager
+from conan.tools.files import copy, mkdir, AutoPackager, update_conandata
 from conan.tools.microsoft import check_min_vs, is_msvc_static_runtime, is_msvc
 from conan.tools.scm import Version
 from jinja2 import Template
@@ -62,6 +62,9 @@ class DulcificumConan(ConanFile):
         if self.settings.compiler == "apple-clang" and Version(self.settings.compiler.version) <= Version("14"):
             return False
         return not self.conf.get("tools.build:skip_test", False, check_type = bool)
+
+    def export(self):
+        update_conandata(self, {"version": self.version})
 
     def export_sources(self):
         copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
