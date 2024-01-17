@@ -360,7 +360,7 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M106& comman
 
     // set fan speed
     const auto set_fan_speed = std::make_shared<botcmd::FanDuty>();
-    set_fan_speed->duty = command.S.has_value() ? command.S.value() : 255;
+    set_fan_speed->duty = command.S.has_value() ? command.S.value() : 1.0;
     set_fan_speed->index = toggle_fan->index;
     proto_path.emplace_back(set_fan_speed);
 }
