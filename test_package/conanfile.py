@@ -13,7 +13,6 @@ from conan.tools.files import copy
 
 class DulcificumTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators =  "VirtualRunEnv"
     test_type = "explicit"
 
     def requirements(self):
@@ -31,14 +30,10 @@ class DulcificumTestConan(ConanFile):
             if len(dep.cpp_info.bindirs) > 0:
                 copy(self, "*.dll", dep.cpp_info.bindirs[0], self.build_folder)
 
-    def build(self):
-        if can_run(self):
-            shutil.copy(Path(self.source_folder).joinpath("test.py"), Path(self.build_folder).joinpath("test.py"))
-
     def test(self):
         if can_run(self):
             test_buf = StringIO()
-            self.run("python test.py", env = "conanrun", output = test_buf, run_environment = True)
+            self.run("python test.py", env="conanrun", stdout=test_buf, scope="run")
             ret_val = test_buf.getvalue()
             if "gcode_2_miracle_jtp" not in ret_val:
                 raise ConanException("pyDulcificum wasn't build correctly!")
