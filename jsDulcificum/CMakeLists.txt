@@ -13,6 +13,6 @@ target_link_options(jsdulcificum
         "SHELL:-s ERROR_ON_UNDEFINED_SYMBOLS=0"
         "SHELL:--bind"
         "SHELL:-l embind"
-        "SHELL: --embind-emit-tsd dulcificum.d.ts"
+        "SHELL: --embind-emit-tsd jsdulcificum.d.ts"
 )
 target_link_libraries(jsdulcificum PUBLIC dulcificum)
