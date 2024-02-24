@@ -5,6 +5,8 @@ find_package(standardprojectsettings REQUIRED)
 option(EXTENSIVE_WARNINGS "Build with all warnings" ON)
 option(ENABLE_TESTS "Build with unit test" ON)
 option(WITH_APPS "Build with apps" ON)
+option(WITH_JS_BINDINGS "Build with JavaScript Emscripten bindings" OFF)
+
 if(WITH_APPS)
     set(APP_VERSION "0.1.0" CACHE STRING "Version of the translator app" )
     message(STATUS "Configuring translator app version: ${APP_VERSION}")
@@ -54,7 +56,10 @@ target_include_directories(dulcificum
 
 target_compile_definitions(dulcificum PRIVATE DULCIFICUM_VERSION="${DULCIFICUM_VERSION}")
 
-use_threads(dulcificum)
+if (NOT CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
+    use_threads(dulcificum)
+endif ()
+
 enable_sanitizers(dulcificum)
 if (${EXTENSIVE_WARNINGS})
     set_project_warnings(dulcificum)
@@ -63,6 +68,11 @@ endif ()
 # --- Setup Python bindings ---
 if (WITH_PYTHON_BINDINGS)
     add_subdirectory(pyDulcificum)
+endif ()
+
+# --- Setup JavaScript bindings ---
+if (WITH_JS_BINDINGS)
+    add_subdirectory(jsDulcificum)
 endif ()
 
 # --- Setup tests ---
