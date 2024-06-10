@@ -11,7 +11,7 @@ from conan.tools.scm import Version
 from jinja2 import Template
 
 
-required_conan_version = ">=1.58.0 <2.0.0"
+required_conan_version = ">=1.64.0 <2.0.0"
 
 
 class DulcificumConan(ConanFile):
@@ -103,8 +103,8 @@ class DulcificumConan(ConanFile):
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
         if self.options.with_python_bindings:
-            self.requires("cpython/3.10.4@ultimaker/stable")
-            self.requires("pybind11/2.10.4")
+            self.requires("cpython/3.12.2")
+            self.requires("pybind11/2.12.0")
 
     def build_requirements(self):
         self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
