@@ -136,13 +136,6 @@ class DulcificumConan(ConanFile):
 
         tc.variables["WITH_PYTHON_BINDINGS"] = self.options.with_python_bindings
         if self.options.with_python_bindings:
-            tc.variables["PYTHON_EXECUTABLE"] = self.deps_user_info["cpython"].python.replace("\\", "/")
-            tc.variables["Python_USE_STATIC_LIBS"] = not self.options["cpython"].shared
-            tc.variables["Python_ROOT_DIR"] = self.deps_cpp_info["cpython"].rootpath.replace("\\", "/")
-            tc.variables["Python_FIND_FRAMEWORK"] = "NEVER"
-            tc.variables["Python_FIND_REGISTRY"] = "NEVER"
-            tc.variables["Python_FIND_IMPLEMENTATIONS"] = "CPython"
-            tc.variables["Python_FIND_STRATEGY"] = "LOCATION"
             tc.variables["PYDULCIFICUM_VERSION"] = self.version
 
         if is_msvc(self):
