@@ -164,7 +164,7 @@ M106::M106(size_t line_index, const std::string& raw_line, regex_result_t captur
     if (const auto& value = captured.get<"S">()) { S = utils::stringConvert<double>(value.to_view()); }
     if (const auto& value = captured.get<"P">()) { P = utils::stringConvert<size_t>(value.to_view()); }
     // clang-format on
-    if (S == std::nullopt && P == std::nullopt)
+    if (S == std::nullopt)
     {
         throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
     }
