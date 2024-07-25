@@ -1,0 +1,45 @@
+{
+  "name": "@ultimaker/dulcificum",
+  "version": "0.1.0-alpha.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "install_dulicificum": "conan install cura_settings/latest@ultimaker/np_147 -s build_type=Release --build=missing --update -c tools.build:skip_test=True --options=\"cura_settings:with_cura_resources=True\" -pr:h cura_wasm.jinja -if src/CuraSettings && rm -f src/CuraSettings/*conan*",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "npm run lint -- --fix",
+    "build": "tsc",
+    "copy-wasm": "cp ../build/Release/dulcificum.js dist/ && cp ../build/Release/dulcificum.d.ts src/",
+    "prepublish": "npm run copy-wasm && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ultimaker/synsepalum-dulcificum.git"
+  },
+  "keywords": [
+    "Cura",
+    "Dulcificum",
+    "Configuration"
+  ],
+  "author": "UltiMaker",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/Ultimaker/synsepalum-dulcificum/issues"
+  },
+  "homepage": "https://github.com/Ultimaker/synsepalum-dulcificum#readme",
+  "dependencies": {
+    "emscripten": "^0.0.2-beta"
+  },
+  "devDependencies": {
+    "@types/emscripten": "^1.39.10",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "eslint": "^8.55.0",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "typescript": "^5.2.2"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ]
+}

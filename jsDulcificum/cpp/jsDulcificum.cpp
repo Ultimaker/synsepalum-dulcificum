@@ -3,8 +3,6 @@
 #include <filesystem>
 #include <string>
 
-using namespace emscripten;
-
 extern "C"
 {
     const std::string gcode_2_miracle_jtp(const std::string& content)
@@ -15,5 +13,5 @@ extern "C"
 
 EMSCRIPTEN_BINDINGS(dulcificum)
 {
-    function("gcode_2_miracle_jtp", &gcode_2_miracle_jtp);
+    emscripten::function("gcode_2_miracle_jtp", &gcode_2_miracle_jtp);
 }
