@@ -50,6 +50,7 @@ jobs:
       - name: Get Conan configuration
         run: |
           conan config install https://github.com/Ultimaker/conan-config.git
+          conan config install https://github.com/Ultimaker/conan-config.git -a "-b runner/${{ runner.os }}/${{ runner.arch }}"
 
       # - name: Cache Conan packages
       #   uses: actions/cache@v3
