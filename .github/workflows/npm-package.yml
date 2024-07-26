@@ -1,9 +1,9 @@
 name: NPM package
 
 on:
-  push:
-    branches:
-      - "NP-76_wasm_bindings"
+  release:
+    types:
+      - created
 
 jobs:
   build:
@@ -81,7 +81,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@ultimaker'
 
-      - name: Set npm config
+      - name: NPM install and publish
         run: |
           npm install
           npm publish
