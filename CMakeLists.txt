@@ -41,7 +41,7 @@ set(DULCIFICUM_SRC
         src/command_types.cpp
 )
 if (WITH_JS_BINDINGS)
-    list(APPEND DULCIFICUM_SRC jsDulcificum/cpp/jsDulcificum.cpp)
+    list(APPEND DULCIFICUM_SRC DulcificumJS/cpp/DulcificumJS.cpp)
     add_executable(dulcificum ${DULCIFICUM_SRC})
     target_link_options(dulcificum
             PUBLIC
