@@ -7,7 +7,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "build": "tsc",
-    "copy:js": "mkdir -p dist && cp ../build/Release/dulcificum.js dist/ && cp ../build/Release/dulcificum.d.ts src/",
+    "copy:js": "mkdir -p dist && cp ../build/Release/dulcificum_js.js dist/ && cp ../build/Release/dulcificum_js.d.ts src/",
     "prepublish": "npm run copy:js && npm run build"
   },
   "repository": {

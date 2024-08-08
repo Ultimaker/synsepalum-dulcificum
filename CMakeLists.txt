@@ -40,27 +40,7 @@ set(DULCIFICUM_SRC
         src/utils/io.cpp
         src/command_types.cpp
 )
-if (WITH_JS_BINDINGS)
-    list(APPEND DULCIFICUM_SRC DulcificumJS/cpp/DulcificumJS.cpp)
-    add_executable(dulcificum ${DULCIFICUM_SRC})
-    target_link_options(dulcificum
-            PUBLIC
-            "SHELL:-s EXPORTED_FUNCTIONS=[_gcode_2_miracle_jtp]"
-            "SHELL:-s USE_ES6_IMPORT_META=1"
-            "SHELL:-s FORCE_FILESYSTEM=1"
-            "SHELL:-s EXPORT_NAME=dulcificum"
-            "SHELL:-s MODULARIZE=1"
-            "SHELL:-s EXPORT_ES6=1"
-            "SHELL:-s SINGLE_FILE=1"
-            "SHELL:-s ALLOW_MEMORY_GROWTH=1"
-            "SHELL:-s ERROR_ON_UNDEFINED_SYMBOLS=0"
-            "SHELL:--bind"
-            "SHELL:-l embind"
-            "SHELL: --embind-emit-tsd dulcificum.d.ts"
-    )
-else ()
-    add_library(dulcificum ${DULCIFICUM_SRC})
-endif ()
+add_library(dulcificum STATIC ${DULCIFICUM_SRC})
 
 target_link_libraries(dulcificum
         PUBLIC
@@ -84,6 +64,11 @@ endif ()
 enable_sanitizers(dulcificum)
 if (${EXTENSIVE_WARNINGS})
     set_project_warnings(dulcificum)
+endif ()
+
+# --- Setup JavaScript bindings ---
+if (WITH_JS_BINDINGS)
+    add_subdirectory(DulcificumJS/cpp)
 endif ()
 
 # --- Setup Python bindings ---

@@ -1,4 +1,4 @@
-import dulcificum, { MainModule } from './dulcificum.js';
+import dulcificum, { MainModule } from './Dulcificum/dulcificum_js';
 
 const mod: MainModule = await (<any> dulcificum)({});
 
