@@ -70,7 +70,7 @@ jobs:
 
       - name: Build C++
         run: |
-          conan install . synsepalum-dulcificum/latest@ultimaker/testing -s build_type=Release --build=missing --update --build=missing -c tools.build:skip_test=True -s arch=wasm -s os=Emscripten -o with_python_bindings=False -pr:h cura_wasm.jinja
+          conan install . dulcificum/latest@ultimaker/testing -s build_type=Release --build=missing --update --build=missing -c tools.build:skip_test=True -s arch=wasm -s os=Emscripten -o with_python_bindings=False -pr:h cura_wasm.jinja
           cmake --preset release
           cmake --build --preset release
 
