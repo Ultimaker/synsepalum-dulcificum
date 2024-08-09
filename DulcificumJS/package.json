@@ -1,13 +1,14 @@
 {
   "name": "@ultimaker/dulcificumjs",
   "version": "0.1.0-alpha.1",
-  "description": "DulcificumJS is a TS component to run Dulsificum in a browser",
+  "description": "DulcificumJS is a TS component to run Dulcificum in a browser",
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "build": "tsc",
-    "copy:js": "mkdir -p dist/Dulcificum && cp ../build/Release/DulcificumJS/dulcificum_js.* dist/Dulcificum",
+
+    "copy:js": "mkdir -p dist/Dulcificum && cp src/Dulcificum/dulcificum_js.* dist/Dulcificum/",
     "prepublish": "npm run copy:js && npm run build"
   },
   "repository": {
