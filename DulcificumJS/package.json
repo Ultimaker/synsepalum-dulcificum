@@ -8,8 +8,9 @@
     "lint:fix": "npm run lint -- --fix",
     "lint:tsc": "tsc",
     "build": "tsc -p tsconfig.json",
-    "copy:js": "mkdir -p dist/Dulcificum && cp ../build/Release/DulcificumJS/cpp/dulcificum_js.* src/Dulcificum/",
-    "prepublish": "npm run copy:js && npm run build"
+    "copy:build": "cp ../build/Release/DulcificumJS/cpp/dulcificum_js.* src/Dulcificum/",
+    "copy:dist": "mkdir -p dist/Dulcificum && cp src/Dulcificum/dulcificum_js.* dist/Dulcificum/",
+    "prepublish": "npm run copy:build && npm run build && npm run copy:dist"
   },
   "repository": {
     "type": "git",
