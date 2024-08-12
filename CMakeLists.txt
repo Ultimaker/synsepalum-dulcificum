@@ -31,12 +31,9 @@ set(DULCIFICUM_SRC
         src/gcode/ast/ast.cpp
         src/gcode/ast/entries.cpp
         src/gcode/parse.cpp
-
         src/miracle_jtp/mgjtp_command_to_json.cpp
         src/miracle_jtp/mgjtp_json_to_command.cpp
-
         src/gcode/gcode_to_command.cpp
-
         src/utils/io.cpp
         src/command_types.cpp
 )
@@ -57,7 +54,7 @@ target_include_directories(dulcificum
 
 target_compile_definitions(dulcificum PRIVATE DULCIFICUM_VERSION="${DULCIFICUM_VERSION}")
 
-if (NOT WITH_JS_BINDINGS)
+if (NOT CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     use_threads(dulcificum)
 endif ()
 
