@@ -1,15 +1,16 @@
 {
   "name": "@ultimaker/dulcificumjs",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.1",
   "description": "DulcificumJS is a TS component to run Dulcificum in a browser",
   "main": "dist/index.js",
   "scripts": {
-    "install_dulcificum": "conan install dulcificum/latest@ultimaker/testing -s build_type=Release --build=missing --update --build=missing -c tools.build:skip_test=True -s arch=wasm -s os=Emscripten -o with_python_bindings=False -pr:h cura_wasm.jinja",
+    "install_dulcificum": "conan install dulcificum/latest@ultimaker/np-76 -s build_type=Release --build=missing --update --build=missing -c tools.build:skip_test=True -s arch=wasm -s os=Emscripten -o with_python_bindings=False -pr:h cura_wasm.jinja",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
-    "build": "tsc",
-    "copy:js": "mkdir -p dist/Dulcificum && cp ../build/Release/DulcificumJS/cpp/dulcificum_js.* dist/Dulcificum/",
-    "prepublish": "npm run copy:js && npm run build"
+    "lint:tsc": "tsc",
+    "build": "tsc -p tsconfig.json",
+    "copy:js": "mkdir -p dist/Dulcificum && cp src/Dulcificum/dulcificum_js.* dist/Dulcificum/",
+    "prepublish": "npm run build && npm run copy:js"
   },
   "repository": {
     "type": "git",
