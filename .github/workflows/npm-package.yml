@@ -83,8 +83,7 @@ jobs:
 
       - name: NPM install and publish
         run: |
-          npm run install_dulcificum
-          npm ci
+          npm install
           npm publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
