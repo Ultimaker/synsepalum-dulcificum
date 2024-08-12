@@ -1,9 +1,9 @@
 name: NPM package
 
 on:
-  release:
-    types:
-      - created
+  push:
+    branches:
+      - "NP-76_wasm_bindings"
 
 jobs:
   build:
@@ -68,11 +68,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-conan-downloads-
 
-#      - name: Build C++
-#        run: |
-#          conan install . dulcificum/latest@ultimaker/testing -s build_type=Release --build=missing --update --build=missing -c tools.build:skip_test=True -s arch=wasm -s os=Emscripten -o with_python_bindings=False -pr:h cura_wasm.jinja
-#          cmake --preset release
-#          cmake --build --preset release
+      - name: Build C++
+        run: |
+          conan install . dulcificum/latest@ultimaker/testing -s build_type=Release --update --build=missing -c tools.build:skip_test=True -s arch=wasm -s os=Emscripten -o with_python_bindings=False -pr:h cura_wasm.jinja
+          cmake --preset release
+          cmake --build --preset release
 
       - name: Use Node.js
         uses: actions/setup-node@v4
