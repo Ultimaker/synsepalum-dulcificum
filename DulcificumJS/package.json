@@ -10,7 +10,7 @@
     "lint:tsc": "tsc",
     "build": "tsc -p tsconfig.json",
     "copy:js": "mkdir -p dist/Dulcificum && cp src/Dulcificum/dulcificum_js.* dist/Dulcificum/",
-    "prepublish": "npm run build && npm run copy:js"
+    "prepublish": "npm run copy:js && npm run build "
   },
   "repository": {
     "type": "git",
