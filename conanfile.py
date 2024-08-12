@@ -136,7 +136,10 @@ class DulcificumConan(ConanFile):
         if self.options.with_apps:
             tc.variables["APP_VERSION"] = self.version
 
-        tc.variables["WITH_JS_BINDINGS"] = self.settings.arch == "wasm" and self.settings.os == "Emscripten"
+        if self.settings.arch == "wasm" and self.settings.os == "Emscripten":
+            tc.variables["WITH_JS_BINDINGS"] = True
+        else:
+            tc.variables["WITH_JS_BINDINGS"] = False
         tc.variables["WITH_PYTHON_BINDINGS"] = self.options.get_safe("with_python_bindings", False)
         if self.options.get_safe("with_python_bindings", False):
             tc.variables["PYTHON_EXECUTABLE"] = self.deps_user_info["cpython"].python.replace("\\", "/")

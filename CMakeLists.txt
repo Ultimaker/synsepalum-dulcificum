@@ -54,7 +54,7 @@ target_include_directories(dulcificum
 
 target_compile_definitions(dulcificum PRIVATE DULCIFICUM_VERSION="${DULCIFICUM_VERSION}")
 
-if (NOT CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
+if (NOT WITH_JS_BINDINGS)
     use_threads(dulcificum)
 endif ()
 
