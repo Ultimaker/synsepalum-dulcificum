@@ -72,6 +72,7 @@ class DulcificumConan(ConanFile):
         copy(self, "*", os.path.join(self.recipe_folder, "test"), os.path.join(self.export_sources_folder, "test"))
         copy(self, "*", os.path.join(self.recipe_folder, "apps"), os.path.join(self.export_sources_folder, "apps"))
         copy(self, "*", os.path.join(self.recipe_folder, "pyDulcificum"), os.path.join(self.export_sources_folder, "pyDulcificum"))
+        copy(self, "*", os.path.join(self.recipe_folder, "DulcificumJS"), os.path.join(self.export_sources_folder, "DulcificumJS"))
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -178,11 +179,14 @@ class DulcificumConan(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+    def deploy(self):
+        copy(self, "dulcificum_js*", src=os.path.join(self.package_folder, "lib"), dst=self.install_folder)
 
     def package(self):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
         copy(self, "translator*", src = os.path.join(self.build_folder, "apps"), dst = os.path.join(self.package_folder, "bin"), keep_path = False)
         copy(self, "*.pyd", src = os.path.join(self.build_folder, "pyDulcificum"), dst = os.path.join(self.package_folder, "lib", "pyDulcificum"), keep_path = False)
+        copy(self, "dulcificum_js.*", os.path.join(self.recipe_folder, "DulcificumJS", "cpp"), os.path.join(self.export_sources_folder, "DulcificumJS", "cpp"))
         copy(self, f"*.d.ts", src=self.build_folder, dst=os.path.join(self.package_folder, "bin"), keep_path = False)
         copy(self, f"*.js", src=self.build_folder, dst=os.path.join(self.package_folder, "bin"), keep_path = False)
         packager = AutoPackager(self)
