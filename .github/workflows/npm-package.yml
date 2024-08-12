@@ -1,9 +1,8 @@
 name: NPM package
 
 on:
-  push:
-    branches:
-      - "NP-76_wasm_bindings"
+  release:
+    types: [ created ]
 
 jobs:
   build:
