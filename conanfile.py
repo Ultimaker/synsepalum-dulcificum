@@ -189,7 +189,7 @@ class DulcificumConan(ConanFile):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
         copy(self, "translator*", src = os.path.join(self.build_folder, "apps"), dst = os.path.join(self.package_folder, "bin"), keep_path = False)
         copy(self, "*.pyd", src = os.path.join(self.build_folder, "pyDulcificum"), dst = os.path.join(self.package_folder, "lib", "pyDulcificum"), keep_path = False)
-        copy(self, "dulcificum_js.*", os.path.join(self.recipe_folder, "DulcificumJS", "cpp"), os.path.join(self.export_sources_folder, "DulcificumJS", "cpp"))
+        copy(self, pattern="dulcificum_js.*", src=os.path.join(self.build_folder, "DulcificumJS", "cpp"), dst=os.path.join(self.package_folder, "lib"))
         copy(self, f"*.d.ts", src=self.build_folder, dst=os.path.join(self.package_folder, "bin"), keep_path = False)
         copy(self, f"*.js", src=self.build_folder, dst=os.path.join(self.package_folder, "bin"), keep_path = False)
         packager = AutoPackager(self)
