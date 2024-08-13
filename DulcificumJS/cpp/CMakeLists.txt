@@ -1,7 +1,6 @@
 add_executable(dulcificum_js DulcificumJS.cpp)
 target_link_options(dulcificum_js
         PUBLIC
-        "SHELL:-s EXPORTED_FUNCTIONS=[_gcode_2_miracle_jtp]"
         "SHELL:-s USE_ES6_IMPORT_META=1"
         "SHELL:-s FORCE_FILESYSTEM=1"
         "SHELL:-s EXPORT_NAME=dulcificum"
