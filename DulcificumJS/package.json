@@ -4,7 +4,7 @@
   "description": "DulcificumJS is a TS component to run Dulcificum in a browser",
   "main": "dist/index.js",
   "scripts": {
-    "install_dulcificum": "conan install dulcificum/latest@ultimaker/np_76 -s build_type=Release --build=missing --update -c tools.build:skip_test=True -pr:h cura_wasm.jinja -if src/Dulcificum && rm -f src/Dulcificum/*conan*",
+    "install_dulcificum": "conan install dulcificum/latest@ultimaker/testing -s build_type=Release --build=missing --update -c tools.build:skip_test=True -pr:h cura_wasm.jinja -if src/Dulcificum && rm -f src/Dulcificum/*conan*",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "lint:tsc": "tsc",
