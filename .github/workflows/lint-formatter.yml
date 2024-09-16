@@ -10,6 +10,7 @@ on:
       - 'include/**/*.h*'
       - 'src/**/*.cpp*'
       - 'tests/**/*.cpp*'
+      - '.github/workflows/lint-formatter.yml'
 
 jobs:
 # FIXME: Use main once merged
