@@ -67,7 +67,7 @@ endif ()
 
 # --- Setup tests ---
 if (ENABLE_TESTS)
-    add_subdirectory(test)
+    add_subdirectory(tests)
 endif ()
 
 # --- Setup Apps ---
