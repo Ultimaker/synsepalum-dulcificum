@@ -1,6 +1,6 @@
 import dulcificum, { MainModule } from './Dulcificum/dulcificum_js';
 
-let mod: MainModule = null;
+let mod: MainModule | null = null;
 
 /**
  * This must be executed and waited on before this module can be used.
