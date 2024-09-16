@@ -1,4 +1,5 @@
 set(ENV{LD_LIBRARY_PATH} "${CMAKE_LIBRARY_PATH}:${LD_LIBRARY_PATH}")  # Needed to ensure that CMake finds the Conan CPython library
+find_package(Python COMPONENTS Interpreter Development)
 find_package(pybind11 REQUIRED)
 
 pybind11_add_module(pyDulcificum pyDulcificum.cpp)

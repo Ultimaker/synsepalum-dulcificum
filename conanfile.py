@@ -9,7 +9,7 @@ from conan.tools.files import copy, mkdir, AutoPackager, update_conandata
 from conan.tools.microsoft import check_min_vs, is_msvc_static_runtime, is_msvc
 from conan.tools.scm import Version
 
-required_conan_version = ">=1.62.0"
+required_conan_version = ">=2.7.0"
 
 
 class DulcificumConan(ConanFile):
@@ -107,7 +107,7 @@ class DulcificumConan(ConanFile):
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
         if self.options.with_python_bindings:
-            self.requires("cpython/3.12.2@ultimaker/cura_11622")  # FIXME: use stable after merge
+            self.requires("cpython/3.12.2")
             self.requires("pybind11/2.11.1")
 
     def build_requirements(self):
@@ -141,16 +141,6 @@ class DulcificumConan(ConanFile):
         tc.variables["WITH_PYTHON_BINDINGS"] = self.options.with_python_bindings
         if self.options.with_python_bindings:
             tc.cache_variables["CMAKE_POLICY_DEFAULT_CMP0148"] = "OLD"
-            cpython_conf = self.dependencies["cpython"].conf_info
-            tc.variables["PYTHON_EXECUTABLE"] = cpython_conf.get("user.cpython:python").replace("\\", "/")
-            tc.variables["Python_ROOT_DIR"] = cpython_conf.get("user.cpython:python_root").replace("\\", "/")
-            cpython_options = self.dependencies["cpython"].options
-            tc.variables["Python_USE_STATIC_LIBS"] = not cpython_options.shared
-            tc.variables["Python_FIND_FRAMEWORK"] = "NEVER"
-            tc.variables["Python_FIND_REGISTRY"] = "NEVER"
-            tc.variables["Python_FIND_IMPLEMENTATIONS"] = "CPython"
-            tc.variables["Python_FIND_STRATEGY"] = "LOCATION"
-
             tc.variables["PYDULCIFICUM_VERSION"] = self.version
 
         if is_msvc(self):
@@ -161,8 +151,8 @@ class DulcificumConan(ConanFile):
         tc = CMakeDeps(self)
         tc.generate()
 
-        tc = VirtualBuildEnv(self)
-        tc.generate(scope="build")
+        vb = VirtualBuildEnv(self)
+        vb.generate(scope="build")
 
         for dep in self.dependencies.values():
             if len(dep.cpp_info.libdirs) > 0:
