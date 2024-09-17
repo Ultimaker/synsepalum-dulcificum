@@ -81,8 +81,6 @@ class DulcificumConan(ConanFile):
             del self.options.with_python_bindings
 
     def configure(self):
-        if self.options.shared:
-            self.options.rm_safe("fPIC")
         if self.options.get_safe("with_python_bindings", False):
             self.options["cpython"].shared = True
 
