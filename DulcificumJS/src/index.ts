@@ -13,5 +13,8 @@ export async function initialize(): Promise<void> {
 }
 
 export function gcode_2_miracle_jtp(input: string): string {
+  if (mod == null) {
+    return "";
+  }
   return <string> mod.gcode_2_miracle_jtp(input);
 }
