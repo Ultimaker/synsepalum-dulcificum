@@ -10,11 +10,13 @@ on:
       - 'conanfile.py'
       - 'CMakeLists.txt'
       - 'pyDulcificum/**'
+      - 'DulcificumJS/**'
       - '.github/workflows/conan-package.yml'
       - '.github/worflows/requirements-conan-package.txt'
     branches:
       - main
       - 'CURA-*'
+      - 'NP-*'
       - 'PP-*'
       - 'SS-*'
       - '[0-9].[0-9]*'

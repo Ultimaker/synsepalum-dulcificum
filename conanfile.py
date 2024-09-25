@@ -71,17 +71,17 @@ class DulcificumConan(ConanFile):
              os.path.join(self.export_sources_folder, "include"))
         copy(self, "*", os.path.join(self.recipe_folder, "tests"), os.path.join(self.export_sources_folder, "tests"))
         copy(self, "*", os.path.join(self.recipe_folder, "apps"), os.path.join(self.export_sources_folder, "apps"))
-        copy(self, "*", os.path.join(self.recipe_folder, "pyDulcificum"),
-             os.path.join(self.export_sources_folder, "pyDulcificum"))
+        copy(self, "*", os.path.join(self.recipe_folder, "pyDulcificum"), os.path.join(self.export_sources_folder, "pyDulcificum"))
+        copy(self, "*", os.path.join(self.recipe_folder, "DulcificumJS"), os.path.join(self.export_sources_folder, "DulcificumJS"))
 
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
+        if self.settings.arch == "wasm" and self.settings.os == "Emscripten":
+            del self.options.with_python_bindings
 
     def configure(self):
-        if self.options.shared:
-            self.options.rm_safe("fPIC")
-        if self.options.with_python_bindings:
+        if self.options.get_safe("with_python_bindings", False):
             self.options["cpython"].shared = True
 
     def layout(self):
@@ -106,7 +106,7 @@ class DulcificumConan(ConanFile):
         self.requires("ctre/3.7.2", transitive_headers=True)
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
-        if self.options.with_python_bindings:
+        if self.options.get_safe("with_python_bindings", False):
             self.requires("cpython/3.12.2")
             self.requires("pybind11/2.11.1")
 
@@ -138,9 +138,13 @@ class DulcificumConan(ConanFile):
         if self.options.with_apps:
             tc.variables["APP_VERSION"] = self.version
 
-        tc.variables["WITH_PYTHON_BINDINGS"] = self.options.with_python_bindings
-        if self.options.with_python_bindings:
-            tc.cache_variables["CMAKE_POLICY_DEFAULT_CMP0148"] = "OLD"
+        if self.settings.arch == "wasm" and self.settings.os == "Emscripten":
+            tc.variables["WITH_JS_BINDINGS"] = True
+        else:
+            tc.variables["WITH_JS_BINDINGS"] = False
+
+        tc.variables["WITH_PYTHON_BINDINGS"] = self.options.get_safe("with_python_bindings", False)
+        if self.options.get_safe("with_python_bindings", False):
             tc.variables["PYDULCIFICUM_VERSION"] = self.version
 
         if is_msvc(self):
@@ -174,13 +178,16 @@ class DulcificumConan(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+    def deploy(self):
+        copy(self, "dulcificum_js*", src=os.path.join(self.package_folder, "lib"), dst=self.install_folder)
 
     def package(self):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
-        copy(self, "translator*", src=os.path.join(self.build_folder, "apps"),
-             dst=os.path.join(self.package_folder, "bin"), keep_path=False)
-        copy(self, "*.pyd", src=os.path.join(self.build_folder, "pyDulcificum"),
-             dst=os.path.join(self.package_folder, "lib", "pyDulcificum"), keep_path=False)
+        copy(self, "translator*", src = os.path.join(self.build_folder, "apps"), dst = os.path.join(self.package_folder, "bin"), keep_path = False)
+        copy(self, "*.pyd", src = os.path.join(self.build_folder, "pyDulcificum"), dst = os.path.join(self.package_folder, "lib", "pyDulcificum"), keep_path = False)
+        copy(self, pattern="dulcificum_js.*", src=os.path.join(self.build_folder, "DulcificumJS", "cpp"), dst=os.path.join(self.package_folder, "lib"))
+        copy(self, f"*.d.ts", src=self.build_folder, dst=os.path.join(self.package_folder, "bin"), keep_path = False)
+        copy(self, f"*.js", src=self.build_folder, dst=os.path.join(self.package_folder, "bin"), keep_path = False)
         packager = AutoPackager(self)
         packager.run()
 
