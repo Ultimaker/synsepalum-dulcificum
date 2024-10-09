@@ -42,8 +42,9 @@ class DulcificumConan(ConanFile):
     def set_version(self):
         try:
             git = Git(self)
-            self.hash = git.get_commit()
+            self.commit_hash = git.get_commit()
         except ConanException as e:
+            self.commit_hash = "unknown"
             self.output.error(f"An error occurred: {e}")
         if not self.version:
             self.version = self.conan_data["version"]
@@ -135,7 +136,7 @@ class DulcificumConan(ConanFile):
         tc.variables["ENABLE_TESTS"] = self._run_tests
         tc.variables["EXTENSIVE_WARNINGS"] = self.options.enable_extensive_warnings
         tc.variables["DULCIFICUM_VERSION"] = self.version
-        tc.variables["GIT_COMMIT_HASH"] = self.hash
+        tc.variables["GIT_COMMIT_HASH"] = self.commit_hash
 
         tc.variables["WITH_APPS"] = self.options.with_apps
         if self.options.with_apps:
