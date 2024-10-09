@@ -18,3 +18,10 @@ export function gcode_2_miracle_jtp(input: string): string {
   }
   return <string> mod.gcode_2_miracle_jtp(input);
 }
+
+export function dulcificum_info(): dulcificum.info_t {
+  if (mod == null) {
+    return { dulcificum_version: "", dulcificum_hash: "" };
+  }
+  return mod.dulcificum_info();
+}

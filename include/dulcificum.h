@@ -3,7 +3,7 @@
 
 #include <nlohmann/json_fwd.hpp>
 #ifndef DULCIFICUM_VERSION
-#define DULCIFICUM_VERSION "0.1.0"
+#define DULCIFICUM_VERSION "0.2.1"
 #endif
 
 #include "dulcificum/gcode/gcode_to_command.h"

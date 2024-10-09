@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from conan import ConanFile
 from conan.errors import ConanInvalidConfiguration
@@ -129,6 +130,7 @@ class DulcificumConan(ConanFile):
         tc.variables["ENABLE_TESTS"] = self._run_tests
         tc.variables["EXTENSIVE_WARNINGS"] = self.options.enable_extensive_warnings
         tc.variables["DULCIFICUM_VERSION"] = self.version
+        tc.variables["GIT_COMMIT_HASH"] = self._get_git_commit_hash()
 
         tc.variables["WITH_APPS"] = self.options.with_apps
         if self.options.with_apps:
@@ -175,6 +177,14 @@ class DulcificumConan(ConanFile):
                     copy(self, "*.dll", dep.cpp_info.libdirs[0], os.path.join(self.build_folder,  "tests"))
                 if len(dep.cpp_info.bindirs) > 0:
                     copy(self, "*.dll", dep.cpp_info.bindirs[0], os.path.join(self.build_folder,  "tests"))
+
+    def _get_git_commit_hash(self):
+        try:
+            result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=self.recipe_folder, capture_output=True,
+                                    check=True, text=True)
+            return result.stdout.strip()
+        except subprocess.CalledProcessError:
+            return "unknown"
 
     def build(self):
         cmake = CMake(self)
