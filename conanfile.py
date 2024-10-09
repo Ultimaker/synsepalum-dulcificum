@@ -38,6 +38,7 @@ class DulcificumConan(ConanFile):
         "with_apps": False,
         "with_python_bindings": True,
     }
+    commit_hash = None
 
     def set_version(self):
         try:
