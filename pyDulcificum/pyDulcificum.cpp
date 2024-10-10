@@ -6,7 +6,7 @@
 #include <string>
 
 #ifndef PYDULCIFICUM_VERSION
-#define PYDULCIFICUM_VERSION "0.1.0"
+#define PYDULCIFICUM_VERSION "0.2.1"
 #endif
 
 namespace py = pybind11;

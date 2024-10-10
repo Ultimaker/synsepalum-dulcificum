@@ -1,4 +1,4 @@
-import dulcificum, { MainModule } from './Dulcificum/dulcificum_js';
+import dulcificum, {info_t, MainModule} from './Dulcificum/dulcificum_js';
 
 let mod: MainModule | null = null;
 
@@ -17,4 +17,11 @@ export function gcode_2_miracle_jtp(input: string): string {
     return "";
   }
   return <string> mod.gcode_2_miracle_jtp(input);
+}
+
+export function dulcificum_info(): info_t {
+  if (mod == null) {
+    return { dulcificum_version: "", dulcificum_hash: "" };
+  }
+  return mod.dulcificum_info();
 }
