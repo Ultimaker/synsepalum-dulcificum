@@ -38,15 +38,8 @@ class DulcificumConan(ConanFile):
         "with_apps": False,
         "with_python_bindings": True,
     }
-    commit_hash = None
 
     def set_version(self):
-        try:
-            git = Git(self)
-            self.commit_hash = git.get_commit()
-        except ConanException as e:
-            self.commit_hash = "unknown"
-            self.output.error(f"An error occurred: {e}")
         if not self.version:
             self.version = self.conan_data["version"]
 
@@ -71,7 +64,13 @@ class DulcificumConan(ConanFile):
         return not self.conf.get("tools.build:skip_test", False, check_type = bool)
 
     def export(self):
-        update_conandata(self, {"version": self.version})
+        try:
+            git = Git(self)
+            commit_hash = git.get_commit()
+        except ConanException as e:
+            commit_hash = "unknown"
+            self.output.error(f"An error occurred: {e}")
+        update_conandata(self, {"version": self.version, "commit_hash": commit_hash})
 
     def export_sources(self):
         copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
@@ -137,8 +136,7 @@ class DulcificumConan(ConanFile):
         tc.variables["ENABLE_TESTS"] = self._run_tests
         tc.variables["EXTENSIVE_WARNINGS"] = self.options.enable_extensive_warnings
         tc.variables["DULCIFICUM_VERSION"] = self.version
-        tc.variables["GIT_COMMIT_HASH"] = self.commit_hash
-
+        tc.variables["GIT_COMMIT_HASH"] = self.conan_data["commit_hash"]
         tc.variables["WITH_APPS"] = self.options.with_apps
         if self.options.with_apps:
             tc.variables["APP_VERSION"] = self.version

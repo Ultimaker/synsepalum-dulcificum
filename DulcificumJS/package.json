@@ -1,6 +1,6 @@
 {
   "name": "@ultimaker/dulcificumjs",
-  "version": "0.1.0-alpha.11",
+  "version": "0.1.0-alpha.12",
   "description": "DulcificumJS is a TS component to run Dulcificum in a browser",
   "main": "dist/index.js",
   "scripts": {
