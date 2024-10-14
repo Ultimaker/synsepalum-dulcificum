@@ -7,7 +7,8 @@ from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
 from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy, mkdir, AutoPackager, update_conandata
 from conan.tools.microsoft import check_min_vs, is_msvc_static_runtime, is_msvc
-from conan.tools.scm import Version
+from conan.tools.scm import Version, Git
+from conan.errors import ConanException
 
 
 required_conan_version = ">=1.58.0 <2.0.0"
@@ -63,7 +64,13 @@ class DulcificumConan(ConanFile):
         return not self.conf.get("tools.build:skip_test", False, check_type = bool)
 
     def export(self):
-        update_conandata(self, {"version": self.version})
+        try:
+            git = Git(self)
+            commit_hash = git.get_commit()
+        except ConanException as e:
+            commit_hash = "unknown"
+            self.output.error(f"An error occurred: {e}")
+        update_conandata(self, {"version": self.version, "commit_hash": commit_hash})
 
     def export_sources(self):
         copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
@@ -129,7 +136,7 @@ class DulcificumConan(ConanFile):
         tc.variables["ENABLE_TESTS"] = self._run_tests
         tc.variables["EXTENSIVE_WARNINGS"] = self.options.enable_extensive_warnings
         tc.variables["DULCIFICUM_VERSION"] = self.version
-
+        tc.variables["GIT_COMMIT_HASH"] = self.conan_data["commit_hash"]
         tc.variables["WITH_APPS"] = self.options.with_apps
         if self.options.with_apps:
             tc.variables["APP_VERSION"] = self.version
@@ -175,6 +182,7 @@ class DulcificumConan(ConanFile):
                     copy(self, "*.dll", dep.cpp_info.libdirs[0], os.path.join(self.build_folder,  "tests"))
                 if len(dep.cpp_info.bindirs) > 0:
                     copy(self, "*.dll", dep.cpp_info.bindirs[0], os.path.join(self.build_folder,  "tests"))
+
 
     def build(self):
         cmake = CMake(self)

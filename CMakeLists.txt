@@ -8,18 +8,21 @@ option(WITH_APPS "Build with apps" ON)
 option(WITH_JS_BINDINGS "Build with JavaScript Emscripten bindings" OFF)
 
 if(WITH_APPS)
-    set(APP_VERSION "0.1.0" CACHE STRING "Version of the translator app" )
+    set(APP_VERSION "0.2.1" CACHE STRING "Version of the translator app" )
     message(STATUS "Configuring translator app version: ${APP_VERSION}")
 endif ()
 
 option(WITH_PYTHON_BINDINGS "Build with Python bindings: `pyDulcificum`" ON)
 if(WITH_PYTHON_BINDINGS)
-    set(PYDULCIFICUM_VERSION "0.1.0" CACHE STRING "Version of the pyDulcificum python bindings" )
+    set(PYDULCIFICUM_VERSION "0.2.1" CACHE STRING "Version of the pyDulcificum python bindings" )
     message(STATUS "Configuring pyDulcificum version: ${PYDULCIFICUM_VERSION}")
 endif ()
 
-set(DULCIFICUM_VERSION "0.1.0" CACHE STRING "Version of the dulcificum library" )
+if(NOT DEFINED DULCIFICUM_VERSION)
+    message(FATAL_ERROR "DULCIFICUM_VERSION is not defined!")
+endif()
 message(STATUS "Configuring Dulcificum version: ${DULCIFICUM_VERSION}")
+message(STATUS "Configuring Dulcificum hash: ${GIT_COMMIT_HASH}")
 
 find_package(nlohmann_json REQUIRED)
 find_package(spdlog REQUIRED)
@@ -52,7 +55,11 @@ target_include_directories(dulcificum
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_definitions(dulcificum PRIVATE DULCIFICUM_VERSION="${DULCIFICUM_VERSION}")
+target_compile_definitions(dulcificum
+    PUBLIC
+    DULCIFICUM_VERSION="${DULCIFICUM_VERSION}"
+    DULCIFICUM_HASH="${GIT_COMMIT_HASH}"
+)
 
 if (NOT WITH_JS_BINDINGS)
     use_threads(dulcificum)
