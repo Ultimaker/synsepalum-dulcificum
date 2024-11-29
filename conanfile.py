@@ -114,7 +114,7 @@ class DulcificumConan(ConanFile):
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
         if self.options.get_safe("with_python_bindings", False):
-            self.requires("cpython/3.12.2")
+            self.requires("cpython/3.12.7")
             self.requires("pybind11/2.11.1")
 
     def build_requirements(self):
