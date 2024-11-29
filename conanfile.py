@@ -186,8 +186,9 @@ class DulcificumConan(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+
     def deploy(self):
-        copy(self, "dulcificum_js*", src=os.path.join(self.package_folder, "lib"), dst=self.install_folder)
+        copy(self, "dulcificum_js*", src=os.path.join(self.package_folder, "lib"), dst=self.deploy_folder)
 
     def package(self):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
