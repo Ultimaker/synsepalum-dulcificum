@@ -118,7 +118,7 @@ class DulcificumConan(ConanFile):
             self.requires("pybind11/2.11.1")
 
     def build_requirements(self):
-        self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/cura_11622")  # FIXME: use stable after merge
+        self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
         if self._run_tests:
             self.test_requires("gtest/[>=1.12.1]")
 
