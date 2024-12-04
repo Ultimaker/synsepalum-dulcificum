@@ -14,3 +14,5 @@ add_executable(dulcificum_unit_tester
 )
 
 target_link_libraries(dulcificum_unit_tester PUBLIC dulcificum GTest::gtest GTest::gmock)
+
+add_test(dulcificum_unit_tester dulcificum_unit_tester)
