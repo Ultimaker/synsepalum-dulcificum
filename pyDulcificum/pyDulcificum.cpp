@@ -43,5 +43,5 @@ PYBIND11_MODULE(pyDulcificum, module)
         py::arg("content"),
         "Writes a given string to a file.");
 
-    module.def("gcode_2_miracle_jtp", &dulcificum::GCode2Miracle_JTP, "Converts GGode to Miracle JSON Toolpaths", py::arg("content"));
+    module.def("gcode_2_miracle_jtp", &dulcificum::GCode2Miracle_JTP, "Converts GGode to Miracle JSON Toolpaths", py::arg("content"), py::arg("nb_extruders") = 2);
 }

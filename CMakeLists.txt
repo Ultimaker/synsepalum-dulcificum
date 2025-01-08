@@ -36,6 +36,7 @@ set(DULCIFICUM_SRC
         src/gcode/parse.cpp
         src/miracle_jtp/mgjtp_command_to_json.cpp
         src/miracle_jtp/mgjtp_json_to_command.cpp
+        src/miracle_jtp/mgjtp_mappings_json_key_to_str.cpp
         src/gcode/gcode_to_command.cpp
         src/utils/io.cpp
         src/command_types.cpp

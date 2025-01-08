@@ -28,7 +28,14 @@ int main(int argc, const char** argv)
     }
     spdlog::info("Tasting the menu");
 
+    size_t nb_extruders = 2;
+    auto nb_extruders_arg = args.at("--nb_extruders");
+    if(nb_extruders_arg)
+    {
+        nb_extruders = nb_extruders_arg.asLong();
+    }
+
     auto input{ dulcificum::utils::readFile(args.at("INPUT").asString()).value() };
-    auto translated = dulcificum::GCode2Miracle_JTP(input);
+    auto translated = dulcificum::GCode2Miracle_JTP(input, nb_extruders);
     dulcificum::utils::writeFile(args.at("OUTPUT").asString(), translated);
 }
