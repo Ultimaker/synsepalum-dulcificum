@@ -26,20 +26,40 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
       { CommandType::WaitForTemperature, "wait_for_temperature" },
       { CommandType::Pause, "pause" } })
 
+#define MB_JTP_TAG(TAG_NAME, TAG_STR) \
+    { Tag::TAG_NAME, #TAG_STR }
+
+#define MB_BEAD_MODE_TAG_DEF(TAG_NAME, TAG_STR) \
+    MB_JTP_TAG(TAG_NAME##_0, TAG_STR##_0), \
+    MB_JTP_TAG(TAG_NAME##_1, TAG_STR##_1)
+
 NLOHMANN_JSON_SERIALIZE_ENUM(
     Tag,
-    { { Tag::Invalid, "Invalid" },
-      { Tag::Infill, "Infill" },
-      { Tag::Inset, "Inset" },
-      { Tag::Purge, "Purge" },
-      { Tag::QuickToggle, "Quick Toggle" },
-      { Tag::Raft, "Raft" },
-      { Tag::Restart, "Restart" },
-      { Tag::Retract, "Retract" },
-      { Tag::Roof, "Roof" },
-      { Tag::Sparse, "Sparse" },
-      { Tag::Support, "Support" },
-      { Tag::TravelMove, "Travel Move" } })
+    {
+      MB_JTP_TAG(Invalid, Invalid),
+      MB_JTP_TAG(Infill, Infill),
+      MB_JTP_TAG(Inset, Inset),
+      MB_JTP_TAG(Purge, Purge),
+      MB_JTP_TAG(QuickToggle, Quick Toggle),
+      MB_JTP_TAG(Raft, Raft),
+      MB_JTP_TAG(Restart, Restart),
+      MB_JTP_TAG(Retract, Retract),
+      MB_JTP_TAG(Roof, Roof),
+      MB_JTP_TAG(Sparse, Sparse),
+      MB_JTP_TAG(Support, Support),
+      MB_JTP_TAG(TravelMove, Travel Move),
+      MB_BEAD_MODE_TAG_DEF(Fill, FILL),
+      MB_BEAD_MODE_TAG_DEF(PrimeTower, PRIME_TOWER),
+      MB_BEAD_MODE_TAG_DEF(TopSurface, TOP_SURFACE),
+      MB_BEAD_MODE_TAG_DEF(Support, SUPPORT),
+      MB_BEAD_MODE_TAG_DEF(SupportInterface, SUPPORT_INTERFACE),
+      MB_BEAD_MODE_TAG_DEF(WallOuter, WALL_OUTER),
+      MB_BEAD_MODE_TAG_DEF(WallInner, WALL_INNER),
+      MB_BEAD_MODE_TAG_DEF(Skirt, SKIRT)
+    })
+
+#undef MB_BEAD_MODE_TAG
+#undef MB_JTP_TAG
 
 } // namespace botcmd
 
