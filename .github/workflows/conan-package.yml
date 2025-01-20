@@ -5,7 +5,7 @@ on:
     paths:
       - 'include/**'
       - 'src/**'
-      - 'test/**'
+      - 'tests/**'
       - 'test_package/**'
       - 'conanfile.py'
       - 'CMakeLists.txt'
