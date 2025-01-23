@@ -45,7 +45,6 @@ enum class Tag
     Restart,
     Retract,
     Roof,
-    Support,
     Sparse,
     TravelMove,
     MB_BEAD_MODE_TAG(Fill),

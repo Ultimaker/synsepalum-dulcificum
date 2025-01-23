@@ -46,7 +46,6 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
       MB_JTP_TAG(Retract, Retract),
       MB_JTP_TAG(Roof, Roof),
       MB_JTP_TAG(Sparse, Sparse),
-      MB_JTP_TAG(Support, Support),
       MB_JTP_TAG(TravelMove, Travel Move),
       MB_BEAD_MODE_TAG_DEF(Fill, FILL),
       MB_BEAD_MODE_TAG_DEF(PrimeTower, PRIME_TOWER),

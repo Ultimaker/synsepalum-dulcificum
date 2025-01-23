@@ -297,7 +297,6 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
 
     if (state.feature_type == "WALL-OUTER")
     {
-        move->tags.emplace_back(botcmd::Tag::Inset);
         if (state.active_tool == 0)
         {
             move->tags.emplace_back(botcmd::Tag::WallOuter_0);
@@ -307,9 +306,8 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
             move->tags.emplace_back(botcmd::Tag::WallOuter_1);
         }
     }
-    else if (state.feature_type == "INNER-OUTER")
+    else if (state.feature_type == "WALL-INNER")
     {
-        move->tags.emplace_back(botcmd::Tag::Inset);
         if (state.active_tool == 0)
         {
             move->tags.emplace_back(botcmd::Tag::WallInner_0);
@@ -321,7 +319,6 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (state.feature_type == "SKIN")
     {
-        move->tags.emplace_back(botcmd::Tag::Roof);
         if (state.active_tool == 0)
         {
             move->tags.emplace_back(botcmd::Tag::TopSurface_0);
@@ -333,7 +330,6 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (state.feature_type == "TOP-SURFACE")
     {
-        move->tags.emplace_back(botcmd::Tag::Roof);
         if (state.active_tool == 0)
         {
             move->tags.emplace_back(botcmd::Tag::TopSurface_0);
@@ -345,7 +341,6 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (state.feature_type == "PRIME-TOWER")
     {
-        move->tags.emplace_back(botcmd::Tag::Purge);
         if (state.active_tool == 0)
         {
             move->tags.emplace_back(botcmd::Tag::PrimeTower_0);
@@ -357,8 +352,6 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (state.feature_type == "FILL")
     {
-        move->tags.emplace_back(botcmd::Tag::Infill);
-        move->tags.emplace_back(botcmd::Tag::Sparse);
         if (state.active_tool == 0)
         {
             move->tags.emplace_back(botcmd::Tag::Fill_0);
@@ -374,8 +367,6 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (state.feature_type == "SUPPORT")
     {
-        move->tags.emplace_back(botcmd::Tag::Sparse);
-        move->tags.emplace_back(botcmd::Tag::Support);
         if (state.active_tool == 0)
         {
             move->tags.emplace_back(botcmd::Tag::Support_0);
@@ -387,7 +378,6 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (state.feature_type == "SUPPORT-INTERFACE")
     {
-        move->tags.emplace_back(botcmd::Tag::Support);
         if (state.active_tool == 0)
         {
             move->tags.emplace_back(botcmd::Tag::SupportInterface_0);
