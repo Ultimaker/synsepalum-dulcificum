@@ -20,7 +20,7 @@ constexpr std::string_view USAGE = R"({0}.
 Dulcificum changes the flavor, or dialect, of 3d printer commands
 
 Usage:
-  translator [--quiet | --verbose] --input=FLAVOR INPUT --output=FLAVOR OUTPUT
+  translator [--quiet | --verbose] --input=FLAVOR INPUT --output=FLAVOR OUTPUT [--nb_extruders=X]
   translator (-h | --help)
   translator --version
 
@@ -31,6 +31,7 @@ Options:
   --verbose                      Output more log statements
   --input=TYPE                   'miracle_jtp' | 'griffin'
   --output=FLAVOR                'miracle_jtp' | 'griffin'
+  --nb_extruders=X               Number of output extruders (default 2)
 )";
 
 } // namespace apps::cmdline

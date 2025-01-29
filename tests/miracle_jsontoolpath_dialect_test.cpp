@@ -7,7 +7,18 @@
 
 using namespace dulcificum;
 
-TEST(miracle_jtp_tests, move)
+class MiracleJTP : public testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        miracle_jtp::k_key_str::init(2);
+    }
+
+    void TearDown() override { }
+};
+
+TEST_F(MiracleJTP, move)
 {
     botcmd::Move move;
     move.feedrate = 0.4242;
@@ -19,7 +30,7 @@ TEST(miracle_jtp_tests, move)
     EXPECT_EQ(jmove, jmove1);
 }
 
-TEST(miracle_jtp_tests, change_toolhead)
+TEST_F(MiracleJTP, change_toolhead)
 {
     botcmd::ChangeTool cmd;
     cmd.position[0] = -4.2;
@@ -31,7 +42,7 @@ TEST(miracle_jtp_tests, change_toolhead)
     EXPECT_EQ(jcmd, jcmd1);
 }
 
-TEST(miracle_jtp_tests, fan_duty)
+TEST_F(MiracleJTP, fan_duty)
 {
     botcmd::FanDuty cmd;
     cmd.index = 0;
@@ -44,7 +55,7 @@ TEST(miracle_jtp_tests, fan_duty)
     EXPECT_EQ(nlohmann::to_string(jcmd), "{\"command\":{\"function\":\"fan_duty\",\"metadata\":{},\"parameters\":{\"index\":0,\"value\":0.12},\"tags\":[]}}");
 }
 
-TEST(miracle_jtp_tests, rwrw)
+TEST_F(MiracleJTP, rwrw)
 {
     std::filesystem::path example_path = kTestDataDir / "cmd_example.json";
     ASSERT_TRUE(std::filesystem::exists(example_path));

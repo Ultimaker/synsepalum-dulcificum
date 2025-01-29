@@ -62,7 +62,9 @@ constexpr static std::string_view value{ "value" };
 constexpr static std::string_view x{ "x" };
 constexpr static std::string_view y{ "y" };
 constexpr static std::string_view z{ "z" };
-constexpr static std::array<const std::string_view, 5> k_param_point_names{ x, y, z, a, b };
+extern std::vector<std::string_view> k_param_point_names;
+
+extern void init(const size_t nb_extruders);
 
 } // namespace miracle_jtp::k_key_str
 
