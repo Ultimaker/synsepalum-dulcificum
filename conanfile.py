@@ -208,7 +208,7 @@ class DulcificumConan(ConanFile):
         packager.run()
 
     def package_info(self):
-        if self.options.with_python_bindings:
+        if self.options.get_safe("with_python_bindings", False):
             self.conf_info.define("user.dulcificum:pythonpath",
                                   os.path.join(self.package_folder, "lib", "pyDulcificum"))
 
