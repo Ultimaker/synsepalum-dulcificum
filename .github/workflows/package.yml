@@ -11,7 +11,7 @@ on:
       - 'CMakeLists.txt'
       - 'pyDulcificum/**'
       - 'DulcificumJS/**'
-      - '.github/workflows/conan-package.yml'
+      - '.github/workflows/package.yml'
       - '.github/worflows/requirements-conan-package.txt'
     branches:
       - main
@@ -28,4 +28,14 @@ on:
 jobs:
   conan-package:
     uses: ultimaker/cura-workflows/.github/workflows/conan-package.yml@main
+    with:
+      platform_wasm: true
+    secrets: inherit
+
+  npm-package:
+    needs: [ conan-package ]
+    if: ${{ github.event_name == 'push' && (github.ref_name == 'main' || startsWith(github.ref_name, 'NP-')) }}
+    uses: ultimaker/cura-workflows/.github/workflows/npm-package.yml@main
+    with:
+      package_version_full: ${{ needs.conan-package.outputs.package_version_full }}
     secrets: inherit
