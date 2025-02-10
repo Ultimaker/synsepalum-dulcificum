@@ -73,7 +73,7 @@ endif ()
 
 # --- Setup JavaScript bindings ---
 if (WITH_JS_BINDINGS)
-    add_subdirectory(DulcificumJS/cpp)
+    add_subdirectory(DulcificumJS)
 endif ()
 
 # --- Setup Python bindings ---

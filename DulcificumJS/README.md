@@ -35,18 +35,15 @@ We are using conan to manage our C++ dependencies and build configuration. If yo
 That said, installing our config goes as follows:
 
 ```
-pip install conan==1.64
+pip install conan==2.7.0
 conan config install https://github.com/ultimaker/conan-config.git
 conan profile new default --detect --force
 ```
 
-2. Installing NodeJS deps
-
-Using Dulcificum in this project follows normal NodeJS package conventions. During an explicit user instigated pre-install step,
-we use Conan (installed and setup above), to build or download the wasm binaries from the JFrog Artifactory.
-and installing these in `src/Dulcificum/`
+3. conan install with wasm
 
 ```
-npm run install_dulcificum
-npm install
+conan install . -s build_type=Release --build=missing --update -c tools.build:skip_test=True -pr:h cura_wasm.jinja
+conan install . -s build_type=Debug --build=missing --update -c tools.build:skip_test=True -pr:h cura_wasm.jinja
 ```
+

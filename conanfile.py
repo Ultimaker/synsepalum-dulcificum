@@ -22,6 +22,7 @@ class DulcificumConan(ConanFile):
     homepage = "https://ultimaker.com"
     topics = ("cura", "curaengine", "gcode-generation", "3D-printing", "miraclegrue", "toolpath")
     package_type = "library"
+    python_requires = "npmpackage/[>=1.0.0]@ultimaker/stable"
     settings = "os", "arch", "compiler", "build_type"
     options = {
         "shared": [True, False],
@@ -101,9 +102,15 @@ class DulcificumConan(ConanFile):
         self.cpp.package.libdirs = ["lib"]
         self.cpp.package.bindirs = ["bin"]
 
-        if self.options.with_python_bindings:
+        if self.options.get_safe("with_python_bindings", False):
             self.layouts.build.runenv_info.prepend_path("PYTHONPATH", "pyDulcificum")
             self.layouts.package.runenv_info.prepend_path("PYTHONPATH", os.path.join("lib", "pyDulcificum"))
+
+        if self.settings.os == "Emscripten":
+            self.cpp.build.bin = ["dulcificum_js.js"]
+            self.cpp.package.bin = ["dulcificum_js.js"]
+            self.cpp.build.bindirs += ["dulcificum_js"]
+
 
     def requirements(self):
         self.requires("nlohmann_json/3.11.2", transitive_headers=True)
@@ -125,7 +132,7 @@ class DulcificumConan(ConanFile):
     def validate(self):
         if self.settings.compiler.cppstd:
             check_min_cppstd(self, self._min_cppstd)
-        check_min_vs(self, 191)
+        check_min_vs(self, 193)
         if not is_msvc(self):
             minimum_version = self._compilers_minimum_version.get(str(self.settings.compiler), False)
             if minimum_version and Version(self.settings.compiler.version) < minimum_version:
@@ -194,13 +201,16 @@ class DulcificumConan(ConanFile):
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
         copy(self, "translator*", src = os.path.join(self.build_folder, "apps"), dst = os.path.join(self.package_folder, "bin"), keep_path = False)
         copy(self, "*.pyd", src = os.path.join(self.build_folder, "pyDulcificum"), dst = os.path.join(self.package_folder, "lib", "pyDulcificum"), keep_path = False)
-        copy(self, pattern="dulcificum_js.*", src=os.path.join(self.build_folder, "DulcificumJS", "cpp"), dst=os.path.join(self.package_folder, "lib"))
+        copy(self, pattern="dulcificum_js.*", src=os.path.join(self.build_folder, "DulcificumJS"), dst=os.path.join(self.package_folder, "lib"))
         copy(self, f"*.d.ts", src=self.build_folder, dst=os.path.join(self.package_folder, "bin"), keep_path = False)
         copy(self, f"*.js", src=self.build_folder, dst=os.path.join(self.package_folder, "bin"), keep_path = False)
         packager = AutoPackager(self)
         packager.run()
 
     def package_info(self):
-        if self.options.with_python_bindings:
+        if self.options.get_safe("with_python_bindings", False):
             self.conf_info.define("user.dulcificum:pythonpath",
                                   os.path.join(self.package_folder, "lib", "pyDulcificum"))
+
+        if self.settings.os == "Emscripten":
+            self.python_requires["npmpackage"].module.conf_package_json(self)
