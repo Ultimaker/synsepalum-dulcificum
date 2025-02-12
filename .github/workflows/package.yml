@@ -9,6 +9,7 @@ on:
       - 'test_package/**'
       - 'conanfile.py'
       - 'CMakeLists.txt'
+      - 'conandata.yml'
       - 'pyDulcificum/**'
       - 'DulcificumJS/**'
       - '.github/workflows/package.yml'
@@ -34,7 +35,8 @@ jobs:
 
   npm-package:
     needs: [ conan-package ]
-    if: ${{ github.event_name == 'push' && (github.ref_name == 'main' || startsWith(github.ref_name, 'NP-')) }}
+    # Run the job for: 1) push to 'main' or branches starting with 'NP-', or 2) merged pull requests targeting 'main'.
+    if: ${{(github.event_name == 'push' && (github.ref_name == 'main' || startsWith(github.ref_name, 'NP-'))) || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.base_ref == 'main' && github.merge_commit_sha)}}
     uses: ultimaker/cura-workflows/.github/workflows/npm-package.yml@main
     with:
       package_version_full: ${{ needs.conan-package.outputs.package_version_full }}
