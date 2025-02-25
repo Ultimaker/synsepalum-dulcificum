@@ -277,6 +277,7 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
         {
             // NOTE: A move may only have a single bead mode tag
             move->tags.emplace_back(botcmd::Tag::TravelMove);
+            proto_path.emplace_back(move);
             return;
         }
     }
@@ -289,6 +290,7 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     {
         // NOTE: A move may only have a single bead mode tag
         move->tags.emplace_back(botcmd::Tag::TravelMove);
+        proto_path.emplace_back(move);
         return;
     }
 
