@@ -22,7 +22,7 @@ class DulcificumConan(ConanFile):
     homepage = "https://ultimaker.com"
     topics = ("cura", "curaengine", "gcode-generation", "3D-printing", "miraclegrue", "toolpath")
     package_type = "library"
-    python_requires = "npmpackage/[>=1.0.0]@ultimaker/stable"
+    python_requires = "npmpackage/[>=1.0.0]"
     settings = "os", "arch", "compiler", "build_type"
     options = {
         "shared": [True, False],
@@ -125,7 +125,7 @@ class DulcificumConan(ConanFile):
             self.requires("pybind11/2.11.1")
 
     def build_requirements(self):
-        self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
+        self.test_requires("standardprojectsettings/[>=0.1.0]")
         if self._run_tests:
             self.test_requires("gtest/[>=1.12.1]")
 
