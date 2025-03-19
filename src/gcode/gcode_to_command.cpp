@@ -270,8 +270,11 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     {
         if (delta_e > 0)
         {
+            // NOTE: A move may only have a single bead mode tag
             move->tags.emplace_back(botcmd::Tag::Restart);
             state.is_retracted = false;
+            proto_path.emplace_back(move);
+            return;
         }
         else
         {
@@ -283,8 +286,11 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (delta_e < 0)
     {
+        // NOTE: A move may only have a single bead mode tag
         move->tags.emplace_back(botcmd::Tag::Retract);
         state.is_retracted = true;
+        proto_path.emplace_back(move);
+        return;
     }
     else if (delta_e == 0)
     {
