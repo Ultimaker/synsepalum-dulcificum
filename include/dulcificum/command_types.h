@@ -30,10 +30,6 @@ enum class CommandType
     Pause, // Command to allow for user defined pause.
 };
 
-#define MB_BEAD_MODE_TAG(TAG_NAME) \
-    TAG_NAME##_0, \
-    TAG_NAME##_1
-
 enum class Tag
 {
     Invalid,
@@ -45,19 +41,10 @@ enum class Tag
     Restart,
     Retract,
     Roof,
+    Support,
     Sparse,
-    TravelMove,
-    MB_BEAD_MODE_TAG(Fill),
-    MB_BEAD_MODE_TAG(PrimeTower),
-    MB_BEAD_MODE_TAG(TopSurface),
-    MB_BEAD_MODE_TAG(Support),
-    MB_BEAD_MODE_TAG(SupportInterface),
-    MB_BEAD_MODE_TAG(WallOuter),
-    MB_BEAD_MODE_TAG(WallInner),
-    MB_BEAD_MODE_TAG(Skirt)
+    TravelMove
 };
-
-#undef MB_BEAD_MODE_TAG
 
 using ExtruderIndex = size_t;
 

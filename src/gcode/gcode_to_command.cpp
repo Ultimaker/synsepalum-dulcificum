@@ -275,9 +275,7 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
         }
         else
         {
-            // NOTE: A move may only have a single bead mode tag
             move->tags.emplace_back(botcmd::Tag::TravelMove);
-            return;
         }
     }
     else if (delta_e < 0)
@@ -287,79 +285,28 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (delta_e == 0)
     {
-        // NOTE: A move may only have a single bead mode tag
         move->tags.emplace_back(botcmd::Tag::TravelMove);
-        return;
     }
-
-    // Bead Mode Tags
-    // NOTE: A move may only have a single bead mode tag
-
-    if (state.feature_type == "WALL-OUTER")
+    if (state.feature_type == "WALL-OUTER" || state.feature_type == "INNER-OUTER")
     {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::WallOuter_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::WallOuter_1);
-        }
-    }
-    else if (state.feature_type == "WALL-INNER")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::WallInner_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::WallInner_1);
-        }
+        move->tags.emplace_back(botcmd::Tag::Inset);
     }
     else if (state.feature_type == "SKIN")
     {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::TopSurface_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::TopSurface_1);
-        }
+        move->tags.emplace_back(botcmd::Tag::Roof);
     }
     else if (state.feature_type == "TOP-SURFACE")
     {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::TopSurface_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::TopSurface_1);
-        }
+        move->tags.emplace_back(botcmd::Tag::Roof);
     }
     else if (state.feature_type == "PRIME-TOWER")
     {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::PrimeTower_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::PrimeTower_1);
-        }
+        move->tags.emplace_back(botcmd::Tag::Purge);
     }
     else if (state.feature_type == "FILL")
     {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::Fill_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::Fill_1);
-        }
+        move->tags.emplace_back(botcmd::Tag::Infill);
+        move->tags.emplace_back(botcmd::Tag::Sparse);
     }
     else if (state.feature_type == "Purge")
     {
@@ -367,36 +314,12 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else if (state.feature_type == "SUPPORT")
     {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::Support_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::Support_1);
-        }
+        move->tags.emplace_back(botcmd::Tag::Sparse);
+        move->tags.emplace_back(botcmd::Tag::Support);
     }
     else if (state.feature_type == "SUPPORT-INTERFACE")
     {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::SupportInterface_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::SupportInterface_1);
-        }
-    }
-    else if (state.feature_type == "SKIRT")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::Skirt_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::Skirt_1);
-        }
+        move->tags.emplace_back(botcmd::Tag::Support);
     }
     proto_path.emplace_back(move);
 }
