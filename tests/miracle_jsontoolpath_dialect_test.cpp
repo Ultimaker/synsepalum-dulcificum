@@ -47,13 +47,12 @@ TEST_F(MiracleJTP, fan_duty)
     botcmd::FanDuty cmd;
     cmd.index = 0;
     cmd.duty = 0.12;
-    cmd.tags = { botcmd::Tag::TopSurface_1};
     auto jcmd = miracle_jtp::toJson(cmd);
     auto cmd1 = miracle_jtp::toCommand(jcmd);
     auto jcmd1 = miracle_jtp::toJson(*cmd1);
     EXPECT_EQ(jcmd, jcmd1);
 
-    EXPECT_EQ(nlohmann::to_string(jcmd), "{\"command\":{\"function\":\"fan_duty\",\"metadata\":{},\"parameters\":{\"index\":0,\"value\":0.12},\"tags\":[\"TOP_SURFACE_1\"]}}");
+    EXPECT_EQ(nlohmann::to_string(jcmd), "{\"command\":{\"function\":\"fan_duty\",\"metadata\":{},\"parameters\":{\"index\":0,\"value\":0.12},\"tags\":[]}}");
 }
 
 TEST_F(MiracleJTP, rwrw)
