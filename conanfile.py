@@ -12,7 +12,6 @@ from conan.errors import ConanException
 
 required_conan_version = ">=2.7.0"
 
-
 class DulcificumConan(ConanFile):
     name = "dulcificum"
     description = "Dulcificum changes the flavor, or dialect, of 3d printer commands"
