@@ -14,38 +14,28 @@ namespace dulcificum::gcode
 
 gcode::ast::ast_t parse(std::string_view content)
 {
-    spdlog::info("Parsing GCode as AST test");
-    try {
-        spdlog::info("Creating string stream from content");
-        std::istringstream stream(content.data());
-        std::string line;
-        gcode::ast::ast_t ast;
-        size_t index{ 1 };
-        spdlog::info("Starting line parsing loop");
-        while (std::getline(stream, line))
+    spdlog::info("Parsing GCode as AST");
+    std::istringstream stream(content.data());
+    std::string line;
+    gcode::ast::ast_t ast;
+
+    size_t index{ 1 };
+    while (std::getline(stream, line))
+    {
+        if (line == "G1" || line == "G0")
         {
-            spdlog::info("Parsing line {}", index);
-            std::optional<ast::node_t> node;
-            try {
-                node = gcode::ast::factory(index, line);
-                spdlog::info("Factory returned node: {}", node.has_value());
-            } catch (const std::exception& e) {
-                spdlog::info("Exception in factory for index {}: {}", index, e.what());
-                throw;
-            }
+            spdlog::info("Skipping empty line with command {}", line);
             ++index;
-            if (node)
-            {
-                spdlog::info("Emplacing node at AST index: {}", index - 1);
-                ast.emplace_back(*node);
-            }
+            continue;
         }
-        spdlog::info("Finished parsing, returning AST");
-        return ast;
-    } catch (const std::exception& e) {
-        spdlog::info("Exception in parse(): {}", e.what());
-        throw;
+        std::optional<ast::node_t> node = gcode::ast::factory(index++, line);
+        if (node)
+        {
+            ast.emplace_back(*node);
+        }
     }
+
+    return ast;
 }
 
 } // namespace dulcificum::gcode

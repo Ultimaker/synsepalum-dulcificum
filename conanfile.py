@@ -33,7 +33,7 @@ class DulcificumConan(ConanFile):
     default_options = {
         "shared": False,
         "fPIC": True,
-        "enable_extensive_warnings": False,
+        "enable_extensive_warnings": True,
         "with_apps": False,
         "with_python_bindings": True,
     }
