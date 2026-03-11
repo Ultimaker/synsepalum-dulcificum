@@ -43,6 +43,10 @@ set(DULCIFICUM_SRC
 )
 add_library(dulcificum STATIC ${DULCIFICUM_SRC})
 
+if (MSVC)
+    target_compile_options(dulcificum PRIVATE /templateDepth:2048)
+endif()
+
 target_link_libraries(dulcificum
         PUBLIC
         nlohmann_json::nlohmann_json
