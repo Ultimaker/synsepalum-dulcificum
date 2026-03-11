@@ -114,13 +114,13 @@ class DulcificumConan(ConanFile):
     def requirements(self):
         self.requires("nlohmann_json/3.11.2", transitive_headers=True)
         self.requires("range-v3/0.12.0", transitive_headers=True)
-        self.requires("spdlog/[>=1.14.1]", transitive_headers=True)
-        self.requires("fmt/[>=11.0.2]", transitive_headers=True)
+        self.requires("spdlog/1.15.1", transitive_headers=True)
+        self.requires("fmt/11.1.3", transitive_headers=True)
         self.requires("ctre/3.7.2", transitive_headers=True)
         if self.options.with_apps:
             self.requires("docopt.cpp/0.6.3")
         if self.options.get_safe("with_python_bindings", False):
-            self.requires("cpython/3.12.2")
+            self.requires("cpython/3.12.7")
             self.requires("pybind11/2.11.1")
 
     def build_requirements(self):
