@@ -1,6 +1,5 @@
 #include <dulcificum.h>
 #include <emscripten/bind.h>
-#include <emscripten/val.h>
 
 struct info_t
 {
