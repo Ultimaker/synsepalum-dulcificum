@@ -519,10 +519,8 @@ botcmd::CommandList toCommand(gcode::ast::ast_t& gcode)
 
     for (const auto& instruction : gcode)
     {
-        spdlog::info("Processing instruction {}", instruction_count);
         std::visit(visit_command, instruction);
-        spdlog::info("Instruction {} processed", instruction_count);
-        ++instruction_count;
+        instruction_count++;
     }
 
     spdlog::info("Completed translating {} instructions to CommandList", instruction_count);

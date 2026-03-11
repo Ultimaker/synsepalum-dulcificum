@@ -10,6 +10,7 @@ target_link_options(dulcificum_js
         "SHELL:-s ALLOW_MEMORY_GROWTH=1"
         "SHELL:-s ERROR_ON_UNDEFINED_SYMBOLS=0"
         "SHELL:--bind"
+        "SHELL:-s ASSERTIONS=1"
         "SHELL:-l embind"
         "SHELL: --embind-emit-tsd dulcificum_js.d.ts"
 )
