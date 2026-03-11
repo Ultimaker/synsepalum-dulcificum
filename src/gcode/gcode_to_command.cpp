@@ -515,15 +515,10 @@ botcmd::CommandList toCommand(gcode::ast::ast_t& gcode)
 
     VisitCommand visit_command;
 
-    size_t instruction_count = 0;
-
     for (const auto& instruction : gcode)
     {
         std::visit(visit_command, instruction);
-        instruction_count++;
     }
-
-    spdlog::info("Completed translating {} instructions to CommandList", instruction_count);
 
     return visit_command.proto_path;
 }
