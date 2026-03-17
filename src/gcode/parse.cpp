@@ -22,6 +22,12 @@ gcode::ast::ast_t parse(std::string_view content)
     size_t index{ 1 };
     while (std::getline(stream, line))
     {
+        if (line == "G1" || line == "G0")
+        {
+            spdlog::info("Skipping empty line with command {}", line);
+            ++index;
+            continue;
+        }
         std::optional<ast::node_t> node = gcode::ast::factory(index++, line);
         if (node)
         {

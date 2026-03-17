@@ -55,7 +55,7 @@ G0_G1::G0_G1(size_t line_index, const std::string& raw_line, regex_result_t capt
     // clang-format on
     if (X == std::nullopt && Y == std::nullopt && Z == std::nullopt && E == std::nullopt && F == std::nullopt)
     {
-        throw std::runtime_error(fmt::format("Unable to parse: [{}] {}", line_index, raw_line));
+        spdlog::warn("Unable to parse: [{}] {}", line_index, raw_line);
     }
 }
 
