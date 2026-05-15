@@ -10,6 +10,7 @@ from conan.tools.microsoft import check_min_vs, is_msvc_static_runtime, is_msvc
 from conan.tools.scm import Version, Git
 from conan.errors import ConanException
 
+
 required_conan_version = ">=2.7.0"
 
 class DulcificumConan(ConanFile):
