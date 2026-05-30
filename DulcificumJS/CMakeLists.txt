@@ -7,8 +7,8 @@ set(DULCIFICUM_JS_MAXIMUM_MEMORY "4GB" CACHE STRING "Maximum wasm heap for dulci
 
 target_link_options(dulcificum_js
         PUBLIC
-        "SHELL:-s USE_ES6_IMPORT_META=1"
-        "SHELL:-s FORCE_FILESYSTEM=1"
+        "SHELL:-sENVIRONMENT=web,worker,node"
+        "SHELL:-sUSE_ES6_IMPORT_META=1"
         "SHELL:-s EXPORT_NAME=dulcificum"
         "SHELL:-s MODULARIZE=1"
         "SHELL:-s EXPORT_ES6=1"
