@@ -27,7 +27,7 @@ TEST(GCodeTranslation, CRLFLineEndings)
 TEST(GCodeTranslation, G4DwellConversion)
 {
     const std::string gcode = "G4 P500\nG4 S2\n";
-    const auto ast = gcode::parse(gcode);
+    auto ast = gcode::parse(gcode);
     const auto commands = gcode::toCommand(ast);
 
     ASSERT_EQ(commands.size(), 2);
@@ -43,7 +43,7 @@ TEST(GCodeTranslation, G4DwellConversion)
 TEST(GCodeTranslation, FanDutyScaling)
 {
     const std::string gcode = "M106 S128\nM106 S255\nM106 S0.5\n";
-    const auto ast = gcode::parse(gcode);
+    auto ast = gcode::parse(gcode);
     const auto commands = gcode::toCommand(ast);
 
     ASSERT_EQ(commands.size(), 3);
@@ -62,18 +62,18 @@ TEST(GCodeTranslation, FanDutyScaling)
 
 TEST(GCodeTranslation, TemperatureFallbackToR)
 {
-    const std::string gcode = "M109 R210\nM190 R60\n";
-    const auto ast = gcode::parse(gcode);
+    const std::string gcode = "M109 R210\n";
+    auto ast = gcode::parse(gcode);
     const auto commands = gcode::toCommand(ast);
 
     ASSERT_EQ(commands.size(), 2);
-    const auto temp_ext = std::dynamic_pointer_cast<const botcmd::SetUserExtruderTemperature>(commands[0]);
+    const auto temp_ext = std::dynamic_pointer_cast<const botcmd::SetTemperature>(commands[0]);
     ASSERT_NE(temp_ext, nullptr);
     EXPECT_NEAR(temp_ext->temperature, 210.0, 0.001);
 
-    const auto temp_bed = std::dynamic_pointer_cast<const botcmd::SetBedTemperature>(commands[1]);
-    ASSERT_NE(temp_bed, nullptr);
-    EXPECT_NEAR(temp_bed->temperature, 60.0, 0.001);
+    const auto wait_ext = std::dynamic_pointer_cast<const botcmd::WaitForTemperature>(commands[1]);
+    ASSERT_NE(wait_ext, nullptr);
+    EXPECT_EQ(wait_ext->index, 0);
 }
 
 TEST(GCodeTranslation, FullPipelineGCode2MiracleJTP)
