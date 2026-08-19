@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "01-jira-commit-standards.md": "c6d4392ffe86048000037e432b59258b59ae5d3e259a6a3c5ddcade939f82710",
+    "02-security-and-paths.md": "f18b11b8ff318e969f812803a72c5d45fe84b78a5d6107bb41a447306de80f93",
+    "04-build-test-and-deployment-rules.md": "e2ad67e4990637b41fab90c0d9174f46c2ddbe9172ba69bddc7c2c96940a4c67",
+    "05-ultimaker-skill-discovery-rules.md": "6895dcc6428158a7cfe0d91fd78fb0556989140fb1d44dbe7ad984f06856b238",
+    "06-pull-request-lifecycle-rules.md": "d9c35d5d90301805d50460df58e98868512252f1a22a42711282b1a6ca014c61",
+    "07-owasp-security-rules.md": "d893a45caf28e31945948f52868ed7cd6dcd84481900fab2407575bd9b28f2bd",
+    "08-scoped-changes-and-minimal-diffs.md": "fc397b61f3f2ddc51736934cc02248d6d188c31b7680977dfb66704e060f310b",
+    "09-atomic-bisect-safe-commits.md": "028d1225bd1ad8f75534eb069478fab2864e8530b7b75f14375c26a01d9dbfd9",
+    "10-file-size-and-decomposition-rules.md": "eca20f37445be2691c51560df954bebc7b1baa7b542329db13608c948afcab0a",
+    "12-ai-context-exclusion-rules.md": "dc3997cdaf749718dc3986453d72b889655f55b15f781f4042fc1b551269d946",
+    "13-dependency-management-rules.md": "17c333ef3503c00ed853dc9f2798ddc83feeb8e8326f35e5d2c83b8012971196",
+    "14-complexity-budget-rules.md": "215d0780f035df03913b8f7e92c461081942675a4a7e7e671b0c8ed4287b33cf",
+    "20-python-conventions-rules.md": "3746830f7b497c81883e8c83a5038a951165b1324feea4304b1966e3d319e02d",
+    "21-cpp-core-architecture-rules.md": "c9168a1b0a1071ae88187dcad8492f3c19572bfe9e5a5c844c55530077c57216",
+    "34-library-consumer-contract-rules.md": "560e10d03db2626471d3b84692be72e462ebd407aa29bd668150484c2fa9d4c8",
+    "40-skill-discovery-index-rules.md": "839f60b8d6435b9e935879cd937db784803f5f506b280a2d1186c25f4509a157"
+  }
+}

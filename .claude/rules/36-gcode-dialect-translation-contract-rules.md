@@ -1,0 +1,1 @@
+../../.agents/rules/36-gcode-dialect-translation-contract-rules.md
