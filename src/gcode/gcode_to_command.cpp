@@ -15,8 +15,12 @@
 
 #include <spdlog/spdlog.h>
 
+#include <algorithm>
+#include <array>
 #include <memory>
+#include <optional>
 #include <string>
+#include <string_view>
 #include <variant>
 #include <vector>
 
@@ -106,29 +110,36 @@ void VisitCommand::update_state([[maybe_unused]] const gcode::ast::M83& command)
 
 void VisitCommand::update_state(const gcode::ast::M104& command)
 {
-    state.extruder_temperatures[command.T.has_value() ? command.T.value() : state.active_tool] = command.S.value();
-}
-
-void VisitCommand::update_state(const gcode::ast::M109& command)
-{
     if (command.S.has_value())
     {
         state.extruder_temperatures[command.T.has_value() ? command.T.value() : state.active_tool] = command.S.value();
     }
-    else
+}
+
+void VisitCommand::update_state(const gcode::ast::M109& command)
+{
+    const auto temp = command.S.has_value() ? command.S : command.R;
+    if (temp.has_value())
     {
-        spdlog::warn("M109 command without temperature");
+        state.extruder_temperatures[command.T.has_value() ? command.T.value() : state.active_tool] = temp.value();
     }
 }
 
 void VisitCommand::update_state(const gcode::ast::M140& command)
 {
-    state.build_plate_temperature = command.S.value();
+    if (command.S.has_value())
+    {
+        state.build_plate_temperature = command.S.value();
+    }
 }
 
 void VisitCommand::update_state(const gcode::ast::M190& command)
 {
-    state.build_plate_temperature = command.S.value();
+    const auto temp = command.S.has_value() ? command.S : command.R;
+    if (temp.has_value())
+    {
+        state.build_plate_temperature = temp.value();
+    }
 }
 
 void VisitCommand::update_state(const gcode::ast::Layer& command)
@@ -219,6 +230,41 @@ void VisitCommand::update_state(const gcode::ast::T& command)
     }
 }
 
+namespace
+{
+struct TagMapping
+{
+    std::string_view feature_type;
+    botcmd::Tag tool0_tag;
+    botcmd::Tag tool1_tag;
+};
+
+constexpr std::array<TagMapping, 10> k_tag_mappings = { {
+    { "WALL-OUTER", botcmd::Tag::WallOuter_0, botcmd::Tag::WallOuter_1 },
+    { "WALL-INNER", botcmd::Tag::WallInner_0, botcmd::Tag::WallInner_1 },
+    { "SKIN", botcmd::Tag::TopSurface_0, botcmd::Tag::TopSurface_1 },
+    { "TOP-SURFACE", botcmd::Tag::TopSurface_0, botcmd::Tag::TopSurface_1 },
+    { "PRIME-TOWER", botcmd::Tag::PrimeTower_0, botcmd::Tag::PrimeTower_1 },
+    { "FILL", botcmd::Tag::Fill_0, botcmd::Tag::Fill_1 },
+    { "Purge", botcmd::Tag::Raft, botcmd::Tag::Raft },
+    { "SUPPORT", botcmd::Tag::Support_0, botcmd::Tag::Support_1 },
+    { "SUPPORT-INTERFACE", botcmd::Tag::SupportInterface_0, botcmd::Tag::SupportInterface_1 },
+    { "SKIRT", botcmd::Tag::Skirt_0, botcmd::Tag::Skirt_1 },
+} };
+
+std::optional<botcmd::Tag> get_feature_tag(std::string_view feature_type, size_t active_tool)
+{
+    for (const auto& mapping : k_tag_mappings)
+    {
+        if (mapping.feature_type == feature_type)
+        {
+            return active_tool == 0 ? mapping.tool0_tag : mapping.tool1_tag;
+        }
+    }
+    return std::nullopt;
+}
+} // namespace
+
 void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
 {
     const auto move = std::make_shared<botcmd::Move>();
@@ -235,13 +281,13 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     else
     {
         const auto curr_e = command.E.value() + state.origin_e[state.active_tool];
-        if (previous_states.empty())
+        if (! previous_state.has_value())
         {
             delta_e = curr_e;
         }
         else
         {
-            const auto& prev_state = previous_states[previous_states.size() - 1];
+            const auto& prev_state = previous_state.value();
             const auto last_e = prev_state.E[state.active_tool] + prev_state.origin_e[state.active_tool];
             delta_e = curr_e - last_e;
         }
@@ -300,111 +346,10 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
         return;
     }
 
-    // Bead Mode Tags
-    // NOTE: A move may only have a single bead mode tag
-
-    if (state.feature_type == "WALL-OUTER")
+    // Bead Mode Tags (NOTE: A move may only have a single bead mode tag)
+    if (const auto tag = get_feature_tag(state.feature_type, state.active_tool); tag.has_value())
     {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::WallOuter_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::WallOuter_1);
-        }
-    }
-    else if (state.feature_type == "WALL-INNER")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::WallInner_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::WallInner_1);
-        }
-    }
-    else if (state.feature_type == "SKIN")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::TopSurface_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::TopSurface_1);
-        }
-    }
-    else if (state.feature_type == "TOP-SURFACE")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::TopSurface_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::TopSurface_1);
-        }
-    }
-    else if (state.feature_type == "PRIME-TOWER")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::PrimeTower_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::PrimeTower_1);
-        }
-    }
-    else if (state.feature_type == "FILL")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::Fill_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::Fill_1);
-        }
-    }
-    else if (state.feature_type == "Purge")
-    {
-        move->tags.emplace_back(botcmd::Tag::Raft);
-    }
-    else if (state.feature_type == "SUPPORT")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::Support_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::Support_1);
-        }
-    }
-    else if (state.feature_type == "SUPPORT-INTERFACE")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::SupportInterface_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::SupportInterface_1);
-        }
-    }
-    else if (state.feature_type == "SKIRT")
-    {
-        if (state.active_tool == 0)
-        {
-            move->tags.emplace_back(botcmd::Tag::Skirt_0);
-        }
-        else
-        {
-            move->tags.emplace_back(botcmd::Tag::Skirt_1);
-        }
+        move->tags.emplace_back(tag.value());
     }
     proto_path.emplace_back(move);
 }
@@ -418,7 +363,7 @@ void VisitCommand::to_proto_path(const gcode::ast::G4& command)
     }
     else if (command.P.has_value())
     {
-        delay->seconds = command.P.value() * 1000.0;
+        delay->seconds = command.P.value() / 1000.0;
     }
     else
     {
@@ -430,7 +375,7 @@ void VisitCommand::to_proto_path(const gcode::ast::G4& command)
 void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M104& command)
 {
     const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
-    set_temperature->temperature = command.S.value();
+    set_temperature->temperature = command.S.has_value() ? command.S.value() : 0.0;
     set_temperature->index = command.T.has_value() ? command.T.value() : state.active_tool;
     proto_path.emplace_back(set_temperature);
 }
@@ -445,7 +390,13 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M106& comman
 
     // set fan speed
     const auto set_fan_speed = std::make_shared<botcmd::FanDuty>();
-    set_fan_speed->duty = command.S.has_value() ? command.S.value() : 1.0;
+    double duty = 1.0;
+    if (command.S.has_value())
+    {
+        duty = command.S.value() <= 1.0 ? command.S.value() : (command.S.value() / 255.0);
+        duty = std::clamp(duty, 0.0, 1.0);
+    }
+    set_fan_speed->duty = duty;
     set_fan_speed->index = toggle_fan->index;
     proto_path.emplace_back(set_fan_speed);
 }
@@ -461,7 +412,8 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M107& comman
 void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M109& command)
 {
     const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
-    set_temperature->temperature = command.S.value();
+    const auto temp = command.S.has_value() ? command.S : command.R;
+    set_temperature->temperature = temp.has_value() ? temp.value() : 0.0;
     set_temperature->index = command.T.has_value() ? command.T.value() : state.active_tool;
     proto_path.emplace_back(set_temperature);
 
@@ -487,7 +439,7 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::Layer& comma
 void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::InitialTemperatureExtruder& command)
 {
     const auto set_temperature = std::make_shared<botcmd::SetTemperature>();
-    set_temperature->temperature = command.S.value();
+    set_temperature->temperature = command.S.has_value() ? command.S.value() : 0.0;
     set_temperature->index = command.T.has_value() ? command.T.value() : state.active_tool;
     proto_path.emplace_back(set_temperature);
 }

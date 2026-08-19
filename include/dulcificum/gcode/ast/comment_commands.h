@@ -86,7 +86,7 @@ public:
  * /brief A generic comment
  * comment = The text of the comment
  */
-class Comment : public Entry<R"(^;(?<C>\.*)$)", ctre::captured_content<1, ctre::id<'C'>>>
+class Comment : public Entry<R"(^;(?<C>.*)$)", ctre::captured_content<1, ctre::id<'C'>>>
 {
 public:
     Comment() = delete;

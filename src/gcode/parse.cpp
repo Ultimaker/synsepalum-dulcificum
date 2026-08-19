@@ -15,16 +15,20 @@ namespace dulcificum::gcode
 gcode::ast::ast_t parse(std::string_view content)
 {
     spdlog::info("Parsing GCode as AST");
-    std::istringstream stream(content.data());
+    std::istringstream stream{ std::string(content) };
     std::string line;
     gcode::ast::ast_t ast;
 
     size_t index{ 1 };
     while (std::getline(stream, line))
     {
-        if (line == "G1" || line == "G0")
+        if (! line.empty() && line.back() == '\r')
         {
-            spdlog::info("Skipping empty line with command {}", line);
+            line.pop_back();
+        }
+        if (line.empty() || line == "G1" || line == "G0")
+        {
+            spdlog::debug("Skipping empty or standalone movement command line: {}", line);
             ++index;
             continue;
         }
