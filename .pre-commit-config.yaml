@@ -133,6 +133,13 @@ repos:
         language: system
         types_or: [text]
 
+      - id: check-github-workflows
+        name: Validate GitHub Actions workflow action versions and directory references
+        entry: python3 .agents/hooks/check_github_workflows.py
+        language: system
+        pass_filenames: false
+        types_or: [text]
+
       - id: check-atomic-bisect-history
         name: Validate atomic bisect-safe commit history
         entry: python3 .agents/hooks/check_atomic_bisect_history.py

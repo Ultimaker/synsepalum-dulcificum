@@ -232,6 +232,9 @@ void VisitCommand::update_state(const gcode::ast::T& command)
 
 namespace
 {
+constexpr double k_ms_per_second = 1000.0;
+constexpr double k_max_pwm_duty = 255.0;
+
 struct TagMapping
 {
     std::string_view feature_type;
@@ -252,7 +255,7 @@ constexpr std::array<TagMapping, 10> k_tag_mappings = { {
     { "SKIRT", botcmd::Tag::Skirt_0, botcmd::Tag::Skirt_1 },
 } };
 
-std::optional<botcmd::Tag> get_feature_tag(std::string_view feature_type, size_t active_tool)
+std::optional<botcmd::Tag> getFeatureTag(std::string_view feature_type, size_t active_tool)
 {
     for (const auto& mapping : k_tag_mappings)
     {
@@ -262,6 +265,29 @@ std::optional<botcmd::Tag> get_feature_tag(std::string_view feature_type, size_t
         }
     }
     return std::nullopt;
+}
+
+std::optional<botcmd::Tag> determineMoveTag(double delta_e, bool& is_retracted, std::string_view feature_type, size_t active_tool)
+{
+    if (is_retracted)
+    {
+        if (delta_e > 0.0)
+        {
+            is_retracted = false;
+            return botcmd::Tag::Restart;
+        }
+        return botcmd::Tag::TravelMove;
+    }
+    if (delta_e < 0.0)
+    {
+        is_retracted = true;
+        return botcmd::Tag::Retract;
+    }
+    if (delta_e == 0.0)
+    {
+        return botcmd::Tag::TravelMove;
+    }
+    return getFeatureTag(feature_type, active_tool);
 }
 } // namespace
 
@@ -280,18 +306,17 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
     }
     else
     {
-        const auto curr_e = command.E.value() + state.origin_e[state.active_tool];
-        if (! previous_state.has_value())
-        {
-            delta_e = curr_e;
-        }
-        else
-        {
-            const auto& prev_state = previous_state.value();
-            const auto last_e = prev_state.E[state.active_tool] + prev_state.origin_e[state.active_tool];
-            delta_e = curr_e - last_e;
-        }
+        const auto e_val = command.E.value();
+        delta_e = e_val - state.E[state.active_tool];
+        state.E[state.active_tool] = e_val;
     }
+
+    const auto feedrate = command.F.has_value() ? command.F : state.F[state.active_tool];
+    if (feedrate.has_value())
+    {
+        state.F[state.active_tool] = feedrate.value();
+    }
+    move->feedrate = state.F[state.active_tool] / 60.0;
 
     // if position is not specified for an axis, move with a relative delta 0 move
     move->point = {
@@ -312,44 +337,9 @@ void VisitCommand::to_proto_path(const gcode::ast::G0_G1& command)
         command.X.has_value() ? state.X_positioning == Positioning::Relative : true, command.Y.has_value() ? state.Y_positioning == Positioning::Relative : true, false, true, true,
     };
 
-    if (state.is_retracted)
+    if (const auto tag = determineMoveTag(delta_e, state.is_retracted, state.feature_type, state.active_tool); tag.has_value())
     {
-        if (delta_e > 0)
-        {
-            // NOTE: A move may only have a single bead mode tag
-            move->tags.emplace_back(botcmd::Tag::Restart);
-            state.is_retracted = false;
-            proto_path.emplace_back(move);
-            return;
-        }
-        else
-        {
-            // NOTE: A move may only have a single bead mode tag
-            move->tags.emplace_back(botcmd::Tag::TravelMove);
-            proto_path.emplace_back(move);
-            return;
-        }
-    }
-    else if (delta_e < 0)
-    {
-        // NOTE: A move may only have a single bead mode tag
-        move->tags.emplace_back(botcmd::Tag::Retract);
-        state.is_retracted = true;
-        proto_path.emplace_back(move);
-        return;
-    }
-    else if (delta_e == 0)
-    {
-        // NOTE: A move may only have a single bead mode tag
-        move->tags.emplace_back(botcmd::Tag::TravelMove);
-        proto_path.emplace_back(move);
-        return;
-    }
-
-    // Bead Mode Tags (NOTE: A move may only have a single bead mode tag)
-    if (const auto tag = get_feature_tag(state.feature_type, state.active_tool); tag.has_value())
-    {
-        move->tags.emplace_back(tag.value());
+        move->tags.emplace_back(*tag);
     }
     proto_path.emplace_back(move);
 }
@@ -363,7 +353,7 @@ void VisitCommand::to_proto_path(const gcode::ast::G4& command)
     }
     else if (command.P.has_value())
     {
-        delay->seconds = command.P.value() / 1000.0;
+        delay->seconds = command.P.value() / k_ms_per_second;
     }
     else
     {
@@ -393,7 +383,7 @@ void VisitCommand::to_proto_path([[maybe_unused]] const gcode::ast::M106& comman
     double duty = 1.0;
     if (command.S.has_value())
     {
-        duty = command.S.value() <= 1.0 ? command.S.value() : (command.S.value() / 255.0);
+        duty = command.S.value() <= 1.0 ? command.S.value() : (command.S.value() / k_max_pwm_duty);
         duty = std::clamp(duty, 0.0, 1.0);
     }
     set_fan_speed->duty = duty;
