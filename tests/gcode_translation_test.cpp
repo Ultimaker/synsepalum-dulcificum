@@ -1,4 +1,5 @@
 #include "dulcificum.h"
+#include "dulcificum/command_types.h"
 #include "dulcificum/gcode/ast/comment_commands.h"
 #include "dulcificum/gcode/ast/translate.h"
 #include "dulcificum/gcode/gcode_to_command.h"
