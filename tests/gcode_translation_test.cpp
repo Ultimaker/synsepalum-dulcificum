@@ -46,17 +46,26 @@ TEST(GCodeTranslation, FanDutyScaling)
     auto ast = gcode::parse(gcode);
     const auto commands = gcode::toCommand(ast);
 
-    ASSERT_EQ(commands.size(), 3);
-    ASSERT_EQ(commands[0]->type, botcmd::CommandType::ActiveFanDuty);
-    const auto fan0 = std::static_pointer_cast<const botcmd::FanDuty>(commands[0]);
+    ASSERT_EQ(commands.size(), 6);
+    ASSERT_EQ(commands[0]->type, botcmd::CommandType::ActiveFanEnable);
+    const auto toggle0 = std::static_pointer_cast<const botcmd::FanToggle>(commands[0]);
+    EXPECT_TRUE(toggle0->is_on);
+    ASSERT_EQ(commands[1]->type, botcmd::CommandType::ActiveFanDuty);
+    const auto fan0 = std::static_pointer_cast<const botcmd::FanDuty>(commands[1]);
     EXPECT_NEAR(fan0->duty, 128.0 / 255.0, 0.001);
 
-    ASSERT_EQ(commands[1]->type, botcmd::CommandType::ActiveFanDuty);
-    const auto fan1 = std::static_pointer_cast<const botcmd::FanDuty>(commands[1]);
+    ASSERT_EQ(commands[2]->type, botcmd::CommandType::ActiveFanEnable);
+    const auto toggle1 = std::static_pointer_cast<const botcmd::FanToggle>(commands[2]);
+    EXPECT_TRUE(toggle1->is_on);
+    ASSERT_EQ(commands[3]->type, botcmd::CommandType::ActiveFanDuty);
+    const auto fan1 = std::static_pointer_cast<const botcmd::FanDuty>(commands[3]);
     EXPECT_NEAR(fan1->duty, 1.0, 0.001);
 
-    ASSERT_EQ(commands[2]->type, botcmd::CommandType::ActiveFanDuty);
-    const auto fan2 = std::static_pointer_cast<const botcmd::FanDuty>(commands[2]);
+    ASSERT_EQ(commands[4]->type, botcmd::CommandType::ActiveFanEnable);
+    const auto toggle2 = std::static_pointer_cast<const botcmd::FanToggle>(commands[4]);
+    EXPECT_TRUE(toggle2->is_on);
+    ASSERT_EQ(commands[5]->type, botcmd::CommandType::ActiveFanDuty);
+    const auto fan2 = std::static_pointer_cast<const botcmd::FanDuty>(commands[5]);
     EXPECT_NEAR(fan2->duty, 0.5, 0.001);
 }
 
