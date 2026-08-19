@@ -433,50 +433,50 @@
       "fired": true,
       "blocked": true,
       "detail": "staged violation rejected",
-      "at": "2026-08-19T12:17:11+00:00",
-      "sha": "42893df"
+      "at": "2026-08-19T12:52:21+00:00",
+      "sha": "ac350a4"
     },
     "block-absolute-paths": {
       "fired": true,
       "blocked": true,
       "detail": "staged violation rejected",
-      "at": "2026-08-19T12:17:11+00:00",
-      "sha": "42893df"
+      "at": "2026-08-19T12:52:21+00:00",
+      "sha": "ac350a4"
     },
     "pretool-guard": {
       "fired": true,
       "blocked": true,
       "detail": "secret payload denied",
-      "at": "2026-08-19T12:17:11+00:00",
-      "sha": "42893df"
+      "at": "2026-08-19T12:52:21+00:00",
+      "sha": "ac350a4"
     },
     "block-name-matched-kill": {
       "fired": true,
       "blocked": true,
       "detail": "pkill denied",
-      "at": "2026-08-19T12:17:11+00:00",
-      "sha": "42893df"
+      "at": "2026-08-19T12:52:21+00:00",
+      "sha": "ac350a4"
     },
     "check-rule-frontmatter": {
       "fired": true,
       "blocked": null,
       "detail": "exit 0 (advisory; executed, not violated)",
-      "at": "2026-08-19T12:17:11+00:00",
-      "sha": "42893df"
+      "at": "2026-08-19T12:52:21+00:00",
+      "sha": "ac350a4"
     },
     "audit-quad-agent-parity": {
       "fired": true,
       "blocked": null,
       "detail": "exit 0 (advisory; executed, not violated)",
-      "at": "2026-08-19T12:17:12+00:00",
-      "sha": "42893df"
+      "at": "2026-08-19T12:52:21+00:00",
+      "sha": "ac350a4"
     },
     "check-upstream-alignment": {
       "fired": true,
       "blocked": null,
       "detail": "exit 0 (advisory; executed, not violated)",
-      "at": "2026-08-19T12:17:12+00:00",
-      "sha": "42893df"
+      "at": "2026-08-19T12:52:22+00:00",
+      "sha": "ac350a4"
     }
   }
 }
