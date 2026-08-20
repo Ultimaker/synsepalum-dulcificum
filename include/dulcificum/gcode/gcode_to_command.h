@@ -26,19 +26,16 @@ botcmd::CommandList toCommand(gcode::ast::ast_t& gcode);
 struct VisitCommand
 {
     state_t state{};
-    std::vector<state_t> previous_states{};
+    std::optional<state_t> previous_state{ std::nullopt };
     dulcificum::botcmd::CommandList proto_path = {};
 
-    VisitCommand()
-        : previous_states{ state }
-    {
-    }
+    VisitCommand() = default;
 
     void operator()(const auto& command)
     {
         update_state(command);
         to_proto_path(command);
-        previous_states.emplace_back(state);
+        previous_state = state;
     }
 
 private:

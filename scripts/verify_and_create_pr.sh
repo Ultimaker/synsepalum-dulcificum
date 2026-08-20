@@ -79,6 +79,10 @@ if [ -f .agents/hooks/run_adversarial_audit.py ]; then
     python3 .agents/hooks/run_adversarial_audit.py || { echo "❌ Adversarial audit failed!"; exit 1; }
 fi
 
+if [ -f .agents/hooks/check_github_workflows.py ]; then
+    python3 .agents/hooks/check_github_workflows.py || { echo "❌ GitHub Actions workflow validation failed!"; exit 1; }
+fi
+
 # E2E browser-evidence gate — present only in cloud/frontend repositories (the
 # registry writes the script there and nowhere else), so this `-f` guard makes
 # it cloud-only without a second predicate. It reads the PR body via gh; before

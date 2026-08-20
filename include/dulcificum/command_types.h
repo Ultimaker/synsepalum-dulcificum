@@ -30,9 +30,7 @@ enum class CommandType
     Pause, // Command to allow for user defined pause.
 };
 
-#define MB_BEAD_MODE_TAG(TAG_NAME) \
-    TAG_NAME##_0, \
-    TAG_NAME##_1
+#define MB_BEAD_MODE_TAG(TAG_NAME) TAG_NAME##_0, TAG_NAME##_1
 
 enum class Tag
 {
@@ -69,6 +67,8 @@ struct Command
         : type{ type }
     {
     }
+
+    virtual ~Command() = default;
 
     const CommandType type;
     std::vector<Tag> tags;

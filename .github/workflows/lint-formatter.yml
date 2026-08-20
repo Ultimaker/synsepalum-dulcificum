@@ -5,19 +5,19 @@ on:
     paths:
       - 'include/**/*.h*'
       - 'src/**/*.c*'
-      - 'test/**/*.c*'
+      - 'tests/**/*.c*'
 
   pull_request:
     types: [ opened ]
     paths:
       - 'include/**/*.h*'
       - 'src/**/*.c*'
-      - 'test/**/*.c*'
+      - 'tests/**/*.c*'
 
 jobs:
   lint-formatter-job:
     uses: ultimaker/cura-workflows/.github/workflows/lint-formatter.yml@main
     with:
-      file_patterns: +(include|srctest/)/**/*.+(h|hpp|cpp)
+      file_patterns: +(include|src|tests)/**/*.+(h|hpp|cpp)
       command: clang-format --verbose -i
       commit_message: "Apply clang-format"

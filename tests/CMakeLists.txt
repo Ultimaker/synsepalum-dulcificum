@@ -6,6 +6,7 @@ find_package(GTest REQUIRED)
 set(UNIT_TEST_FILES
         dulcificum_unit_tester.cpp
         miracle_jsontoolpath_dialect_test.cpp
+        gcode_translation_test.cpp
 )
 
 add_executable(dulcificum_unit_tester
